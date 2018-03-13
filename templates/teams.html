@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+
+{% set page_id = "teams" %}
+<center>
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+     {% for t in teams %}
+        <br> <a href='/team/{{t}}'>{{t}}</a></h3>
+        {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+</center>

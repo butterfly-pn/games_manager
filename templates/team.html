@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+
+{% set page_id = "team" %}
+<center>
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <h3>Nazwa zespołu: {{ team_name }}<br></h3>
+      Szef zespołu: {{ team_master }}<br>
+      Mail: {{ team_master_email }}<br>
+      Członkowie: {% for i in team_contributors %}<a href="/user/{{i}}">{{i}}</a>{%endfor%}
+      {% if admin %}
+      <br><a href="/delete-team/{{team_name}}">Usuń ten zespół</a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+</center>

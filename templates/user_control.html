@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+<title> Kontrola nad użytkownikiem {{username}} </title>
+{% set page_id = "lista użytkowników" %}
+<center>
+{% block content %}
+  <div class="row">
+      <br>
+      <ul>
+
+          <br> <a href='/delete/{{id}}' >Usuń konto użytkownika {{username}}</a></h3>
+          {% if admin%}
+          <br> <a href='/take_admin/{{id}}' >Odbierz uprawnienia administratora użytkownikowi {{username}}</a></h3>
+
+          {% else %}
+
+            <br> <a href='/give_admin/{{id}}' >Przekaż uprawnienia administratora użytkownikowi {{username}}</a></h3>
+
+          {% endif %}
+      </ul>
+  </div>
+{% endblock %}
+</center>
+</head>
+<body>
+</body>
+</html>

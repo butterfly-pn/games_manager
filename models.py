@@ -1,11 +1,12 @@
 __author__ = 'Piotr Dyba'
 
-from flask.ext.login import UserMixin
+from flask_login import UserMixin
 
 from sqlalchemy import Column
 from sqlalchemy.types import Integer
 from sqlalchemy.types import String
 from sqlalchemy.types import Boolean
+from sqlalchemy.types import PickleType
 
 from main import db
 
@@ -17,9 +18,12 @@ class User(db.Model, UserMixin):
     __tablename__ = 'user'
     id = Column(Integer, autoincrement=True, primary_key=True)
     active = Column(Boolean, default=True)
+    username = Column(String(20), unique=True)
     email = Column(String(200), unique=True)
     password = Column(String(200), default='')
+    job=Column(String(20),default='')
     admin = Column(Boolean, default=False)
+
 
     def is_active(self):
         """
@@ -32,3 +36,14 @@ class User(db.Model, UserMixin):
         Returns if user is admin.
         """
         return self.admin
+
+class Team(db.Model):
+    """
+    Team model
+    """
+    __tablename__ = 'team'
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    name = Column(String(20), unique=True)
+    master_email = Column(String(200))
+    master = Column(String(200))
+    contributors = Column(PickleType())

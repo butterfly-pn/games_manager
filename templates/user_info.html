@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+<title>{{ session['username'] }}</title>
+{% set page_id = "{{ session['username'] }}" %}
+<center>
+{% block content %}
+  <div class="row">
+      Jesteś zalogowany jako {{ session['username'] }}
+<br><br>
+      {{job}}
+      <br> <a href={{delete_link}} >Usuń swoje konto</a></h3>
+
+      <!--<br>{{job}}-->
+    <div class="col-12">
+    </div>
+  </div>
+{% endblock %}
+</center>

@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+<title> Lista użytkowników </title>
+{% set page_id = "lista użytkowników" %}
+<center>
+{% block content %}
+  <div class="row">
+      <br>
+      <ul>
+          <h4>ADMINI:</h4>
+              {%for a in range(0,f)%}
+               <br><a href="/admin/user/{{id[a]}}">{{admins[a]}}</a></h3>,
+              <br>
+              {%endfor%}
+          <br>
+          <br>
+          <h4>UŻYTKOWNICY: </h4>
+          {%for a in range(0,g)%}
+
+               <br> <a href='/admin/user/{{id[a]}}'>{{users[a]}}</a></h3>
+              {%endfor%}
+          <br>
+
+      </ul>
+  </div>
+{% endblock %}
+</center>
+</head>
+<body>
+</body>
+</html>
