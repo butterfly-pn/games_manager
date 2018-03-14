@@ -26,8 +26,8 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
 
-        <li class="nav-item{% if page_id == 'user_info' %} active{% endif %}">
-          <a class="nav-link" href="{{ url_for('user_info') }}">{{ session['username'] }}</a>
+        <li class="nav-item{% if page_id == 'user_info_id' %} active{% endif %}">
+          <a class="nav-link" href="/user/{{session['username']}}">{{ session['username'] }}</a>
         </li>
 
         <li class="nav-item{% if page_id == 'info' %} active{% endif %}">
@@ -82,9 +82,14 @@
                     <dt><label for="confirm">Powtórz hasło</label></dt>
                     <dd><input id="confirm" name="confirm" type="password" value=""></dd>
 
-                    <dt><label for="job">Czym się zajmujesz</label></dt>
-                    <dd><input id="job" name="job" type="text" value=""></dd>
-
+                    <dt><label for="job">jaka jest twoja funkcja</label></dt>
+                    <dd>
+                    <select id="job" name="job" type="text">
+                    <option value="Programista">Programista</option>
+                    <option value="Dźwiękowiec">Dźwiękowiec</option>
+                    <option value="Grafik">Grafik</option>
+                  </select>
+                      </dd>
                     <dt><label for="accept_tos">Akceptuję <a href="/about/tos" target="blank">Warunki użytkowania</a> i <a href="/about/privacy-policy" target="blank">Politykę prywatności</a> (zaktualizowana 17 stycznia 2018r.) <input id="accept_tos" name="accept_tos" type="checkbox" value="y"></label></dt>
                   </dl>
                   <p><input class="btn btn-primary" type=submit value="Zarejestruj się"></p>

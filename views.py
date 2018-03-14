@@ -170,24 +170,40 @@ Koniec podstawowych informacji o stronie, początek informacji o użytkowniku
 """
 
 
-@app.route("/user_info")
-@login_required
-def user_info():
-    """Wyświetla informacje o użytkowniku, DO USUNIĘCIA I ZASTĄPIENIA PRZEZ FUNKCJĘ user_info_id"""
-    if User.query.filter_by(username=session['username']).first().admin:
-        return redirect("/admin")
-    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, id=id),
-
-
 @app.route('/user/<username>')
 def user_info_id(username):
     """
     Tu będą wyświetlane gamejamy, drużyny, gry i dokłade dane dotyczące użytkownika
     """
-    if username != 'piotr':
-        pass
-    #return redirect('/')
-    return "jej"
+
+    id=User.query.filter_by(username=username).first().id
+    user_teams=Team.query.filter_by(master=username).all()
+    names=[]
+    for team in user_teams:
+        team_id=int(str(team)[str(team).find('>') - (str(team).find('>') - 6):str(team).find('>')])
+        team_name=Team.query.filter_by(id=team_id).first().name
+        names.append(team_name)
+        del(team_id)
+        del(team_name)
+
+    teams = Team.query.order_by(Team.id.asc()).all()
+    t = []
+    for team in teams:
+        idt = int(str(team)[str(team).find('>') - (str(team).find('>') - 6):str(team).find('>')])
+        t.append(idt)
+        del(idt)
+
+    teams=[]
+    for team in t:
+        team_name=Team.query.filter_by(id=team).first().contributors
+        if session['username'] in team_name:
+            teams.append(Team.query.filter_by(id=team).first().name)
+
+    admin=User.query.filter_by(username=session['username']).first().admin
+
+
+    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, id=id, admin=admin, teams=names,teams2=teams)
+
 
 
 """
@@ -357,10 +373,8 @@ Koniec obsługi plików, początek obsługi konta administratora
 @app.route("/admin")
 def admin():
     """to samo co user info tylko dla admina"""
-    """TAKŻE DO ZASTĄPIENIA PRZEZ user_info_id"""
     if User.query.filter_by(username=session['username']).first().admin:
         return render_template('admin.html')
-    flash('Nie dla psa kiełbasa')
     return redirect('/')
 
 @app.route("/user_list")
@@ -404,7 +418,7 @@ def user_control(id):
             admin = User.query.filter_by(id=id).first().admin
             return render_template('user_control.html', id=id, admin=admin, username=username)
 
-@app.route('/admin/give_admin/<int:id>')
+@app.route('/give_admin/<int:id>')
 def give_admin(id):
     """daje admina użytkownikowi"""
     """może być uruchomiona tylko przez admina"""
@@ -423,7 +437,7 @@ def give_admin(id):
                 return redirect('/')
     return redirect('/')
 
-@app.route('/admin/take_admin/<int:id>')
+@app.route('/take_admin/<int:id>')
 def take_admin(id):
     """odbiera admina użytkownikowi"""
     """może być uruchomiona tylko przez admina"""
