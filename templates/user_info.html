@@ -6,8 +6,29 @@
   <div class="row">
       Jesteś zalogowany jako {{ session['username'] }}
 <br><br>
-      {{job}}
-      <br> <a href={{delete_link}} >Usuń swoje konto</a></h3>
+      {% if admin %}
+      <a href="/admin">Funkcje administratora  </a><br>
+      {%endif%}
+
+        <br>
+      <br> <a href="/delete/{{id}}" > Usuń swoje konto</a>
+        <br>{{job}}<br>
+      {%if teams%}
+      twoje zespoły:
+        {% for team in teams %}
+       <a href="/team/{{team}}">{{team}}</a>,
+      <br>
+      {% endfor %}
+      {%endif%}
+
+            {%if teams2%}
+      zespoły, w których jesteś:
+        {% for team in teams2 %}
+       <a href="/team/{{team}}">{{team}}</a>,
+      <br>
+      {% endfor %}
+      {%endif%}
+
 
       <!--<br>{{job}}-->
     <div class="col-12">
