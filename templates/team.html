@@ -5,6 +5,18 @@
 {% block content %}
   <div class="row">
     <div class="col-12">
+      <h3>Nazwa zespołu: {{ team.name }}<br></h3>
+      Szef zespołu: <a href="/user/{{team.master}}">{{team.master}}</a> <br>
+      Mail: {{ team.master_email }}<br>
+      Członkowie: {% for i in team.contributors %}<a href="/user/{{i}}">{{i}}</a>, {%endfor%}
+      {% if admin or session['username']==team.master %}
+      <br><a href="/delete-team/{{team.name}}">Usuń ten zespół</a>
+
+          <form action="/team/{{team.name}}/invite" method="post">
+        Nazwa <input type="text" name="user" id="user" required><br>
+        <button type="submit">zaproś</button>
+    </form>
+
       <h3>Nazwa zespołu: {{ team_name }}<br></h3>
       Szef zespołu: <a href="/user/{{team_master}}">{{team_master}}</a> <br>
       Mail: {{ team_master_email }}<br>
