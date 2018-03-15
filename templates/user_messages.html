@@ -7,9 +7,19 @@
       <center>
       twoje wiadomości:
         <br>
+          Nowe wiadomości:
         {% for message in messages %}
+          {%if message.new%}
       <br>
        <a href="/message/{{message.id}}">{{message.title}}</a>
+          {%endif%}
+      {% endfor %}
+          <br>  stare wiadomości:
+        {% for message in messages %}
+          {%if not message.new %}
+      <br>
+       <a href="/message/{{message.id}}">{{message.title}}</a>
+          {%endif%}
       {% endfor %}
         </center>
       <!--<br>{{job}}-->

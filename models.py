@@ -51,6 +51,7 @@ class Message(db.Model):
     author = Column(String(20), default='')
     created = Column(db.DateTime(), nullable=False)
     content = Column(db.Text())
+    new = Column(Boolean, default=True)
 
 
 class Team(db.Model):

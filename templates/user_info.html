@@ -20,20 +20,20 @@
 
           <a href="/user/{{user.username}}/messages">Twoje wiadomości</a>
             <br>
-      {%if teams%}
+      {%if teams2%}
       twoje zespoły:
           <ol>
-        {% for team in teams %}
+        {% for team in teams2 %}
       <li> <a href="/team/{{team.name}}">{{team.name}}</a>,</li>
       {% endfor %}
           </ol>
       {%endif%}
 
 
-            {%if teams2%}
+            {%if teams%}
       zespoły, w których jesteś:
           <ol>
-        {% for team in teams2 %}
+        {% for team in teams %}
        {% if user.username in team.contributors%}
               <li><a href="/team/{{team.name}}">{{team.name}}</a></li>
         {%endif%}
