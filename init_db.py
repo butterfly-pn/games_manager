@@ -1,4 +1,4 @@
-__author__ = 'Piotr Dyba'
+_author__ = 'Piotr Dyba'
 
 from sqlalchemy import create_engine
 from main import db
@@ -31,7 +31,7 @@ def db_start():
     db.session.add(team)
     db.session.commit()
 
-    message=models.Message
+    message=models.Message()
     message.title = 'testowa wiadomość'
     message.adresser='piotr'
     message.author='wikwoj'
@@ -41,7 +41,7 @@ def db_start():
     db.session.commit()
 
 
-    jam = models.Jam
+    jam = models.Jam()
     jam.title = "Jam testowy"
     jam.master="piotr"
     jam.master_email = 'piotr@dyba.com.pl'

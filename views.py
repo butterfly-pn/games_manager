@@ -189,7 +189,6 @@ def user_info_id(username):
 @app.route('/user/<username>/messages')
 def user_messages(username):
     if session['username']==username or User.query.filter_by(username=session['username']).first().admin:
-        m=[]
 
         messages=Message.query.filter_by(adresser=username).all()
         try:
@@ -318,7 +317,7 @@ def invite_redirect(team_name):
     if request.method=='GET':
         return render_template('team.html')
     else:
-        name=request.form['user']
+        name=request.form['username']
         if User.query.filter_by(username=name).first():
             return redirect("/team/"+team_name+'/invite/'+name)
         flash("Nie ma takiego użytkownika")
@@ -338,6 +337,18 @@ def team_invite(team_name,username):
         flash("użytkownik został zaproszony")
         return redirect('/team/'+team_name)
     return redirect("/")
+
+@app.route('/team/<team_name>/join')
+def join_redirect(team_name):
+    if request.method == 'GET':
+        return render_template('team.html')
+    else:
+        name = request.form['add-to-team']
+        if User.query.filter_by(username=name).first():
+            return redirect("/team/" + team_name + '/invite/' + name)
+        flash("Nie ma takiego użytkownika")
+        return redirect('/team/' + team_name)
+
 
 @app.route('/team/<team_name>/join/<username>')
 def team_join(team_name, username):
