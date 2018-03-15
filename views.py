@@ -177,7 +177,7 @@ def user_info_id(username):
     """
     Tu będą wyświetlane gamejamy, drużyny, gry i dokłade dane dotyczące użytkownika
     """
-    if User.query.filter_by(username=session['username']).first().admin or session['username']==username:
+    if session['username']==username:
         user=User.query.filter_by(username=username).first()
         user_teams=Team.query.filter_by(master=username).all()
         teams = Team.query.order_by(Team.id.asc()).all()
@@ -258,9 +258,7 @@ def team(team_name):
         return render_template("team.html", team=this_team, admin=admin)
     return render_template('404.html'), 404
 
-
 class NewTeamForm(Form):
-    """Forma do rejestracji"""
     name = StringField('Nazwa zespołu', [validators.Length(min=4, max=20)])
 
 
@@ -409,29 +407,8 @@ def user_list():
     """wyświetla listę użytkowników wraz z linkami dla adminów do edycji kont użytkowników"""
     """nie wyświetla użytkownika piotr"""
     if User.query.filter_by(username=session['username']).first().admin:
-        admins = User.query.filter_by(admin=True).all()
-        i = []
-        a = []
-        f = -1
-        for admin in admins:
-            a.append(User.query.filter_by(id=int(
-                str(admin)[str(admin).find('>') - (str(admin).find('>') - 6):str(admin).find('>')])).first().username)
-            i.append(User.query.filter_by(username=a[-1]).first().id)
-            f += 1
-        del a[0]
-        del i[0]
-
-        users = User.query.filter_by(admin=0).all()
-        u = []
-        g = f
-        for ua in a:
-            u.append(ua)
-        for user in users:
-            u.append(User.query.filter_by(id=int(
-                str(user)[str(user).find('>') - (str(user).find('>') - 6):str(user).find('>')])).first().username)
-            i.append(User.query.filter_by(username=u[-1]).first().id)
-            g += 1
-        return render_template('user_list.html', users=u, admins=a, id=i, f=f, g=g)
+        users=User.query.order_by(User.id.asc()).all()
+        return render_template('user_list.html', users=users)
     flash('Nie dla psa kiełbasa')
     return redirect('/')
 
@@ -441,9 +418,9 @@ def user_control(id):
     """nie działa na użytkownia piotr"""
     if id != 1:
         if User.query.filter_by(username=session['username']).first().admin:
-            username = User.query.filter_by(id=id).first().username
-            admin = User.query.filter_by(id=id).first().admin
-            return render_template('user_control.html', id=id, admin=admin, username=username)
+            user = User.query.filter_by(id=id).first()
+            teams=Team.query.order_by(Team.id.asc()).all()
+            return render_template('user_control.html', user=user, teams=teams)
 
 @app.route('/give_admin/<int:id>')
 def give_admin(id):

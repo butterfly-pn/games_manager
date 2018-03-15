@@ -8,7 +8,7 @@
       <h3>Nazwa zespołu: {{ team.name }}<br></h3>
       Szef zespołu: <a href="/user/{{team.master}}">{{team.master}}</a> <br>
       Mail: {{ team.master_email }}<br>
-      Członkowie: {% for i in team.contributors %}<a href="/user/{{i}}">{{i}}</a>, {%endfor%}
+      Członkowie: {% for i in team.contributors %}{{i}}, {%endfor%}
       {% if admin or session['username']==team.master %}
       <br><a href="/delete-team/{{team.name}}">Usuń ten zespół</a>
 
