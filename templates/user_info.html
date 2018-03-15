@@ -4,33 +4,46 @@
 <center>
 {% block content %}
   <div class="row">
-      Jesteś zalogowany jako {{ session['username'] }}
-<br><br>
+      <center>
+
+
+          <p>Jesteś zalogowany jako {{ session['username'] }}</p>
+
+
+    <p><a href="/delete/{{user.id}}" > Usuń swoje konto</a></p>
+
+
       {% if admin %}
-      <a href="/admin">Funkcje administratora  </a><br>
-      {%endif%}
+      <p><a href="/admin">Funkcje administratora  </a></p>
+            {%endif%}
+            <br>
 
-        <br>
-      <br> <a href="/delete/{{id}}" > Usuń swoje konto</a>
-        <br>{{job}}<br>
-      {%if teams%}
+          <a href="/user/{{user.username}}/messages">Twoje wiadomości</a>
+            <br>
+      {%if teams2%}
       twoje zespoły:
-        {% for team in teams %}
-       <a href="/team/{{team}}">{{team}}</a>,
-      <br>
-      {% endfor %}
-      {%endif%}
-
-            {%if teams2%}
-      zespoły, w których jesteś:
+          <ol>
         {% for team in teams2 %}
-       <a href="/team/{{team}}">{{team}}</a>,
-      <br>
+      <li> <a href="/team/{{team.name}}">{{team.name}}</a>,</li>
       {% endfor %}
+          </ol>
       {%endif%}
 
 
-      <!--<br>{{job}}-->
+            {%if teams%}
+      zespoły, w których jesteś:
+          <ol>
+        {% for team in teams %}
+       {% if user.username in team.contributors%}
+              <li><a href="/team/{{team.name}}">{{team.name}}</a></li>
+        {%endif%}
+      {% endfor %}
+          </ol>
+      {%endif%}
+
+
+
+    </center>
     <div class="col-12">
     </div>
   </div>
