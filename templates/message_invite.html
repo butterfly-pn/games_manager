@@ -1,0 +1,20 @@
+{% extends "_base.html" %}
+<title>{{ session['username'] }}</title>
+{% set page_id = "user_teams" %}
+<center>
+{% block content %}
+  <div class="row">
+      <center>
+          xdd
+          {{team_name}}
+          xddd
+          <h3>{{message.title}}</h3>
+        <br><h5>Wysłane przez: {{message.author}}</h5>
+          <br>{{message.content}}
+          <br><a href="/team/{{team_name}}/join/{{message.adresser}}">Dołącz do drużyny {{team_name}}</a>
+      </center>
+    <div class="col-12">
+    </div>
+  </div>
+{% endblock %}
+</center>

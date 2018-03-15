@@ -10,7 +10,7 @@
           <p>Jesteś zalogowany jako {{ session['username'] }}</p>
 
 
-    <p><a href="/delete/{{id}}" > Usuń swoje konto</a></p>
+    <p><a href="/delete/{{user.id}}" > Usuń swoje konto</a></p>
 
 
       {% if admin %}
@@ -18,11 +18,13 @@
             {%endif%}
             <br>
 
+          <a href="/user/{{user.username}}/messages">Twoje wiadomości</a>
+            <br>
       {%if teams%}
       twoje zespoły:
           <ol>
         {% for team in teams %}
-      <li> <a href="/team/{{team}}">{{team}}</a>,</li>
+      <li> <a href="/team/{{team.name}}">{{team.name}}</a>,</li>
       {% endfor %}
           </ol>
       {%endif%}
@@ -32,10 +34,13 @@
       zespoły, w których jesteś:
           <ol>
         {% for team in teams2 %}
-       <li><a href="/team/{{team}}">{{team}}</a>,</li>
+       {% if user.username in team.contributors%}
+              <li><a href="/team/{{team.name}}">{{team.name}}</a></li>
+        {%endif%}
       {% endfor %}
           </ol>
       {%endif%}
+
 
 
     </center>

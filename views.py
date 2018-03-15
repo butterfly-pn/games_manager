@@ -4,13 +4,14 @@ from main import app
 from main import db
 from main import bcrypt
 from main import lm
-from models import User, Team
+from models import User, Team, Message
 import gc
 from passlib.hash import sha256_crypt
 from functools import wraps
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_from_directory
 from wtforms import Form, validators, StringField, PasswordField, BooleanField
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 target = os.path.join(APP_ROOT, 'games')
@@ -176,34 +177,37 @@ def user_info_id(username):
     Tu będą wyświetlane gamejamy, drużyny, gry i dokłade dane dotyczące użytkownika
     """
 
-    id=User.query.filter_by(username=username).first().id
+    user=User.query.filter_by(username=username).first()
     user_teams=Team.query.filter_by(master=username).all()
-    names=[]
-    for team in user_teams:
-        team_id=int(str(team)[str(team).find('>') - (str(team).find('>') - 6):str(team).find('>')])
-        team_name=Team.query.filter_by(id=team_id).first().name
-        names.append(team_name)
-        del(team_id)
-        del(team_name)
 
     teams = Team.query.order_by(Team.id.asc()).all()
-    t = []
-    for team in teams:
-        idt = int(str(team)[str(team).find('>') - (str(team).find('>') - 6):str(team).find('>')])
-        t.append(idt)
-        del(idt)
-
-    teams=[]
-    for team in t:
-        team_name=Team.query.filter_by(id=team).first().contributors
-        if session['username'] in team_name:
-            teams.append(Team.query.filter_by(id=team).first().name)
 
     admin=User.query.filter_by(username=session['username']).first().admin
 
 
-    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, id=id, admin=admin, teams=names,teams2=teams)
+    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, admin=admin, teams=teams,teams2=user_teams)
 
+@app.route('/user/<username>/messages')
+def user_messages(username):
+    if session['username']==username or User.query.filter_by(username=session['username']).first().admin:
+        m=[]
+
+        messages=Message.query.filter_by(adresser=username).all()
+        try:
+            if messages:
+                return render_template('user_messages.html', messages=messages)
+            return redirect('/')
+        except:
+            return redirect('/')
+
+@app.route('/message/<id>')
+def message_print(id):
+    if session['username'] == Message.query.filter_by(id=id).first().adresser or User.query.filter_by(username=session['username']).first().admin:
+        message=Message.query.filter_by(id=id).first()
+        if "Zaproszenie do drużyny " in message.title:
+            return render_template("message_invite.html",message=message, team_name=str(message.title))
+        return render_template("message_invite.html", message=message)
+    return redirect("/")
 
 
 """
@@ -326,9 +330,20 @@ def delete_team(team_name):
         flash("Musisz być zalogowany")
         return redirect(url_for('homepage'))
 
-@app.route('/team/<team_name>/invite/<id>')
-def team_invite(team_name,id):
-    pass
+@app.route('/team/<team_name>/invite/<username>')
+def team_invite(team_name,username):
+    if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master==session['username']:
+        new_message = Message()
+        new_message.title ="Zaproszenie do drużyny   "+team_name
+        new_message.author =Team.query.filter_by(name=team_name).first().master
+        new_message.adresser =username
+        new_message.created=datetime.now()
+        new_message.content = "Zostałeś zaproszony do drużyny "+team_name+". W tej drużynie znajdują się: "+str(Team.query.filter_by(name=team_name).first().contributors)
+        db.session.add(new_message)
+        db.session.commit()
+        flash("użytkownik został zaproszony")
+        return redirect('/team/'+team_name)
+
 
 """
 Koniec obsługi drużyn, początek obsługi plików

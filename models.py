@@ -46,6 +46,7 @@ class Message(db.Model):
     """
     __tablename__ = 'message'
     id = Column(Integer,autoincrement=True, primary_key=True)
+    title = Column(String(200))
     adresser = Column(String(20), default='')
     author = Column(String(20), default='')
     created = Column(db.DateTime(), nullable=False)

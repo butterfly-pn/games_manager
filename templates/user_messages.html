@@ -1,0 +1,20 @@
+{% extends "_base.html" %}
+<title>{{ session['username'] }}</title>
+{% set page_id = "user_messages" %}
+<center>
+{% block content %}
+  <div class="row">
+      <center>
+      twoje wiadomości:
+        <br>
+        {% for message in messages %}
+      <br>
+       <a href="/message/{{message.id}}">{{message.title}}</a>
+      {% endfor %}
+        </center>
+      <!--<br>{{job}}-->
+    <div class="col-12">
+    </div>
+  </div>
+{% endblock %}
+</center>

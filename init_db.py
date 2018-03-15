@@ -32,10 +32,13 @@ def db_start():
     db.session.commit()
 
     message=models.Message
+    message.title = 'testowa wiadomość'
     message.adresser='piotr'
     message.author='wikwoj'
     message.content='No hej'
     message.created=datetime.now()
+    db.session.add(message)
+    db.session.commit()
 
 
     jam = models.Jam
