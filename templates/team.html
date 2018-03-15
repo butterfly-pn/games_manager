@@ -17,8 +17,40 @@
         <button type="submit">zaproś</button>
     </form>
 
+      <h3>Nazwa zespołu: {{ team_name }}<br></h3>
+      Szef zespołu: <a href="/user/{{team_master}}">{{team_master}}</a> <br>
+      Mail: {{ team_master_email }}<br>
+      Członkowie: {% for i in team_contributors %}<a href="/user/{{i}}">{{i}}</a>{% if loop.index != team_contributors|length %},{%endif%} {%endfor%}
+      {% if admin or owner %}
+      <button class="btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#add-to-team" href="#">+
+            <!--<a role="presentation" class="btn btn-primary" data-toggle="modal" data-target="#add-to-team" href="#">+</a>-->
+        </button>
+      {% endif %}
+      {% if admin %}
+      <br><a href="/delete-team/{{team_name}}">Usuń ten zespół</a>
       {% endif %}
     </div>
   </div>
+  <div class="modal fade" id="add-to-team" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Dodaj do zespołu</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form method=post action="/add-to-team/">
+                  <dl>
+                    <dt><label for="username">Nazwa użytkownika</label></dt>
+                    <dd><input id="username" name="username" type="text" value=""></dd>
+                   </dl>
+                  <p><input class="btn btn-primary" type=submit value="Dodaj"></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 {% endblock %}
 </center>
