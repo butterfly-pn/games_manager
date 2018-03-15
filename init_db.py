@@ -5,6 +5,8 @@ from main import db
 import models
 from passlib.hash import sha256_crypt
 
+from datetime import datetime
+
 
 def db_start():
     engine = create_engine('sqlite:///tmp/test.db', convert_unicode=True)
@@ -29,6 +31,20 @@ def db_start():
     db.session.add(team)
     db.session.commit()
 
+    message=models.Message
+    message.adresser='piotr'
+    message.author='wikwoj'
+    message.content='No hej'
+    message.created=datetime.now()
+
+
+    jam = models.Jam
+    jam.title = "Jam testowy"
+    jam.master="piotr"
+    jam.master_email = 'piotr@dyba.com.pl'
+    jam.teams=['BestTeam']
+    db.session.add(jam)
+    db.session.commit()
 
 if __name__ == '__main__':
     db_start()

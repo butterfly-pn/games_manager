@@ -326,6 +326,9 @@ def delete_team(team_name):
         flash("Musisz być zalogowany")
         return redirect(url_for('homepage'))
 
+@app.route('/team/<team_name>/invite/<id>')
+def team_invite(team_name,id):
+    pass
 
 """
 Koniec obsługi drużyn, początek obsługi plików

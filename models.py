@@ -8,6 +8,8 @@ from sqlalchemy.types import String
 from sqlalchemy.types import Boolean
 from sqlalchemy.types import PickleType
 
+from datetime import datetime
+
 from main import db
 
 
@@ -22,6 +24,7 @@ class User(db.Model, UserMixin):
     email = Column(String(200), unique=True)
     password = Column(String(200), default='')
     job=Column(String(20),default='')
+    organizer = Column(Boolean, default=False)
     admin = Column(Boolean, default=False)
 
 
@@ -37,6 +40,18 @@ class User(db.Model, UserMixin):
         """
         return self.admin
 
+class Message(db.Model):
+    """
+    Message model
+    """
+    __tablename__ = 'message'
+    id = Column(Integer,autoincrement=True, primary_key=True)
+    adresser = Column(String(20), default='')
+    author = Column(String(20), default='')
+    created = Column(db.DateTime(), nullable=False)
+    content = Column(db.Text())
+
+
 class Team(db.Model):
     """
     Team model
@@ -47,3 +62,16 @@ class Team(db.Model):
     master_email = Column(String(200))
     master = Column(String(200))
     contributors = Column(PickleType())
+
+
+class Jam(db.Model):
+    """
+    Jam model
+    """
+    __tablename__ = 'jam'
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    title = Column(String(20), unique=True)
+    master_email = Column(String(200))
+    master = Column(String(200))
+    teams = Column(PickleType())
+    active= Column(Boolean, default=True)
