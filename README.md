@@ -11,3 +11,4 @@ Aplikacja dla twórców gier niezależnych
 
 (gry niezależne to gry tworzone bez wielkich budżetów, np. McPixel lub Super Meat Boy)
 Uwaga: zespoły _nie muszą_ być wyważone (nie muszą zawierać co najmniej po 1 osobie od grafiki/audio/programowania)
+czydziała?
