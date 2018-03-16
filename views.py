@@ -177,14 +177,11 @@ def user_info_id(username):
     """
     Tu będą wyświetlane gamejamy, drużyny, gry i dokłade dane dotyczące użytkownika
     """
-    if session['username']==username:
-        user=User.query.filter_by(username=username).first()
-        user_teams=Team.query.filter_by(master=username).all()
-        teams = Team.query.order_by(Team.id.asc()).all()
-        admin=User.query.filter_by(username=session['username']).first().admin
-        return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, admin=admin, teams=teams,teams2=user_teams)
-    flash('nie masz dotępu do tej strony')
-    return render_template('/')
+    user=User.query.filter_by(username=username).first()
+    user_teams=Team.query.filter_by(master=username).all()
+    teams = Team.query.order_by(Team.id.asc()).all()
+    admin=User.query.filter_by(username=session['username']).first().admin
+    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, admin=admin, teams=teams,teams2=user_teams)
 
 @app.route('/user/<username>/messages')
 def user_messages(username):
@@ -318,10 +315,13 @@ def invite_redirect(team_name):
         return render_template('team.html')
     else:
         name=request.form['username']
-        if User.query.filter_by(username=name).first():
-            return redirect("/team/"+team_name+'/invite/'+name)
-        flash("Nie ma takiego użytkownika")
-        return redirect('/team/'+team_name)
+        if not Message.query.filter_by(adresser=name, title="Zaproszenie do drużyny "+team_name).first():
+            if User.query.filter_by(username=name).first():
+                return redirect("/team/"+team_name+'/invite/'+name)
+            flash("Nie ma takiego użytkownika")
+            return redirect('/team/'+team_name)
+        flash("Ten użytkownik został już zaproszony")
+        return redirect('/team/' + team_name)
 
 @app.route('/team/<team_name>/invite/<username>')
 def team_invite(team_name,username):
@@ -338,27 +338,17 @@ def team_invite(team_name,username):
         return redirect('/team/'+team_name)
     return redirect("/")
 
-@app.route('/team/<team_name>/join')
-def join_redirect(team_name):
-    if request.method == 'GET':
-        return render_template('team.html')
-    else:
-        name = request.form['add-to-team']
-        if User.query.filter_by(username=name).first():
-            return redirect("/team/" + team_name + '/invite/' + name)
-        flash("Nie ma takiego użytkownika")
-        return redirect('/team/' + team_name)
-
 
 @app.route('/team/<team_name>/join/<username>')
 def team_join(team_name, username):
     if User.query.filter_by(username=session['username']).first().admin or Message.query.filter_by(title="Zaproszenie do drużyny "+team_name, adresser=username).first().adresser==username:
-        team=Team.query.filter_by(name=team_name).first()
-        cont=team.contributors[:]
-        cont.append(username)
-        team.contributors=cont[:]
-        db.session.commit()
-        flash('Pomyślnie dołączono do drużyny')
+        if not username in Team.query.filter_by(name=team_name).first().contributors:
+            team=Team.query.filter_by(name=team_name).first()
+            cont=team.contributors[:]
+            cont.append(username)
+            team.contributors=cont[:]
+            db.session.commit()
+            flash('Pomyślnie dołączono do drużyny')
         return redirect('/team/'+team_name)
     return redirect('/')
 

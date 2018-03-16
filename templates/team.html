@@ -6,16 +6,16 @@
   <div class="row">
     <div class="col-12">
 
-      <h3>Nazwa zespołu: {{ team_name }}<br></h3>
-      Szef zespołu: {{team.master}} <br>
+      <h3>Nazwa zespołu: {{ team.name }}<br></h3>
+      Szef zespołu: <a href="/user/{{team.master}}">{{team.master}}</a> <br>
       Mail: {{ team.master_email }}<br>
-      Członkowie: {% for i in team.contributors %}{{i}}{% if loop.index != team.contributors|length %},{%endif%} {%endfor%}
-      {% if admin or owner %}
+        Członkowie: {% for i in team.contributors %}<a href="/user/{{i}}" >{{i}}</a>{% if loop.index != team.contributors|length %},{%endif%} {%endfor%}
+      {% if admin or team.master==session['username'] %}
       <button class="btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#add-to-team" href="#">+
         </button>
       {% endif %}
-      {% if admin %}
-      <br><a href="/delete-team/{{team_name}}">Usuń ten zespół</a>
+      {% if admin or team.master==session['username'] %}
+      <br><a href="/delete-team/{{team.name}}">Usuń ten zespół</a>
       {% endif %}
     </div>
   </div>
