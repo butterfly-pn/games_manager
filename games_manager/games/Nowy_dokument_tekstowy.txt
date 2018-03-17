@@ -1,0 +1,44 @@
+# @app.route("/give_admin/",methods=["GET","POST"])
+# def give_admin():
+#     try:
+#         try:
+#             if request.method == "POST":
+#                 if User.query.filter_by(username=session['username']).first().admin:
+#                     db_user = User.query.filter_by(username=request.form['new_admin']).first()
+#                     if db_user:
+#                         db_user.admin = 1
+#                         db.session.commit()
+#                         flash("przekazano admina u¿ytkownikowi "+request.form['new_admin'])
+#                         return redirect(url_for('homepage'))
+#                 flash("nie jesteœ adminem")
+#                 flash("Niepoprawne dane")
+#                 gc.collect()
+#             return redirect(url_for('homepage'))
+#         except Exception as e:
+#             flash(e)
+#             return redirect(url_for('homepage'))
+#     except:
+#         return redirect(url_for('homepage'))
+#
+#
+# @app.route("/take_admin/",methods=["GET","POST"])
+# def take_admin():
+#     try:
+#         try:
+#             if request.method == "POST":
+#                 if User.query.filter_by(username=session['username']).first().admin:
+#                     db_user = User.query.filter_by(username=request.form['old_admin']).first()
+#                     if db_user:
+#                         db_user.admin = 0
+#                         db.session.commit()
+#                         flash("Odebrano admina u¿ytkownikowi "+request.form['old_admin'])
+#                         return redirect(url_for('homepage'))
+#                 flash("nie jesteœ adminem")
+#                 flash("Niepoprawne dane")
+#                 gc.collect()
+#             return redirect(url_for('homepage'))
+#         except Exception as e:
+#             flash(e)
+#             return redirect(url_for('homepage'))
+#     except:
+#         return redirect(url_for('homepage'))
