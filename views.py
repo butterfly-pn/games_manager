@@ -177,15 +177,19 @@ def user_info_id(username):
     """
     Tu będą wyświetlane gamejamy, drużyny, gry i dokłade dane dotyczące użytkownika
     """
-    user=User.query.filter_by(username=username).first()
-    user_teams=Team.query.filter_by(master=username).all()
-    teams = Team.query.order_by(Team.id.asc()).all()
-    admin=User.query.filter_by(username=session['username']).first().admin
-    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, admin=admin, teams=teams,teams2=user_teams)
+    if User.query.filter_by(username=session['username']).first().admin or session['username']==username:
+        user=User.query.filter_by(username=username).first()
+        user_teams=Team.query.filter_by(master=username).all()
+        teams = Team.query.order_by(Team.id.asc()).all()
+        admin=User.query.filter_by(username=session['username']).first().admin
+        return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, admin=admin, teams=teams,teams2=user_teams)
+    flash('nie masz dotępu do tej strony')
+    return render_template('/')
 
 @app.route('/user/<username>/messages')
 def user_messages(username):
     if session['username']==username or User.query.filter_by(username=session['username']).first().admin:
+        m=[]
 
         messages=Message.query.filter_by(adresser=username).all()
         try:
@@ -254,7 +258,9 @@ def team(team_name):
         return render_template("team.html", team=this_team, admin=admin)
     return render_template('404.html'), 404
 
+
 class NewTeamForm(Form):
+    """Forma do rejestracji"""
     name = StringField('Nazwa zespołu', [validators.Length(min=4, max=20)])
 
 
@@ -314,14 +320,11 @@ def invite_redirect(team_name):
     if request.method=='GET':
         return render_template('team.html')
     else:
-        name=request.form['username']
-        if not Message.query.filter_by(adresser=name, title="Zaproszenie do drużyny "+team_name).first():
-            if User.query.filter_by(username=name).first():
-                return redirect("/team/"+team_name+'/invite/'+name)
-            flash("Nie ma takiego użytkownika")
-            return redirect('/team/'+team_name)
-        flash("Ten użytkownik został już zaproszony")
-        return redirect('/team/' + team_name)
+        name=request.form['user']
+        if User.query.filter_by(username=name).first():
+            return redirect("/team/"+team_name+'/invite/'+name)
+        flash("Nie ma takiego użytkownika")
+        return redirect('/team/'+team_name)
 
 @app.route('/team/<team_name>/invite/<username>')
 def team_invite(team_name,username):
@@ -338,17 +341,15 @@ def team_invite(team_name,username):
         return redirect('/team/'+team_name)
     return redirect("/")
 
-
 @app.route('/team/<team_name>/join/<username>')
 def team_join(team_name, username):
     if User.query.filter_by(username=session['username']).first().admin or Message.query.filter_by(title="Zaproszenie do drużyny "+team_name, adresser=username).first().adresser==username:
-        if not username in Team.query.filter_by(name=team_name).first().contributors:
-            team=Team.query.filter_by(name=team_name).first()
-            cont=team.contributors[:]
-            cont.append(username)
-            team.contributors=cont[:]
-            db.session.commit()
-            flash('Pomyślnie dołączono do drużyny')
+        team=Team.query.filter_by(name=team_name).first()
+        cont=team.contributors[:]
+        cont.append(username)
+        team.contributors=cont[:]
+        db.session.commit()
+        flash('Pomyślnie dołączono do drużyny')
         return redirect('/team/'+team_name)
     return redirect('/')
 
@@ -408,8 +409,29 @@ def user_list():
     """wyświetla listę użytkowników wraz z linkami dla adminów do edycji kont użytkowników"""
     """nie wyświetla użytkownika piotr"""
     if User.query.filter_by(username=session['username']).first().admin:
-        users=User.query.order_by(User.id.asc()).all()
-        return render_template('user_list.html', users=users)
+        admins = User.query.filter_by(admin=True).all()
+        i = []
+        a = []
+        f = -1
+        for admin in admins:
+            a.append(User.query.filter_by(id=int(
+                str(admin)[str(admin).find('>') - (str(admin).find('>') - 6):str(admin).find('>')])).first().username)
+            i.append(User.query.filter_by(username=a[-1]).first().id)
+            f += 1
+        del a[0]
+        del i[0]
+
+        users = User.query.filter_by(admin=0).all()
+        u = []
+        g = f
+        for ua in a:
+            u.append(ua)
+        for user in users:
+            u.append(User.query.filter_by(id=int(
+                str(user)[str(user).find('>') - (str(user).find('>') - 6):str(user).find('>')])).first().username)
+            i.append(User.query.filter_by(username=u[-1]).first().id)
+            g += 1
+        return render_template('user_list.html', users=u, admins=a, id=i, f=f, g=g)
     flash('Nie dla psa kiełbasa')
     return redirect('/')
 
@@ -419,9 +441,9 @@ def user_control(id):
     """nie działa na użytkownia piotr"""
     if id != 1:
         if User.query.filter_by(username=session['username']).first().admin:
-            user = User.query.filter_by(id=id).first()
-            teams=Team.query.order_by(Team.id.asc()).all()
-            return render_template('user_control.html', user=user, teams=teams)
+            username = User.query.filter_by(id=id).first().username
+            admin = User.query.filter_by(id=id).first().admin
+            return render_template('user_control.html', id=id, admin=admin, username=username)
 
 @app.route('/give_admin/<int:id>')
 def give_admin(id):

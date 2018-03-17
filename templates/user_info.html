@@ -6,45 +6,32 @@
   <div class="row">
       <center>
 
-            {%if user.username==session['username']%}
-                <p>Jesteś zalogowany jako {{ session['username'] }}</p>
-                <p><a href="/delete/{{user.id}}" > Usuń swoje konto</a></p>
+
+          <p>Jesteś zalogowany jako {{ session['username'] }}</p>
 
 
-                {% if admin %}
-                <p><a href="/admin">Funkcje administratora  </a></p>
-                {%endif%}
-                <br>
+    <p><a href="/delete/{{user.id}}" > Usuń swoje konto</a></p>
 
-                <a href="/user/{{user.username}}/messages">Twoje wiadomości</a>
 
-            {%else%}
-                Widzisz profil użytkownika {{user.username}}
+      {% if admin %}
+      <p><a href="/admin">Funkcje administratora  </a></p>
             {%endif%}
+            <br>
 
+          <a href="/user/{{user.username}}/messages">Twoje wiadomości</a>
             <br>
       {%if teams2%}
-       {%if user.username==session['username']%}
       twoje zespoły:
-          {%else%}
-          Zespoły użytkownika
-          {%endif%}
           <ol>
         {% for team in teams2 %}
       <li> <a href="/team/{{team.name}}">{{team.name}}</a>,</li>
       {% endfor %}
           </ol>
-          {%endif%}
-
-
+      {%endif%}
 
 
             {%if teams%}
-       {% if user.username==session['username'] %}
-      Zespoły, w których jesteś:
-          {%else%}
-          Zespoły, do których użytkownik należy
-          {%endif%}
+      zespoły, w których jesteś:
           <ol>
         {% for team in teams %}
        {% if user.username in team.contributors%}
@@ -52,7 +39,7 @@
         {%endif%}
       {% endfor %}
           </ol>
-          {%endif%}
+      {%endif%}
 
 
 
