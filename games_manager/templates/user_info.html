@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+<title>{{ session['username'] }}</title>
+{% set page_id = "{{ session['username'] }}" %}
+<center>
+{% block content %}
+  <div class="row">
+      <center>
+
+            {%if user.username==session['username']%}
+                <p>Jesteś zalogowany jako {{ session['username'] }}</p>
+                <p><a href="/delete/{{user.id}}" > Usuń swoje konto</a></p>
+
+
+                {% if admin %}
+                <p><a href="/admin">Funkcje administratora  </a></p>
+                {%endif%}
+                <br>
+
+                <a href="/user/{{user.username}}/messages">Twoje wiadomości</a>
+
+            {%else%}
+                Widzisz profil użytkownika {{user.username}}
+            {%endif%}
+
+            <br>
+      {%if teams2%}
+       {%if user.username==session['username']%}
+      twoje zespoły:
+          {%else%}
+          Zespoły użytkownika
+          {%endif%}
+          <ol>
+        {% for team in teams2 %}
+      <li> <a href="/team/{{team.name}}">{{team.name}}</a>,</li>
+      {% endfor %}
+          </ol>
+          {%endif%}
+
+
+
+
+            {%if teams%}
+       {% if user.username==session['username'] %}
+      Zespoły, w których jesteś:
+          {%else%}
+          Zespoły, do których użytkownik należy
+          {%endif%}
+          <ol>
+        {% for team in teams %}
+       {% if user.username in team.contributors%}
+              <li><a href="/team/{{team.name}}">{{team.name}}</a></li>
+        {%endif%}
+      {% endfor %}
+          </ol>
+          {%endif%}
+
+
+
+    </center>
+    <div class="col-12">
+    </div>
+  </div>
+{% endblock %}
+</center>
