@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+<title> Download page </title>
+{% set page_id = "download" %}
+<center>
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <h3>Gry do pobrania:<br></h3>
+      <ol>
+        {% for file in files %}
+        <li><a href="/download/{{file}}"> {{ file }} </a></li>
+        <br>
+        {% endfor %}
+      </ol>
+      <h3>Dodaj nowy plik</h3>
+      <form method=post enctype=multipart/form-data>
+        <p><input type=file name=file>
+           <input type=submit value=Upload>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+</center>

@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+<title> {{ session['username'] }} </title>
+{% set page_id = "{{ session['username'] }}" %}
+<center>
+{% block content %}
+  <div class="row">
+      <br>
+      <ul>
+          Jesteś adminem
+          <h3><a href="/user_list">Lista użytkowników</a></h3>
+            <br>
+          <br>
+          <h3><a href="/teams">Lista drużyn</a></h3>
+      </ul>
+  </div>
+{% endblock %}
+</center>
