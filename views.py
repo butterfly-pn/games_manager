@@ -10,6 +10,7 @@ from passlib.hash import sha256_crypt
 from functools import wraps
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_from_directory
 from wtforms import Form, validators, StringField, PasswordField, BooleanField
+from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
 from datetime import datetime
 
@@ -232,6 +233,50 @@ def message_create():
     return redirect('/')
 
 
+class OrganizerForm(Form):
+    fullname = StringField('Imię i nazwisko', [validators.InputRequired(' ')])
+    birthdate = StringField('Data urodzenia', [validators.Length(min=6)])
+    #about = StringField('O sobie', widget=TextArea)
+    #why = StringField('Dlaczego chcesz organizować gamejam?', widget=TextArea)
+
+
+@app.route('/become-organizer/', methods=['GET', 'POST'])
+@login_required
+def become_organizer():
+    try:
+        form = OrganizerForm(request.form)
+        if request.method == "POST" and form.validate():
+            fullname = form.fullname.data
+            birthdate = form.birthdate.data
+            #about = form.about.data
+            #why = form.why.data
+            organizer = User.query.filter_by(username=session['username']).first()
+            organizer.organizer = True
+            organizer.fullname = fullname
+            organizer.birthdate = birthdate
+            #organizer.about = about
+            #organizer.why = why
+            db.session.commit()
+            for admin in User.query.filter_by(admin=True).all():
+                name = admin
+                title = 'Nowe zgłoszenie'
+                content = 'Użytkownik '+session['username']+' chce zostać użytkownikiem <br> Imię i nazwisko: '+fullname+'<br> Data urodzenia: '+ birthdate+'<br> O mnie: '+ +'<br> Dlaczego: '+ +'<br><br> <a href=#>Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
+                new_message = Message()
+                print('gg')
+                new_message.adresser = name
+                new_message.title = title
+                new_message.content = content
+                new_message.author = 'GAMEJAM'
+                new_message.created = datetime.now()
+                db.session.add(new_message)
+                db.session.commit()
+            flash("Przyjęto zgłoszenie!")
+            gc.collect()
+            return redirect(url_for('homepage'))
+        return render_template('become-organizer.html', form=form)
+    except Exception as error:
+        flash(error)
+        return redirect(url_for('homepage'))
 
 
 
