@@ -341,6 +341,7 @@ def delete_team(team_name):
         return redirect(url_for('homepage'))
 
 @app.route('/team/<team_name>/invite', methods=['GET','POST'])
+@login_required
 def invite_redirect(team_name):
     if request.method=='GET':
         return render_template('team.html')
@@ -355,6 +356,7 @@ def invite_redirect(team_name):
         return redirect('/team/' + team_name)
 
 @app.route('/team/<team_name>/invite/<username>')
+@login_required
 def team_invite(team_name,username):
     if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master==session['username']:
         new_message = Message()
@@ -371,6 +373,7 @@ def team_invite(team_name,username):
 
 
 @app.route('/team/<team_name>/join/<username>')
+@login_required
 def team_join(team_name, username):
     if User.query.filter_by(username=session['username']).first().admin or Message.query.filter_by(title="Zaproszenie do drużyny "+team_name, adresser=username).first().adresser==username:
         if not username in Team.query.filter_by(name=team_name).first().contributors:
@@ -383,9 +386,25 @@ def team_join(team_name, username):
         return redirect('/team/'+team_name)
     return redirect('/')
 
-
-
-
+@app.route('/team/<team_name>/delete/<username>')
+@login_required
+def team_delete(team_name, username):
+    if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master == session['username']:
+        for contributor in Team.query.filter_by(name=team_name).first().contributors:
+            if contributor == username:
+                contributors = Team.query.filter_by(name=team_name).first().contributors
+                contributors.remove(contributor)
+                Team.query.filter_by(name=team_name).first().contributors = contributors
+                print(contributors)
+                db.session.commit()
+                print(Team.query.filter_by(name=team_name).first().contributors)
+                flash('Pomyślnie usunięto username z drużyny'.replace('username', username))
+                return redirect('team/'+team_name)
+        flash('Błąd: Nie ma takiego użytkownika')
+        return redirect('team/'+team_name)
+    else:
+        flash("Błąd: Nie masz uprawnień", category='error')
+        return redirect('team/'+team_name)
 
 """
 Koniec obsługi drużyn, początek obsługi plików
