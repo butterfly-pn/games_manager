@@ -4,27 +4,60 @@
 <center>
 {% block content %}
   <div class="row">
+      <div class="col-12">
       <center>
       twoje wiadomości:
         <br>
           Nowe wiadomości:
+
         {% for message in messages %}
           {%if message.new%}
       <br>
-       <a href="/message/{{message.id}}">{{message.title}}</a>
+       <a href="/message/{{message.id}}">{{message.title}} <br> wysłana przez {{message.author}}</a>
           {%endif%}
       {% endfor %}
+
           <br>  stare wiadomości:
+
         {% for message in messages %}
           {%if not message.new %}
       <br>
-       <a href="/message/{{message.id}}">{{message.title}}</a>
+       <a href="/message/{{message.id}}">{{message.title}}<br> wysłana przez {{message.author}}</a>
           {%endif%}
       {% endfor %}
+
         </center>
-      <!--<br>{{job}}-->
-    <div class="col-12">
+      <button class="btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#send_message" href="#">Nowa wiadomość
+
     </div>
   </div>
+      <div class="modal fade" id="send_message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Wyślij nową wiadomość</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form method=post action="/message/create">
+                  <dl>
+                    <dt><label for="username">Nazwa użytkownika, do którego chcesz wysłać wiadomość</label></dt>
+                    <dd><input id="username" name="username" type="text" value=""></dd>
+
+                      <dt><label for="title">Tytuł wiadomości</label></dt>
+                    <dd><input id="title" name="title" type="text" value=""></dd>
+
+
+                      <dt><label for="content">Treść wiadomości</label></dt>
+                      <dt><textarea name="content" id="content" style="width:250px;height:150px;"></textarea></dt>
+                   </dl>
+                  <p><input class="btn btn-primary" type=submit value="Wyślij"></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 {% endblock %}
 </center>

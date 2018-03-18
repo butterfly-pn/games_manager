@@ -187,7 +187,7 @@ def user_info_id(username):
 def user_messages(username):
     if session['username']==username or User.query.filter_by(username=session['username']).first().admin:
 
-        messages=Message.query.filter_by(adresser=username).all()
+        messages=Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
         try:
             if messages:
                 return render_template('user_messages.html', messages=messages, )
@@ -199,10 +199,41 @@ def user_messages(username):
 def message_print(id):
     if session['username'] == Message.query.filter_by(id=id).first().adresser or User.query.filter_by(username=session['username']).first().admin:
         message=Message.query.filter_by(id=id).first()
-        message.new=False
-        db.session.commit()
-        return render_template("message_normal.html", message=message)
+        if message.new:
+            message.new=False
+            db.session.commit()
+        return render_template("message_normal.html", message=message, user=Message.query.filter_by(id=id).first().adresser)
     return redirect("/")
+
+
+@app.route('/message/create', methods=['GET','POST'])
+def message_create():
+    if session['logged_in']:
+        if request.method=='GET':
+            return render_template('user_messages.html')
+        else:
+            name=request.form['username']
+            title=request.form['title']
+            content=request.form['content']
+            if not User.query.filter_by(username=name).first():
+                flash("nie ma takiego użytkownika")
+                return redirect("/message/create")
+
+            new_message=Message()
+            new_message.adresser=name
+            new_message.title=title
+            new_message.content=content
+            new_message.author=session['username']
+            new_message.created=datetime.now()
+            db.session.add(new_message)
+            db.session.commit()
+            flash("Wiadomość została wysłana")
+            return redirect('/user/' + session['username']+"/messages")
+    return redirect('/')
+
+
+
+
 
 
 """

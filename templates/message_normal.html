@@ -6,11 +6,12 @@
   <div class="row">
       <center>
         <h3>{{message.title}}</h3>
-        <br><h5>Wysłane przez: {{message.author}}</h5>
+        <br><h5>Wysłane przez: {{message.author}} w dniu {{message.created}}</h5>
           <br>{{message.content}}
           {% if "Zaproszenie do drużyny " in message.title %}
           <br><a href="/team/{{message.title[23:]}}/join/{{message.adresser}}">Dołącz do drużyny {{message.title[23:]}}</a>
           {%endif%}
+      <a href="/user/{{user}}/messages">Powrót do wiadomości</a>
       </center>
     <div class="col-12">
     </div>
