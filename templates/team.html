@@ -6,21 +6,40 @@
   <div class="row">
     <div class="col-12">
 
-      <h3>Nazwa zespołu: {{ team.name }}<br></h3>
+            <h3>Nazwa zespołu: {{ team.name }}<br></h3>
       Szef zespołu: <a href="/user/{{team.master}}">{{team.master}}</a> <br>
       Mail: {{ team.master_email }}<br>
       Członkowie: {% for i in team.contributors %}<a href="/user/{{i}}">{{i}}</a><a class="btn btn-primary" href="/team/{{team.name}}/delete/{{i}}">-</a>{% if loop.index != team.contributors|length %},{%endif%} {%endfor%}
-      {% if admin or session['username']==team.master %}
-
-
-          <form action="/team/{{team.name}}/invite" method="post">
-        Nazwa <input type="text" name="user" id="user" required><br>
-        <button type="submit">zaproś</button><br>
-            <br><a href="/delete-team/{{team.name}}">Usuń ten zespół</a>
-    </form>
-      {%endif%}
-
+      {% if admin or team.master==session['username'] %}
+      <br><br>
+      <button class="btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#add-to-team" href="#">+
+        </button>
+      {% endif %}
+      {% if admin or team.master==session['username'] %}
+      <br><a href="/delete-team/{{team.name}}">Usuń ten zespół</a>
+      {% endif %}
     </div>
   </div>
+  <div class="modal fade" id="add-to-team" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Dodaj do zespołu</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form method=post action="/team/{{team.name}}/invite">
+                  <dl>
+                    <dt><label for="username">Nazwa użytkownika</label></dt>
+                    <dd><input id="username" name="username" type="text" value=""></dd>
+                   </dl>
+                  <p><input class="btn btn-primary" type=submit value="Dodaj"></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 {% endblock %}
 </center>
