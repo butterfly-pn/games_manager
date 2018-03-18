@@ -9,7 +9,7 @@
       <h3>Nazwa zespołu: {{ team.name }}<br></h3>
       Szef zespołu: <a href="/user/{{team.master}}">{{team.master}}</a> <br>
       Mail: {{ team.master_email }}<br>
-      Członkowie: {% for i in team.contributors %}<a href="/user/{{i}}">{{i}}</a>{% if loop.index != team.contributors|length %},{%endif%} {%endfor%}
+      Członkowie: {% for i in team.contributors %}<a href="/user/{{i}}">{{i}}</a><a class="btn btn-primary" href="/team/{{team.name}}/delete/{{i}}">-</a>{% if loop.index != team.contributors|length %},{%endif%} {%endfor%}
       {% if admin or session['username']==team.master %}
 
 

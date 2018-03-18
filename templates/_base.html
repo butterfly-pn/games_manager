@@ -42,6 +42,9 @@
         <li class="nav-item{% if page_id == 'create-team' %} active{% endif %}">
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-team" href="#">Stwórz zespół</a>
         </li>
+        <li class="nav-item{% if page_id == 'create-jam' %} active{% endif %}">
+            <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-jam" href="#">Organizuj GAME-JAM</a>
+        </li>
         <li class="nav-item{% if page_id == 'logout' %} active{% endif %}">
           <a class="nav-link" href="{{ url_for('logout') }}">Wyloguj się</a>
         </li>
@@ -121,7 +124,38 @@
           </div>
         </div>
       </div>
-<!--The end of new team form,, the beginning of login form-->
+  <!--create-jam-->
+  <div class="modal fade" id="create-jam" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Stwórz GAME-JAM</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                {% if organizer or admin%}
+                <form method=post action="/create-jam/">
+                  <dl>
+                    <dt><label for="name">Nazwa GAME-JAMu</label></dt>
+                    <dd><input id="name" name="name" type="text" value=""></dd>
+                   </dl>
+                  <p><input class="btn btn-primary" type=submit value="Stwórz"></p>
+                </form>
+                {%else%}
+                <div class="row">
+                  <div class="col text-center">
+                  <p>Aby zorganizować GAME-JAM musisz być organizatorem</p>
+                  <a href="/become-organizer/" role="button" class="btn btn-secondary center">Zostań organizatorem</a>
+                </div>
+                </div>
+                {%endif%}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!--The end of new jam form,, the beginning of login form-->
 <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
