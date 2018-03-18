@@ -384,6 +384,9 @@ def team_join(team_name, username):
     return redirect('/')
 
 
+
+
+
 """
 Koniec obsługi drużyn, początek obsługi plików
 """
