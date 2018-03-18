@@ -25,9 +25,11 @@
        <a href="/message/{{message.id}}">{{message.title}}<br> wysłana przez {{message.author}}</a>
           {%endif%}
       {% endfor %}
+          <br><br><button class="btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#send_message" href="#">Nowa wiadomość
 
+          <br><br><a href="/user/{{user}}">Powrót do wiadomości</a>
         </center>
-      <button class="btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#send_message" href="#">Nowa wiadomość
+
 
     </div>
   </div>
