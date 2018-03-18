@@ -360,15 +360,17 @@ def team_join(team_name, username):
 def team_delete(team_name, username):
     if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master == session['username']:
         for contributor in Team.query.filter_by(name=team_name).first().contributors:
-            flash(contributor)
             if contributor == username:
-                if Team.query.filter_by(name=team_name).first().contributors.remove(contributor):
-                    db.session.commit
-                    flash('Pomyślnie usunięto username z drużyny'.replace('username', username))
-                    return redirect('team/'+team_name)
-                else:
-                    flash('Wystąpił błąd')
-                    return redirect('team/'+team_name)
+                contributors = Team.query.filter_by(name=team_name).first().contributors
+                contributors.remove(contributor)
+                Team.query.filter_by(name=team_name).first().contributors = contributors
+                print(contributors)
+                db.session.commit()
+                print(Team.query.filter_by(name=team_name).first().contributors)
+                flash('Pomyślnie usunięto username z drużyny'.replace('username', username))
+                return redirect('team/'+team_name)
+        flash('Błąd: Nie ma takiego użytkownika')
+        return redirect('team/'+team_name)
     else:
         flash("Błąd: Nie masz uprawnień", category='error')
         return redirect('team/'+team_name)
