@@ -330,6 +330,7 @@ def make_organizer(username):
     if User.query.filter_by(username=session['username']).first().admin:
         if User.query.filter_by(username=username).first():
             User.query.filter_by(username=username).first().organizer = True
+            User.query.filter_by(username=username).first().since=datetime.now()
             db.session.commit()
             flash("Użytkownik "+username+" jest organizatorem!")
             return redirect('/user/' + session['username'] + '/messages')
