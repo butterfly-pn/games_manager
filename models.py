@@ -7,6 +7,7 @@ from sqlalchemy.types import Integer
 from sqlalchemy.types import String
 from sqlalchemy.types import Boolean
 from sqlalchemy.types import PickleType
+from sqlalchemy.types import Date
 
 from datetime import datetime
 
@@ -26,6 +27,9 @@ class User(db.Model, UserMixin):
     job=Column(String(20),default='')
     organizer = Column(Boolean, default=False)
     admin = Column(Boolean, default=False)
+    birthdate = Column(String(20), default='')
+    about = Column(String(2000), default='')
+    why = Column(String(2000), default='')
 
 
     def is_active(self):

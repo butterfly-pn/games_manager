@@ -146,10 +146,38 @@
                 <div class="row">
                   <div class="col text-center">
                   <p>Aby zorganizować GAME-JAM musisz być organizatorem</p>
-                  <a href="/become-organizer/" role="button" class="btn btn-secondary center">Zostań organizatorem</a>
+                  <a role="presentation" data-toggle="modal" data-target="#become-organizer" href="#" data-dismiss="modal" class="btn btn-secondary center">Zostań organizatorem</a>
                 </div>
                 </div>
                 {%endif%}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- Become organizer -->
+<div class="modal fade" id="become-organizer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Zostań organizatorem</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form method=post action="/become-organizer/">
+                  <dl>
+                    <dt><label for="fullname">Pełne imię i nazwisko</label></dt>
+                    <dd><input id="fullname" name="fullname" type="text" value=""></dd>
+                    <dt><label for="birthdate">Data urodzenia</label></dt>
+                    <dd><input id="birthdate" name="birthdate" type="text" value=""></dd>
+                    <dt><label for="about">O tobie</label></dt>
+                    <dd><input id="about" name="about" type="text" value=""></dd>
+                    <dt><label for="why">Dlaczego chcesz organizować gamejam?</label></dt>
+                    <dd><input id="why" name="why" type="text" value=""></dd>
+                  </dl>
+                  <p><input class="btn btn-primary" type=submit value="Prześlij zgłoszenie"></p>
+                </form>
               </div>
             </div>
           </div>
