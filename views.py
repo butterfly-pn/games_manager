@@ -72,10 +72,10 @@ def register():
             used_username = User.query.filter_by(username=username).first()
             if used_username:
                 flash('Ta nazwa użytkowania jest już zajęta, proszę wybierz inną.')
-                return render_template('register.html', form=form, orgnizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
+                return render_template('register.html', form=form, organizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
             if "@" not in email:
                 flash('Podałeś nieprawidłowy adres email')
-                return render_template('register.html', form=form, orgnizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
+                return render_template('register.html', form=form, organizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
             user.email = email
             user.password = password
             user.username = username
@@ -89,7 +89,7 @@ def register():
             session['username'] = username
             user_admin = User.query.filter_by(username=session['username']).first().admin
             return redirect(url_for('homepage'))
-        return render_template('register.html', form=form, orgnizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
+        return render_template('register.html', form=form, organizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
     except Exception as error:
         flash(error)
         return redirect(url_for('homepage'))
@@ -671,7 +671,7 @@ def give_admin(id):
                 id=id).first() and User.query.filter_by(id=id).first() != User.query.filter_by(
                 username=session['username']).first():
             try:
-                User.query.filter_by(id=id).first().admin = 1
+                User.query.filter_by(id=id).first().admin = True
                 db.session.commit()
                 flash('Przekazano uprawnienia administratora użytkownikowi ' + str(
                     User.query.filter_by(id=id).first().username))
