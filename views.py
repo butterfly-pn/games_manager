@@ -246,7 +246,7 @@ def message_print(id):
 def message_create():
 
     if request.method=='GET':
-        return render_template('user_messages.html', organaizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
+        return render_template('user_messages.html', organizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
     else:
         name=request.form['username']
         title=request.form['title']
