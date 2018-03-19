@@ -31,9 +31,11 @@ def login_required(func):
 
     @wraps(func)
     def wrap(*args, **kwargs):
-        if 'logged_in' in session:
+        if not 'logged_in' in session:
+            flash("Musisz być zalogowany.")
+            return redirect('/')
+        else:
             return func(*args, **kwargs)
-        flash("Musisz być zalogowany.")
 
     return wrap
 
@@ -78,6 +80,7 @@ def register():
             user.password = password
             user.username = username
             user.job = job
+            user.organizer = False
             db.session.add(user)
             db.session.commit()
             flash("Dzięki za rejestrację!")
@@ -199,7 +202,7 @@ def user_info_id(username):
     user=User.query.filter_by(username=username).first()
     user_teams=Team.query.filter_by(master=username).all()
     teams = Team.query.order_by(Team.id.asc()).all()
-    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=teams,teams2=user_teams, orgnizer=organizer, admin=admin)
+    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=teams,teams2=user_teams, organizer=organizer, admin=admin)
 
 @app.route('/user/<username>/messages')
 @login_required
@@ -215,7 +218,7 @@ def user_messages(username):
         messages=Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
         try:
             if messages:
-                return render_template('user_messages.html', messages=messages, orgnizer=organizer, admin=admin)
+                return render_template('user_messages.html', messages=messages, organizer=organizer, admin=admin)
             return redirect('/')
         except:
             return redirect('/')
@@ -234,7 +237,7 @@ def message_print(id):
         if message.new:
             message.new=False
             db.session.commit()
-        return render_template("message_normal.html", message=message, user=Message.query.filter_by(id=id).first().adresser, orgnizer=organizer, admin=admin)
+        return render_template("message_normal.html", message=message, user=Message.query.filter_by(id=id).first().adresser, organizer=organizer, admin=admin)
     return redirect("/")
 
 
@@ -243,7 +246,7 @@ def message_print(id):
 def message_create():
 
     if request.method=='GET':
-        return render_template('user_messages.html', orgnizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
+        return render_template('user_messages.html', orgnaizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
     else:
         name=request.form['username']
         title=request.form['title']
@@ -313,7 +316,7 @@ def become_organizer():
             flash("Przyjęto zgłoszenie!")
             gc.collect()
             return redirect(url_for('homepage'))
-        return render_template('become-organizer.html', form=form, orgnizer=organizer, admin=admin)
+        return render_template('become-organizer.html', form=form, organizer=organizer, admin=admin)
     except Exception as error:
         flash(error)
         return redirect(url_for('homepage'))
@@ -323,7 +326,7 @@ def become_organizer():
 def make_organizer(username):
     if User.query.filter_by(username=session['username']).first().admin:
         if User.query.filter_by(username=username).first():
-            User.query.filter_by(username=username).first().organizer = 1
+            User.query.filter_by(username=username).first().organizer = True
             db.session.commit()
             flash("Użytkownik "+username+" jest organizatorem!")
             return redirect('/user/' + session['username'] + '/messages')
@@ -388,7 +391,7 @@ def team(team_name):
     this_team = Team.query.filter_by(name=team_name).first()
     admin = User.query.filter_by(username=session['username']).first().admin
     if this_team:
-        return render_template("team.html", team=this_team, orgnizer=organizer, admin=admin)
+        return render_template("team.html", team=this_team, organizer=organizer, admin=admin)
     return render_template('404.html'), 404
 
 class NewTeamForm(Form):
