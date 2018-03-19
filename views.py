@@ -401,7 +401,6 @@ def team(team_name):
 class NewTeamForm(Form):
     name = StringField('Nazwa zespołu', [validators.Length(min=4, max=20)])
 
-
 @app.route('/create-team/', methods=["GET", "POST"])
 @login_required
 def create_team():
@@ -433,7 +432,6 @@ def create_team():
     except Exception as error:
         flash(error)
         return redirect(url_for('homepage'))
-
 
 @app.route('/delete-team/<team_name>')
 @login_required
