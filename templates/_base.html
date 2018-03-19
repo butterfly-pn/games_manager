@@ -137,8 +137,11 @@
                 {% if organizer or admin%}
                 <form method=post action="/create-jam/">
                   <dl>
-                    <dt><label for="name">Nazwa GAME-JAMu</label></dt>
-                    <dd><input id="name" name="name" type="text" value=""></dd>
+                    <dt><label for="jam_name">Nazwa GAME-JAMu</label></dt>
+                    <dd><input id="jam_name" name="jam_name" type="text" value=""></dd>
+
+                    <dt><label for="jam_theme">Motyw przewodni jamu</label></dt>
+                    <dd><input id="jam_theme" name="jam_theme" type="text" value=""></dd>
                    </dl>
                   <p><input class="btn btn-primary" type=submit value="Stwórz"></p>
                 </form>
