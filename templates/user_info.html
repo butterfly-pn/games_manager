@@ -15,8 +15,7 @@
                 <p><a class="btn btn-primary" href="/admin">Funkcje administratora  </a></p><br>
                 {%endif%}
 
-
-                <a class="btn btn-primary" href="/user/{{user.username}}/messages">Twoje wiadomości</a><br>
+                <a class="btn btn-primary" href="/user/{{user.username}}/messages">Twoje wiadomości<span class="ml-2 badge badge-primary badge-pill" style="background-color: #999999;">{{new_messages}}</span></a><br>
 
             {%else%}
                 Widzisz profil użytkownika {{user.username}}<br>
