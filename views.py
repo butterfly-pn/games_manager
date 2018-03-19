@@ -4,7 +4,7 @@ from main import app
 from main import db
 from main import bcrypt
 from main import lm
-from models import User, Team, Message
+from models import User, Team, Message, Jam
 import gc
 from passlib.hash import sha256_crypt
 from functools import wraps
@@ -166,7 +166,7 @@ def homepage():
     except KeyError:
         organizer = False
         admin = False
-    return render_template('main.html', orgnizer=organizer, admin=admin)
+    return render_template('main.html', organizer=organizer, admin=admin)
 
 
 @app.route("/info/")
@@ -264,6 +264,11 @@ def message_create():
         return redirect('/user/' + session['username']+"/messages")
 
 
+"""
+Koniec informacji o użytkowniku, początek informacji o organizatorach
+"""
+
+
 class OrganizerForm(Form):
     fullname = StringField('Imię i nazwisko', [validators.InputRequired(' ')])
     birthdate = StringField('Data urodzenia', [validators.Length(min=6)])
@@ -295,7 +300,7 @@ def become_organizer():
             organizer.why = why
             for admin in User.query.filter_by(admin=True).all():
                 name = admin.username
-                title = 'Nowe zgłoszenie'
+                title = 'Nowe zgłoszenie na organizatora'
                 content = 'Użytkownik '+str(session['username'])+' chce zostać organizatorem <br> Imię i nazwisko: '+str(fullname)+'<br> Data urodzenia: '+str(birthdate)+'<br> O mnie: '+str(about) +'<br> Dlaczego: '+str(why) +'<br><br> <a href=\'/make-organizer/'+session['username']+'\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
                 new_message = Message()
                 new_message.adresser = name
@@ -318,9 +323,9 @@ def become_organizer():
 def make_organizer(username):
     if User.query.filter_by(username=session['username']).first().admin:
         if User.query.filter_by(username=username).first():
-            User.query.filter_by(username=username).first().organizer = True
+            User.query.filter_by(username=username).first().organizer = 1
             db.session.commit()
-            flash("Użytkownik jest organizatorem!")
+            flash("Użytkownik "+username+" jest organizatorem!")
             return redirect('/user/' + session['username'] + '/messages')
         else:
             flash("Błąd: Użytkownik nie istnieje")
@@ -331,7 +336,7 @@ def make_organizer(username):
 
 
 """
-Koniec informacji o użytkowniku, początek usuwania użytkownika
+Koniec informacji o organizatorach, początek usuwania użytkownika
 """
 
 
@@ -508,7 +513,55 @@ def team_delete(team_name, username):
         return redirect('team/'+team_name)
 
 """
-Koniec obsługi drużyn, początek obsługi plików
+Koniec obsługi drużyn, początek obsługi jamów
+"""
+
+class JamCreationForm(Form):
+    jam_name =  StringField("nazwa GAME-JAMu", [validators.InputRequired(' ')])
+    jam_theme = StringField("motyw przewodni jamu", [validators.InputRequired(' ')])
+
+
+@app.route('/create-jam/', methods=['GET', 'POST'])
+@login_required
+def jam_creation():
+    print("NNNNNNNNNNNNNNNNNNN")
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
+        print('TWOJA MAMA')
+    try:
+        if admin or organizer:
+            form = JamCreationForm(request.form)
+            if form.validate():
+                print('gg')
+                name = form.jam_name.data
+                theme = form.jam_theme.data
+                master = User.query.filter_by(username=session['username']).first()
+                new_jam = Jam()
+                new_jam.title=name
+                new_jam.theme=theme
+                new_jam.master=master.username
+                new_jam.master_email=master.email
+                new_jam.active=True
+                db.session.add(new_jam)
+                db.session.commit()
+                flash("Jam stworzony!")
+                gc.collect()
+                return redirect(url_for('homepage'))
+            flash("Operacja nie powiodła się")
+            return redirect('/')
+        flash('Nie masz uprawnień aby wchodzić na tą stronę')
+        return redirect(url_for('homeage'))
+    except Exception as error:
+        flash(error)
+        return redirect(url_for('homepage'))
+
+
+"""
+Koniec jamów początek plików
 """
 
 
