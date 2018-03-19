@@ -12,14 +12,14 @@
       Członkowie: {% for i in team.contributors %}
       <div class="btn-group" role="group" aria-label="User">
       <a class="btn btn-primary" href="/user/{{i}}">{{i}}</a>
+        {% if admin or team.master==session['username'] %}
       <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{i}}" href="#">-</button>
+        {%endif%}
       </div>
       {% if loop.index != team.contributors|length %},{%endif%} {%endfor%}
       {% if admin or team.master==session['username'] %}
       <button class="ml-5 btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#add-to-team" href="#">+
         </button><br>
-      {% endif %}
-      {% if admin or team.master==session['username'] %}
       <br><button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#">Usuń ten zespół</button>
       {% endif %}
     </div>
