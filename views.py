@@ -351,8 +351,12 @@ def delete(id):
     if id == User.query.filter_by(username=session['username']).first().id or User.query.filter_by(
             username=session['username']).first().admin:
         user = User.query.filter_by(id=id).first()
-
         if user:
+            messages=Message.query.filter_by(adresser=user.username).all()
+            for message in messages:
+                db.session.delete(message)
+            db.session.commit()
+            gc.collect()
             if id == User.query.filter_by(username=session['username']).first().id:
                 db.session.delete(user)
                 db.session.commit()
@@ -527,14 +531,12 @@ class JamCreationForm(Form):
 @app.route('/create-jam/', methods=['GET', 'POST'])
 @login_required
 def jam_creation():
-    print("NNNNNNNNNNNNNNNNNNN")
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         admin = User.query.filter_by(username=session['username']).first().admin
     except KeyError:
         organizer = False
         admin = False
-        print('TWOJA MAMA')
     try:
         if admin or organizer:
             form = JamCreationForm(request.form)
