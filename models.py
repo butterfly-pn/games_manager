@@ -77,6 +77,7 @@ class Jam(db.Model):
     __tablename__ = 'jam'
     id = Column(Integer, autoincrement=True, primary_key=True)
     title = Column(String(20), unique=True)
+    theme = Column(String(100))
     master_email = Column(String(200))
     master = Column(String(200))
     teams = Column(PickleType())
