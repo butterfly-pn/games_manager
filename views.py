@@ -222,9 +222,7 @@ def user_messages(username):
 
         messages=Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
         try:
-            if messages:
-                return render_template('user_messages.html', messages=messages, user=username, organizer=organizer, admin=admin)
-            return redirect('/')
+            return render_template('user_messages.html', messages=messages, user=username, organizer=organizer, admin=admin)
         except:
             return redirect('/')
 
@@ -513,6 +511,11 @@ def team_delete(team_name, username):
                 Team.query.filter_by(name=team_name).first().contributors = contributors
                 print(contributors)
                 db.session.commit()
+                invite_message = Message.query.filter_by(adresser=username, title = "Zaproszenie do drużyny "+team_name).first()
+                if invite_message:
+                    db.session.delete(invite_message)
+                    db.session.commit()
+                    print("usunięte")
                 print(Team.query.filter_by(name=team_name).first().contributors)
                 flash('Pomyślnie usunięto username z drużyny'.replace('username', username))
                 return redirect('team/'+team_name)
