@@ -69,7 +69,6 @@ class Team(db.Model):
     master = Column(String(200))
     contributors = Column(PickleType())
 
-
 class Jam(db.Model):
     """
     Jam model

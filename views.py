@@ -401,6 +401,7 @@ def team(team_name):
         return render_template("team.html", team=this_team, organizer=organizer, admin=admin)
     return render_template('404.html'), 404
 
+
 class NewTeamForm(Form):
     name = StringField('Nazwa zespołu', [validators.Length(min=4, max=20)])
 
