@@ -32,7 +32,6 @@ class User(db.Model, UserMixin):
     since = Column(db.DateTime())
     why = Column(db.Text(), default='')
 
-
     def is_active(self):
         """
         Returns if user is active.

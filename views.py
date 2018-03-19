@@ -281,7 +281,6 @@ class OrganizerForm(Form):
     about = TextAreaField('O sobie')
     why = TextAreaField('Dlaczego chcesz organizować gamejam?')
 
-
 @app.route('/become-organizer/', methods=['GET', 'POST'])
 @login_required
 def become_organizer():
