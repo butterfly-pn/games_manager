@@ -4,34 +4,33 @@
 <center>
 {% block content %}
   <div class="row">
-      <center>
+      <div class="col">
 
             {%if user.username==session['username']%}
-                <p>Jesteś zalogowany jako {{ session['username'] }}</p>
-                <p><a href="/delete/{{user.id}}" > Usuń swoje konto</a></p>
+                <p>Jesteś zalogowany jako {{ session['username'] }}</p><br>
+                <p><button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#" > Usuń swoje konto</button></p><br>
 
 
                 {% if admin %}
-                <p><a href="/admin">Funkcje administratora  </a></p>
+                <p><a class="btn btn-primary" href="/admin">Funkcje administratora  </a></p><br>
                 {%endif%}
-                <br>
 
-                <a href="/user/{{user.username}}/messages">Twoje wiadomości</a>
+                <a class="btn btn-primary" href="/user/{{user.username}}/messages">Twoje wiadomości<span class="ml-2 badge badge-primary badge-pill" style="background-color: #999999;">{{new_messages}}</span></a><br>
 
             {%else%}
-                Widzisz profil użytkownika {{user.username}}
+                Widzisz profil użytkownika {{user.username}}<br>
             {%endif%}
 
             <br>
       {%if teams2%}
        {%if user.username==session['username']%}
-      twoje zespoły:
+      twoje zespoły:<br>
           {%else%}
-          Zespoły użytkownika
+          Zespoły użytkownika<br>
           {%endif%}
           <ol>
         {% for team in teams2 %}
-      <li> <a href="/team/{{team.name}}">{{team.name}}</a>,</li>
+      <li> <a class="btn btn-primary" href="/team/{{team.name}}">{{team.name}}</a>,</li><br>
       {% endfor %}
           </ol>
           {%endif%}
@@ -41,23 +40,43 @@
 
             {%if teams%}
        {% if user.username==session['username'] %}
-      Zespoły, w których jesteś:
+      Zespoły, w których jesteś:<br>
           {%else%}
-          Zespoły, do których użytkownik należy
+          Zespoły, do których użytkownik należy<br>
           {%endif%}
           <ol>
         {% for team in teams %}
        {% if user.username in team.contributors%}
-              <li><a href="/team/{{team.name}}">{{team.name}}</a></li>
+              <li><a href="/team/{{team.name}}">{{team.name}}</a></li><br>
         {%endif%}
       {% endfor %}
           </ol>
           {%endif%}
 
+  {%if user.username==session['username']%}
+         <div class="modal fade" id="are-you-sure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <p>Właśnie zamierzasz usunąć użytkownika <b>{{user.username}}</b>. Jesteś tego pewien?</p>
+                <a class="btn btn-danger" href="/delete/{{user.id}}">Usuń</a>
+                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  {%endif%}
 
 
 
-    </center>
+</div>
     <div class="col-12">
     </div>
   </div>
