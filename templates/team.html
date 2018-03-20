@@ -3,12 +3,22 @@
 {% set page_id = "team" %}
 <center>
 {% block content %}
+  <div class="row mt-3">
+    <div class="col-8">
+      <h2>{{ team.name }}</h2>
+    </div>
+    <div class="col-4">
+      <a class="btn btn-primary btn-block" href="/user/{{team.master}}">Szef zespołu: {{team.master}}</a><br>
+      <a class="btn btn-primary btn-block" href="">Mail: {{ team.master_email }}</a>
+      {% if admin or team.master==session['username'] %}
+      <hr>
+      <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#">Usuń ten zespół</button>
+      {%endif%}
+    </div>
+  </div>
+  <hr>
   <div class="row">
-    <div class="col-12">
-
-            <h3>Nazwa zespołu: {{ team.name }}<br></h3>
-      Szef zespołu: <a href="/user/{{team.master}}">{{team.master}}</a> <br>
-      Mail: {{ team.master_email }}<br>
+    <div class="col-6">
       Członkowie: {% for i in team.contributors %}
       <div class="btn-group" role="group" aria-label="User">
       <a class="btn btn-primary" href="/user/{{i}}">{{i}}</a>
@@ -23,7 +33,9 @@
       <br><button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#">Usuń ten zespół</button>
       {% endif %}
     </div>
+    <div class="col-6"></div>
   </div>
+
   {% if admin or team.master==session['username'] %}
   <div class="modal fade" id="add-to-team" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
