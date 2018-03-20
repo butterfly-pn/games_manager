@@ -8,7 +8,7 @@
       <h3>Gry do pobrania:<br></h3>
       <ol>
         {% for file in files %}
-        <li><a href="/download/{{file}}"> {{ file }} </a></li>
+        <li><a href="/download/{{file}}"> {{ file }} </a><a href="/download/{{file}}" download="{{file}}"><button>Download</button></a> </li>
         <br>
         {% endfor %}
       </ol>
