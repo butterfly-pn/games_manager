@@ -29,7 +29,6 @@ class User(db.Model, UserMixin):
     admin = Column(Boolean, default=False)
     birthdate = Column(String(20), default='')
     about = Column(db.Text(), default='')
-    since = Column(db.DateTime())
     why = Column(db.Text(), default='')
 
     def is_active(self):
