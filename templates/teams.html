@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+
+{% set page_id = 'become-organizer' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-2"></div>
+        Drużyny:
+           {% for t in teams %}
+        <a class="btn btn-primary" href="/team/{{t.name}}">{{t.name}} ></a></li><br>
+        {% endfor %}
+
+    <div class="col-2"></div>
+  </div>
+{% endblock %}

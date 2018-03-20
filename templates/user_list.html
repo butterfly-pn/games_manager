@@ -9,16 +9,18 @@
           <h4>ADMINI:</h4>
               {%for u in users%}
           {%if u.admin and u.id!=1%}
-               <br><a href="/admin/user/{{u.id}}">{{u.username}}</a></h3>,
+          <a class="btn btn-primary" href="/admin/user/{{u.id}}"> Użytkownik {{u.username}} ><span class="ml-2 badge badge-primary badge-pill" style="background-color: #999999;"></span></a><br>
               <br>
+          <br>
           {%endif%}
               {%endfor%}
-          <br>
-          <br>
+          
           <h4>UŻYTKOWNICY: </h4>
           {%for a in users%}
             {%if a.id!=1%}
-               <br> <a href='/admin/user/{{a.id}}'>{{a.username}}</a></h3>
+               <a class="btn btn-primary" href="/admin/user/{{a.id}}"> Użytkownik {{a.username}} ><span class="ml-2 badge badge-primary badge-pill" style="background-color: #999999;"></span></a><br>
+                        <br>
+
           {%endif%}
               {%endfor%}
           <br>
