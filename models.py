@@ -7,6 +7,7 @@ from sqlalchemy.types import Integer
 from sqlalchemy.types import String
 from sqlalchemy.types import Boolean
 from sqlalchemy.types import PickleType
+from sqlalchemy.types import Date
 
 from datetime import datetime
 
@@ -26,7 +27,9 @@ class User(db.Model, UserMixin):
     job=Column(String(20),default='')
     organizer = Column(Boolean, default=False)
     admin = Column(Boolean, default=False)
-
+    birthdate = Column(String(20), default='')
+    about = Column(db.Text(), default='')
+    why = Column(db.Text(), default='')
 
     def is_active(self):
         """
@@ -65,7 +68,6 @@ class Team(db.Model):
     master = Column(String(200))
     contributors = Column(PickleType())
 
-
 class Jam(db.Model):
     """
     Jam model
@@ -73,6 +75,7 @@ class Jam(db.Model):
     __tablename__ = 'jam'
     id = Column(Integer, autoincrement=True, primary_key=True)
     title = Column(String(20), unique=True)
+    theme = Column(String(100))
     master_email = Column(String(200))
     master = Column(String(200))
     teams = Column(PickleType())

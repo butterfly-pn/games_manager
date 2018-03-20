@@ -4,12 +4,13 @@ from main import app
 from main import db
 from main import bcrypt
 from main import lm
-from models import User, Team, Message
+from models import User, Team, Message, Jam
 import gc
 from passlib.hash import sha256_crypt
 from functools import wraps
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_from_directory
-from wtforms import Form, validators, StringField, PasswordField, BooleanField
+from wtforms import Form, validators, StringField, PasswordField, BooleanField, TextAreaField
+from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
 from datetime import datetime
 
@@ -30,9 +31,11 @@ def login_required(func):
 
     @wraps(func)
     def wrap(*args, **kwargs):
-        if 'logged_in' in session:
+        if not 'logged_in' in session:
+            flash("Musisz być zalogowany.")
+            return redirect('/')
+        else:
             return func(*args, **kwargs)
-        flash("Musisz być zalogowany.")
 
     return wrap
 
@@ -77,6 +80,7 @@ def register():
             user.password = password
             user.username = username
             user.job = job
+            user.organizer = False
             db.session.add(user)
             db.session.commit()
             flash("Dzięki za rejestrację!")
@@ -159,12 +163,24 @@ Koniec Logowania, Początek Podstawowych informacji o stronie
 @app.route("/")
 def homepage():
     """Wyświetla stronę do testowania rejestracji i logowania"""
-    return render_template('main.html')
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
+    return render_template('main.html', organizer=organizer, admin=admin)
 
 
 @app.route("/info/")
 def info():
-    return render_template("info.html")
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
+    return render_template("info.html", organizer=organizer, admin=admin)
 
 
 """
@@ -172,57 +188,177 @@ Koniec podstawowych informacji o stronie, początek informacji o użytkowniku
 """
 
 
-@app.route('/user/<username>')
+@app.route('/user/<username>/')
 def user_info_id(username):
     """
     Tu będą wyświetlane gamejamy, drużyny, gry i dokłade dane dotyczące użytkownika
     """
-    if User.query.filter_by(username=session['username']).first().admin or session['username']==username:
-        user=User.query.filter_by(username=username).first()
-        user_teams=Team.query.filter_by(master=username).all()
-        teams = Team.query.order_by(Team.id.asc()).all()
-        admin=User.query.filter_by(username=session['username']).first().admin
-        return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, admin=admin, teams=teams,teams2=user_teams)
-    flash('nie masz dotępu do tej strony')
-    return render_template('/')
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
+    user=User.query.filter_by(username=username).first()
+    user_teams=Team.query.filter_by(master=username).all()
+    teams = Team.query.order_by(Team.id.asc()).all()
+    messages = Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
+    new_messages=0
+    for message in messages:
+        if message.new:
+            new_messages += 1
+    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages)
 
 @app.route('/user/<username>/messages')
+@login_required
 def user_messages(username):
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
     if session['username']==username or User.query.filter_by(username=session['username']).first().admin:
-        m=[]
 
-        messages=Message.query.filter_by(adresser=username).all()
+        messages=Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
         try:
-            if messages:
-                return render_template('user_messages.html', messages=messages, )
-            return redirect('/')
+            return render_template('user_messages.html', messages=messages, user=username, organizer=organizer, admin=admin)
         except:
             return redirect('/')
 
 @app.route('/message/<id>')
+@login_required
 def message_print(id):
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
     if session['username'] == Message.query.filter_by(id=id).first().adresser or User.query.filter_by(username=session['username']).first().admin:
         message=Message.query.filter_by(id=id).first()
-        message.new=False
-        db.session.commit()
-        return render_template("message_normal.html", message=message)
+        if message.new:
+            message.new=False
+            db.session.commit()
+        return render_template("message_normal.html", message=message, user=Message.query.filter_by(id=id).first().adresser, organizer=organizer, admin=admin)
     return redirect("/")
 
 
+@app.route('/message/create', methods=['GET','POST'])
+@login_required
+def message_create():
+
+    if request.method=='GET':
+        return render_template('user_messages.html', organizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
+    else:
+        name=request.form['username']
+        title=request.form['title']
+        content=request.form['content']
+        if not User.query.filter_by(username=name).first():
+            flash("nie ma takiego użytkownika")
+            return redirect("/message/create")
+
+        new_message=Message()
+        new_message.adresser=name
+        new_message.title=title
+        new_message.content=content
+        new_message.author=session['username']
+        new_message.created=datetime.now()
+        db.session.add(new_message)
+        db.session.commit()
+        flash("Wiadomość została wysłana")
+        return redirect('/user/' + session['username']+"/messages")
+
+
 """
-Koniec informacji o użytkowniku, początek usuwania użytkownika
+Koniec informacji o użytkowniku, początek informacji o organizatorach
+"""
+
+
+class OrganizerForm(Form):
+    fullname = StringField('Imię i nazwisko', [validators.InputRequired(' ')])
+    birthdate = StringField('Data urodzenia', [validators.Length(min=6)])
+    about = TextAreaField('O sobie')
+    why = TextAreaField('Dlaczego chcesz organizować gamejam?')
+
+@app.route('/become-organizer/', methods=['GET', 'POST'])
+@login_required
+def become_organizer():
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
+    try:
+        form = OrganizerForm(request.form)
+        if request.method == "POST" and form.validate():
+            print('gg')
+            fullname = form.fullname.data
+            birthdate = form.birthdate.data
+            about = form.about.data
+            why = form.why.data
+            organizer = User.query.filter_by(username=session['username']).first()
+            organizer.fullname = fullname
+            organizer.birthdate = birthdate
+            organizer.about = about
+            organizer.why = why
+            for admin in User.query.filter_by(admin=True).all():
+                name = admin.username
+                title = 'Nowe zgłoszenie na organizatora'
+                content = 'Użytkownik '+str(session['username'])+' chce zostać organizatorem <br> Imię i nazwisko: '+str(fullname)+'<br> Data urodzenia: '+str(birthdate)+'<br> O mnie: '+str(about) +'<br> Dlaczego: '+str(why) +'<br><br> <a href=\'/make-organizer/'+session['username']+'\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
+                new_message = Message()
+                new_message.adresser = name
+                new_message.title = title
+                new_message.content = content
+                new_message.author = 'GAMEJAM'
+                new_message.created = datetime.now()
+                db.session.add(new_message)
+            db.session.commit()
+            flash("Przyjęto zgłoszenie!")
+            gc.collect()
+            return redirect(url_for('homepage'))
+        return render_template('become-organizer.html', form=form, organizer=organizer, admin=admin)
+    except Exception as error:
+        flash(error)
+        return redirect(url_for('homepage'))
+
+@app.route('/make-organizer/<username>')
+@login_required
+def make_organizer(username):
+    if User.query.filter_by(username=session['username']).first().admin:
+        if User.query.filter_by(username=username).first():
+            User.query.filter_by(username=username).first().organizer = True
+            db.session.commit()
+            flash("Użytkownik "+username+" jest organizatorem!")
+            return redirect('/user/' + session['username'] + '/messages')
+        else:
+            flash("Błąd: Użytkownik nie istnieje")
+            return redirect('/user/'+session['username']+'/messages')
+    else:
+        flash("Błąd: Nie masz uprawnień")
+        return redirect('/user/' + session['username'] + '/messages')
+
+
+"""
+Koniec informacji o organizatorach, początek usuwania użytkownika
 """
 
 
 @app.route('/delete/<int:id>')
+@login_required
 def delete(id):
     """NIE DZIAłA NA UŻYTKOWNIKA PIOTR"""
     """Funkcja usuwa użytkownika, po czym jeżeli zalogoway użytkownik to admin, zwraca listę użytkowników, w przeciwnym przypadku wraca na stronę główną"""
     if id == User.query.filter_by(username=session['username']).first().id or User.query.filter_by(
             username=session['username']).first().admin:
         user = User.query.filter_by(id=id).first()
-
         if user:
+            messages=Message.query.filter_by(adresser=user.username).all()
+            for message in messages:
+                db.session.delete(message)
+            db.session.commit()
+            gc.collect()
             if id == User.query.filter_by(username=session['username']).first().id:
                 db.session.delete(user)
                 db.session.commit()
@@ -252,81 +388,89 @@ Koniec usuwania użytkownika, początek obsługi drużyn
 @app.route("/team/<team_name>")
 def team(team_name):
     """wyświetla informacje o drużynie"""
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
     this_team = Team.query.filter_by(name=team_name).first()
     admin = User.query.filter_by(username=session['username']).first().admin
     if this_team:
-        return render_template("team.html", team=this_team, admin=admin)
+        return render_template("team.html", team=this_team, organizer=organizer, admin=admin)
     return render_template('404.html'), 404
 
 
 class NewTeamForm(Form):
-    """Forma do rejestracji"""
     name = StringField('Nazwa zespołu', [validators.Length(min=4, max=20)])
-
 
 @app.route('/create-team/', methods=["GET", "POST"])
 @login_required
 def create_team():
-    if session['logged_in']==True:
-        try:
-            form = NewTeamForm(request.form)
-            if request.method == "POST" and form.validate():
-                name = form.name.data
-                used_name = Team.query.filter_by(name=name).first()
-                if used_name:
-                    flash('Ta nazwa użytkowania jest już zajęta, proszę wybierz inną.')
-                    return render_template('create-team.html', form=form)
-                new_team = Team()
-                new_team.name = name
-                new_team.master = session['username']
-                new_team.master_email = User.query.filter_by(username=session['username']).first().email
-                new_team.contributors = [session['username']]
-                db.session.add(new_team)
-                db.session.commit()
-                flash("Zespół został stworzony!")
-                gc.collect()
-                return redirect(url_for('homepage'))
-            return render_template('create-team.html', form=form)
-        except Exception as error:
-            flash(error)
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
+    try:
+        form = NewTeamForm(request.form)
+        if request.method == "POST" and form.validate():
+            name = form.name.data
+            used_name = Team.query.filter_by(name=name).first()
+            if used_name:
+                flash('Ta nazwa użytkowania jest już zajęta, proszę wybierz inną.')
+                return render_template('create-team.html', form=form, organizer=organizer, admin=admin)
+            new_team = Team()
+            new_team.name = name
+            new_team.master = session['username']
+            new_team.master_email = User.query.filter_by(username=session['username']).first().email
+            new_team.contributors = [session['username']]
+            db.session.add(new_team)
+            db.session.commit()
+            flash("Zespół został stworzony!")
+            gc.collect()
             return redirect(url_for('homepage'))
-    else:
-        flash("Musisz być zalogowany")
+        return render_template('create-team.html', form=form, organizer=organizer, admin=admin)
+    except Exception as error:
+        flash(error)
         return redirect(url_for('homepage'))
 
 @app.route('/delete-team/<team_name>')
 @login_required
 def delete_team(team_name):
-    if session['logged_in']==True:
-        try:
-           if User.query.filter_by(username=session['username']).first().admin:
-               this_team = Team.query.filter_by(name=team_name).first()
-               db.session.delete(this_team)
-               db.session.commit()
-               flash("Usunięto zespół!")
-               return redirect(url_for('homepage'))
-           else:
-               flash("Nie masz uprawnień")
-               return redirect(url_for('homepage'))
-        except Exception as error:
-            flash(error)
-            return redirect(url_for('homepage'))
-    else:
-        flash("Musisz być zalogowany")
+    try:
+       if User.query.filter_by(username=session['username']).first().admin:
+           this_team = Team.query.filter_by(name=team_name).first()
+           db.session.delete(this_team)
+           db.session.commit()
+           flash("Usunięto zespół!")
+           return redirect(url_for('homepage'))
+       else:
+           flash("Nie masz uprawnień")
+           return redirect(url_for('homepage'))
+    except Exception as error:
+        flash(error)
         return redirect(url_for('homepage'))
 
+
 @app.route('/team/<team_name>/invite', methods=['GET','POST'])
+@login_required
 def invite_redirect(team_name):
     if request.method=='GET':
-        return render_template('team.html')
+        return render_template('team.html', organizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
     else:
-        name=request.form['user']
-        if User.query.filter_by(username=name).first():
-            return redirect("/team/"+team_name+'/invite/'+name)
-        flash("Nie ma takiego użytkownika")
-        return redirect('/team/'+team_name)
+        name=request.form['username']
+        if not Message.query.filter_by(adresser=name, title="Zaproszenie do drużyny "+team_name).first():
+            if User.query.filter_by(username=name).first():
+                return redirect("/team/"+team_name+'/invite/'+name)
+            flash("Nie ma takiego użytkownika")
+            return redirect('/team/'+team_name)
+        flash("Ten użytkownik został już zaproszony")
+        return redirect('/team/' + team_name)
 
 @app.route('/team/<team_name>/invite/<username>')
+@login_required
 def team_invite(team_name,username):
     if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master==session['username']:
         new_message = Message()
@@ -341,21 +485,93 @@ def team_invite(team_name,username):
         return redirect('/team/'+team_name)
     return redirect("/")
 
+
 @app.route('/team/<team_name>/join/<username>')
+@login_required
 def team_join(team_name, username):
     if User.query.filter_by(username=session['username']).first().admin or Message.query.filter_by(title="Zaproszenie do drużyny "+team_name, adresser=username).first().adresser==username:
-        team=Team.query.filter_by(name=team_name).first()
-        cont=team.contributors[:]
-        cont.append(username)
-        team.contributors=cont[:]
-        db.session.commit()
-        flash('Pomyślnie dołączono do drużyny')
+        if not username in Team.query.filter_by(name=team_name).first().contributors:
+            team=Team.query.filter_by(name=team_name).first()
+            cont=team.contributors[:]
+            cont.append(username)
+            team.contributors=cont[:]
+            db.session.commit()
+            flash('Pomyślnie dołączono do drużyny')
         return redirect('/team/'+team_name)
     return redirect('/')
 
+@app.route('/team/<team_name>/delete/<username>')
+@login_required
+def team_delete(team_name, username):
+    if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master == session['username']:
+        for contributor in Team.query.filter_by(name=team_name).first().contributors:
+            if contributor == username:
+                contributors = Team.query.filter_by(name=team_name).first().contributors
+                contributors.remove(contributor)
+                Team.query.filter_by(name=team_name).first().contributors = contributors
+                print(contributors)
+                db.session.commit()
+                invite_message = Message.query.filter_by(adresser=username, title = "Zaproszenie do drużyny "+team_name).first()
+                if invite_message:
+                    db.session.delete(invite_message)
+                    db.session.commit()
+                    print("usunięte")
+                print(Team.query.filter_by(name=team_name).first().contributors)
+                flash('Pomyślnie usunięto username z drużyny'.replace('username', username))
+                return redirect('team/'+team_name)
+        flash('Błąd: Nie ma takiego użytkownika')
+        return redirect('team/'+team_name)
+    else:
+        flash("Błąd: Nie masz uprawnień", category='error')
+        return redirect('team/'+team_name)
 
 """
-Koniec obsługi drużyn, początek obsługi plików
+Koniec obsługi drużyn, początek obsługi jamów
+"""
+
+class JamCreationForm(Form):
+    jam_name =  StringField("nazwa GAME-JAMu", [validators.InputRequired(' ')])
+    jam_theme = StringField("motyw przewodni jamu", [validators.InputRequired(' ')])
+
+
+@app.route('/create-jam/', methods=['GET', 'POST'])
+@login_required
+def jam_creation():
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
+    try:
+        if admin or organizer:
+            form = JamCreationForm(request.form)
+            if form.validate():
+                name = form.jam_name.data
+                theme = form.jam_theme.data
+                master = User.query.filter_by(username=session['username']).first()
+                new_jam = Jam()
+                new_jam.title=name
+                new_jam.theme=theme
+                new_jam.master=master.username
+                new_jam.master_email=master.email
+                new_jam.active=True
+                db.session.add(new_jam)
+                db.session.commit()
+                flash("Jam stworzony!")
+                gc.collect()
+                return redirect(url_for('homepage'))
+            flash("Operacja nie powiodła się")
+            return redirect('/')
+        flash('Nie masz uprawnień aby wchodzić na tą stronę')
+        return redirect(url_for('homeage'))
+    except Exception as error:
+        flash(error)
+        return redirect(url_for('homepage'))
+
+
+"""
+Koniec jamów początek plików
 """
 
 
@@ -364,9 +580,16 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/download", methods=['GET', 'POST'])
+@login_required
 def download():
     """Lista plików do pobrania oraz upload"""
     """ROZłOŻYć NA OSOBNY DOWNLOAD I UPLOAD"""
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
     files = os.listdir(UPLOAD_FOLDER)
     if request.method == 'POST':
         # check if the post request has the file part
@@ -384,7 +607,7 @@ def download():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('download',
                                     files=files))
-    return render_template('download.html', files=files)
+    return render_template('download.html', files=files, organizer=organizer, admin=admin)
 
 @app.route('/download/<filename>')
 def uploaded_file(filename):
@@ -398,54 +621,55 @@ Koniec obsługi plików, początek obsługi konta administratora
 
 
 @app.route("/admin")
+@login_required
 def admin():
     """to samo co user info tylko dla admina"""
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
     if User.query.filter_by(username=session['username']).first().admin:
-        return render_template('admin.html')
+        return render_template('admin.html', organizer=organizer, admin=admin)
     return redirect('/')
 
 @app.route("/user_list")
+@login_required
 def user_list():
     """wyświetla listę użytkowników wraz z linkami dla adminów do edycji kont użytkowników"""
     """nie wyświetla użytkownika piotr"""
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
     if User.query.filter_by(username=session['username']).first().admin:
-        admins = User.query.filter_by(admin=True).all()
-        i = []
-        a = []
-        f = -1
-        for admin in admins:
-            a.append(User.query.filter_by(id=int(
-                str(admin)[str(admin).find('>') - (str(admin).find('>') - 6):str(admin).find('>')])).first().username)
-            i.append(User.query.filter_by(username=a[-1]).first().id)
-            f += 1
-        del a[0]
-        del i[0]
-
-        users = User.query.filter_by(admin=0).all()
-        u = []
-        g = f
-        for ua in a:
-            u.append(ua)
-        for user in users:
-            u.append(User.query.filter_by(id=int(
-                str(user)[str(user).find('>') - (str(user).find('>') - 6):str(user).find('>')])).first().username)
-            i.append(User.query.filter_by(username=u[-1]).first().id)
-            g += 1
-        return render_template('user_list.html', users=u, admins=a, id=i, f=f, g=g)
+        users=User.query.order_by(User.id.asc()).all()
+        return render_template('user_list.html', users=users, organizer=organizer, admin=admin)
     flash('Nie dla psa kiełbasa')
     return redirect('/')
 
 @app.route('/admin/user/<int:id>')
+@login_required
 def user_control(id):
     """umożliwia adminowi kontrolę nad użytkownikiem"""
     """nie działa na użytkownia piotr"""
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
     if id != 1:
         if User.query.filter_by(username=session['username']).first().admin:
-            username = User.query.filter_by(id=id).first().username
-            admin = User.query.filter_by(id=id).first().admin
-            return render_template('user_control.html', id=id, admin=admin, username=username)
+            user = User.query.filter_by(id=id).first()
+            teams=Team.query.order_by(Team.id.asc()).all()
+            return render_template('user_control.html', user=user, teams=teams, organizer=organizer, admin=admin)
 
 @app.route('/give_admin/<int:id>')
+@login_required
 def give_admin(id):
     """daje admina użytkownikowi"""
     """może być uruchomiona tylko przez admina"""
@@ -455,7 +679,7 @@ def give_admin(id):
                 id=id).first() and User.query.filter_by(id=id).first() != User.query.filter_by(
                 username=session['username']).first():
             try:
-                User.query.filter_by(id=id).first().admin = 1
+                User.query.filter_by(id=id).first().admin = True
                 db.session.commit()
                 flash('Przekazano uprawnienia administratora użytkownikowi ' + str(
                     User.query.filter_by(id=id).first().username))
@@ -465,6 +689,7 @@ def give_admin(id):
     return redirect('/')
 
 @app.route('/take_admin/<int:id>')
+@login_required
 def take_admin(id):
     """odbiera admina użytkownikowi"""
     """może być uruchomiona tylko przez admina"""

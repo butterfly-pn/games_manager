@@ -1,26 +1,31 @@
 {% extends "_base.html" %}
 <title> Lista użytkowników </title>
-{% set page_id = "lista użytkowników" %}
+{% set page_id = "user_list" %}
 <center>
 {% block content %}
   <div class="row">
       <br>
       <ul>
           <h4>ADMINI:</h4>
-              {%for a in range(0,f)%}
-               <br><a href="/admin/user/{{id[a]}}">{{admins[a]}}</a></h3>,
+              {%for u in users%}
+          {%if u.admin and u.id!=1%}
+               <br><a href="/admin/user/{{u.id}}">{{u.username}}</a></h3>,
               <br>
+          {%endif%}
               {%endfor%}
           <br>
           <br>
           <h4>UŻYTKOWNICY: </h4>
-          {%for a in range(0,g)%}
-
-               <br> <a href='/admin/user/{{id[a]}}'>{{users[a]}}</a></h3>
+          {%for a in users%}
+            {%if a.id!=1%}
+               <br> <a href='/admin/user/{{a.id}}'>{{a.username}}</a></h3>
+          {%endif%}
               {%endfor%}
           <br>
 
       </ul>
+
+
   </div>
 {% endblock %}
 </center>

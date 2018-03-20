@@ -1,4 +1,4 @@
-__author__ = 'Piotr Dyba'
+_author__ = 'Piotr Dyba'
 
 from sqlalchemy import create_engine
 from main import db
@@ -20,6 +20,10 @@ def db_start():
     user.job= "szef projektu"
     user.admin = True
     user.poweruser = True
+    user.organizer = True
+    user.birthdate = "01.01.1999"
+    user.about = "Jestem dobrym adminem"
+    user.why = "Chcę organizować gamejam, poniewż uważam, że jest to jest to idealna forma rozwoju dla młodych ludzi."
     db.session.add(user)
     db.session.commit()
 

@@ -17,7 +17,7 @@
 <body>
 
   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="../">Game Jams</a>
+    <a class="navbar-brand" href="/">Game Jams</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
             aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -42,9 +42,17 @@
         <li class="nav-item{% if page_id == 'create-team' %} active{% endif %}">
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-team" href="#">Stwórz zespół</a>
         </li>
+        <li class="nav-item{% if page_id == 'create-jam' %} active{% endif %}">
+            <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-jam" href="#">Organizuj GAME-JAM</a>
+        </li>
         <li class="nav-item{% if page_id == 'logout' %} active{% endif %}">
           <a class="nav-link" href="{{ url_for('logout') }}">Wyloguj się</a>
         </li>
+        {% if admin %}
+        <li class="nav-item{% if page_id == 'admin' %} active{% endif %}">
+          <a class="btn btn-warning" href="/admin">Funkcje administratora  </a>
+        </li>
+        {%endif%}
         {% endif %}
 
         {% if not session['logged_in']%}
@@ -55,9 +63,12 @@
           <a role="presentation" class="nav-link" data-toggle="modal" data-target="#login" href="#">Zaloguj</a>
         </li>
         {% endif %}
-
-
       </ul>
+      <form class="form-inline mt-2 mt-md-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+      </form>
+
         <!--Beginning of register form-->
       <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
@@ -121,7 +132,72 @@
           </div>
         </div>
       </div>
-<!--The end of new team form,, the beginning of login form-->
+  <!--create-jam-->
+  <div class="modal fade" id="create-jam" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Stwórz GAME-JAM</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                {% if organizer or admin%}
+                <form method=post action="/create-jam/">
+                  <dl>
+                    <dt><label for="jam_name">Nazwa GAME-JAMu</label></dt>
+                    <dd><input id="jam_name" name="jam_name" type="text" value=""></dd>
+
+                    <dt><label for="jam_theme">Motyw przewodni jamu</label></dt>
+                    <dd><input id="jam_theme" name="jam_theme" type="text" value=""></dd>
+                   </dl>
+                  <p><input class="btn btn-primary" type=submit value="Stwórz"></p>
+                </form>
+                {%else%}
+                <div class="row">
+                  <div class="col text-center">
+                  <p>Aby zorganizować GAME-JAM musisz być organizatorem</p>
+                  <a role="presentation" data-toggle="modal" data-target="#become-organizer" href="#" data-dismiss="modal" class="btn btn-secondary center">Zostań organizatorem</a>
+                </div>
+                </div>
+                {%endif%}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- Become organizer -->
+<div class="modal fade" id="become-organizer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Zostań organizatorem</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form method=post action="/become-organizer/">
+                  <dl>
+                    <dt><label for="fullname">Pełne imię i nazwisko</label></dt>
+                    <dd><input id="fullname" name="fullname" type="text" value=""></dd>
+
+                    <dt><label for="birthdate">Data urodzenia</label></dt>
+                    <dd><input id="birthdate" name="birthdate" type="text" value=""></dd>
+
+                      <dt><label for="about">Napisz coś o sobie</label></dt>
+                      <dt><textarea name="about" id="about" style="width:250px;height:150px;"></textarea></dt>
+
+                    <dt><label for="why">Dlaczego chcesz organizować gamejam?</label></dt>
+                      <dt><textarea name="why" id="why" style="width:250px;height:150px;"></textarea></dt>
+                  </dl>
+                  <p><input class="btn btn-primary" type=submit value="Prześlij zgłoszenie"></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!--The end of new jam form,, the beginning of login form-->
 <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -133,6 +209,7 @@
               <div class="container">
                 <form method=post action="/login/">
                   <dl>
+
                     <dt><label for="username">Nazwa użytkownika</label></dt>
                     <dd><input autofocus id="username" name="username" type="text" value=""></dd>
 

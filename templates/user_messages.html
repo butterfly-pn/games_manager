@@ -4,27 +4,63 @@
 <center>
 {% block content %}
   <div class="row">
-      <center>
-      twoje wiadomości:
-        <br>
-          Nowe wiadomości:
+      <div class="col-3">
+          <ul class="navbar-nav mr-auto">
+              <li class="nav-item"><a class="mt-2 btn btn-secondary btn-block" href="/user/{{user}}/">< Powrót do użytkownika</a></li>
+              <li class="nav-item"><button class="mt-2 btn btn-primary btn-block" role="presentation" data-toggle="modal" data-target="#send_message" href="#">+ Nowa wiadomość</button></li>
+          </ul>
+      </div>
+      <div class="col-lg-9">
+          {%if messages %}
+          <ul class="list-group list-group-flush">
+
         {% for message in messages %}
           {%if message.new%}
-      <br>
-       <a href="/message/{{message.id}}">{{message.title}}</a>
+      <li class="list-group-item">
+          <a href="/message/{{message.id}}">
+              <h3>{{message.title}} <span class="badge badge-secondary">New</span></h3><b>wysłana przez {{message.author}}</b>
+          </a></li>
           {%endif%}
       {% endfor %}
-          <br>  stare wiadomości:
+
         {% for message in messages %}
           {%if not message.new %}
-      <br>
-       <a href="/message/{{message.id}}">{{message.title}}</a>
+              <li class="list-group-item"><a class="text-secondary" href="/message/{{message.id}}"><h4>{{message.title}}</h4> wysłana przez {{message.author}}</a></li>
           {%endif%}
       {% endfor %}
-        </center>
-      <!--<br>{{job}}-->
-    <div class="col-12">
+          </ul>
+          {% else%}
+          <h3>Narazie nie masz żadnych wiadomości</h3>
+          {% endif%}
     </div>
   </div>
+      <div class="modal fade" id="send_message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Wyślij nową wiadomość</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form method=post action="/message/create">
+                  <dl>
+                    <dt><label for="username">Nazwa użytkownika, do którego chcesz wysłać wiadomość</label></dt>
+                    <dd><input id="username" name="username" type="text" value=""></dd>
+
+                      <dt><label for="title">Tytuł wiadomości</label></dt>
+                    <dd><input id="title" name="title" type="text" value=""></dd>
+
+
+                      <dt><label for="content">Treść wiadomości</label></dt>
+                      <dt><textarea name="content" id="content" style="width:250px;height:150px;"></textarea></dt>
+                   </dl>
+                  <p><input class="btn btn-primary" type=submit value="Wyślij"></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 {% endblock %}
 </center>
