@@ -281,7 +281,6 @@ class OrganizerForm(Form):
     about = TextAreaField('O sobie')
     why = TextAreaField('Dlaczego chcesz organizować gamejam?')
 
-
 @app.route('/become-organizer/', methods=['GET', 'POST'])
 @login_required
 def become_organizer():
@@ -330,6 +329,7 @@ def make_organizer(username):
     if User.query.filter_by(username=session['username']).first().admin:
         if User.query.filter_by(username=username).first():
             User.query.filter_by(username=username).first().organizer = True
+            User.query.filter_by(username=username).first().since=datetime.now()
             db.session.commit()
             flash("Użytkownik "+username+" jest organizatorem!")
             return redirect('/user/' + session['username'] + '/messages')
@@ -400,6 +400,7 @@ def team(team_name):
     if this_team:
         return render_template("team.html", team=this_team, organizer=organizer, admin=admin)
     return render_template('404.html'), 404
+
 
 class NewTeamForm(Form):
     name = StringField('Nazwa zespołu', [validators.Length(min=4, max=20)])

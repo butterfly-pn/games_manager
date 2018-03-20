@@ -28,9 +28,9 @@ class User(db.Model, UserMixin):
     organizer = Column(Boolean, default=False)
     admin = Column(Boolean, default=False)
     birthdate = Column(String(20), default='')
-    about = Column(String(2000), default='')
-    why = Column(String(2000), default='')
-
+    about = Column(db.Text(), default='')
+    since = Column(db.DateTime())
+    why = Column(db.Text(), default='')
 
     def is_active(self):
         """
@@ -68,7 +68,6 @@ class Team(db.Model):
     master_email = Column(String(200))
     master = Column(String(200))
     contributors = Column(PickleType())
-
 
 class Jam(db.Model):
     """

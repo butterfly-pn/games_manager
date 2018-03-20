@@ -175,12 +175,15 @@
                   <dl>
                     <dt><label for="fullname">Pełne imię i nazwisko</label></dt>
                     <dd><input id="fullname" name="fullname" type="text" value=""></dd>
+
                     <dt><label for="birthdate">Data urodzenia</label></dt>
                     <dd><input id="birthdate" name="birthdate" type="text" value=""></dd>
-                    <dt><label for="about">O tobie</label></dt>
-                    <dd><input id="about" name="about" type="text" value=""></dd>
+
+                      <dt><label for="about">Napisz coś o sobie</label></dt>
+                      <dt><textarea name="about" id="about" style="width:250px;height:150px;"></textarea></dt>
+
                     <dt><label for="why">Dlaczego chcesz organizować gamejam?</label></dt>
-                    <dd><input id="why" name="why" type="text" value=""></dd>
+                      <dt><textarea name="why" id="why" style="width:250px;height:150px;"></textarea></dt>
                   </dl>
                   <p><input class="btn btn-primary" type=submit value="Prześlij zgłoszenie"></p>
                 </form>
@@ -201,6 +204,7 @@
               <div class="container">
                 <form method=post action="/login/">
                   <dl>
+
                     <dt><label for="username">Nazwa użytkownika</label></dt>
                     <dd><input autofocus id="username" name="username" type="text" value=""></dd>
 
