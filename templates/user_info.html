@@ -34,10 +34,12 @@
 
             {%if teams%}
        {% if user.username==session['username'] %}
+          {% if teams %}
       Zespoły, w których jesteś:<br>
           {%else%}
           Zespoły, do których użytkownik należy<br>
           {%endif%}
+          {% endif%}    
           <ol>
         {% for team in teams %}
        {% if user.username in team.contributors%}
