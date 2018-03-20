@@ -48,6 +48,11 @@
         <li class="nav-item{% if page_id == 'logout' %} active{% endif %}">
           <a class="nav-link" href="{{ url_for('logout') }}">Wyloguj się</a>
         </li>
+        {% if admin %}
+        <li class="nav-item{% if page_id == 'admin' %} active{% endif %}">
+          <a class="btn btn-warning" href="/admin">Funkcje administratora  </a>
+        </li>
+        {%endif%}
         {% endif %}
 
         {% if not session['logged_in']%}

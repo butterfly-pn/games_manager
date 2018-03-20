@@ -9,12 +9,6 @@
             {%if user.username==session['username']%}
                 <p>Jesteś zalogowany jako {{ session['username'] }}</p><br>
                 <p><button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#" > Usuń swoje konto</button></p><br>
-
-
-                {% if admin %}
-                <p><a class="btn btn-primary" href="/admin">Funkcje administratora  </a></p><br>
-                {%endif%}
-
                 <a class="btn btn-primary" href="/user/{{user.username}}/messages">Twoje wiadomości<span class="ml-2 badge badge-primary badge-pill" style="background-color: #999999;">{{new_messages}}</span></a><br>
 
             {%else%}
@@ -30,7 +24,7 @@
           {%endif%}
           <ol>
         {% for team in teams2 %}
-      <li> <a class="btn btn-primary" href="/team/{{team.name}}">{{team.name}}</a>,</li><br>
+      <li> <a class="btn btn-primary" href="/team/{{team.name}}">{{team.name}}</a></li><br>
       {% endfor %}
           </ol>
           {%endif%}
@@ -47,7 +41,7 @@
           <ol>
         {% for team in teams %}
        {% if user.username in team.contributors%}
-              <li><a href="/team/{{team.name}}">{{team.name}}</a></li><br>
+              <li><a class="btn btn-primary" href="/team/{{team.name}}">{{team.name}}</a></li><br>
         {%endif%}
       {% endfor %}
           </ol>

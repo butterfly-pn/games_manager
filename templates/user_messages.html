@@ -4,39 +4,34 @@
 <center>
 {% block content %}
   <div class="row">
-      <div class="col-12">
-      <center>
+      <div class="col-3">
+          <ul class="navbar-nav mr-auto">
+              <li class="nav-item"><a class="mt-2 btn btn-secondary btn-block" href="/user/{{user}}/">< Powrót do użytkownika</a></li>
+              <li class="nav-item"><button class="mt-2 btn btn-primary btn-block" role="presentation" data-toggle="modal" data-target="#send_message" href="#">+ Nowa wiadomość</button></li>
+          </ul>
+      </div>
+      <div class="col-lg-9">
           {%if messages %}
-      twoje wiadomości:
-        <br>
-          Nowe wiadomości:
+          <ul class="list-group list-group-flush">
 
         {% for message in messages %}
           {%if message.new%}
-      <br>
-       <a href="/message/{{message.id}}">{{message.title}} <br> wysłana przez {{message.author}}</a>
+      <li class="list-group-item">
+          <a href="/message/{{message.id}}">
+              <h3>{{message.title}} <span class="badge badge-secondary">New</span></h3><b>wysłana przez {{message.author}}</b>
+          </a></li>
           {%endif%}
       {% endfor %}
-
-
-          <br>  stare wiadomości:
-
 
         {% for message in messages %}
           {%if not message.new %}
-      <br>
-       <a href="/message/{{message.id}}">{{message.title}}<br> wysłana przez {{message.author}}</a>
+              <li class="list-group-item"><a class="text-secondary" href="/message/{{message.id}}"><h4>{{message.title}}</h4> wysłana przez {{message.author}}</a></li>
           {%endif%}
       {% endfor %}
-          <br><br><button class="btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#send_message" href="#">Nowa wiadomość</button>
+          </ul>
           {% else%}
           <h3>Narazie nie masz żadnych wiadomości</h3>
           {% endif%}
-          <br><a class="mt-2 btn btn-secondary" href="/user/{{user}}/">< Powrót do użytkownika</a>
-
-        </center>
-
-
     </div>
   </div>
       <div class="modal fade" id="send_message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
