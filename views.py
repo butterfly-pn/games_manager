@@ -202,12 +202,17 @@ def user_info_id(username):
     user=User.query.filter_by(username=username).first()
     user_teams=Team.query.filter_by(master=username).all()
     teams = Team.query.order_by(Team.id.asc()).all()
+    in_teams = []
+    for team in teams:
+        if user.username in team.contributors:
+            in_teams.append(team)
     messages = Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
     new_messages=0
     for message in messages:
         if message.new:
             new_messages += 1
-    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages)
+    print(teams)
+    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=in_teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages)
 
 @app.route('/user/<username>/messages')
 @login_required
@@ -440,7 +445,7 @@ def create_team():
 @login_required
 def delete_team(team_name):
     try:
-       if User.query.filter_by(username=session['username']).first().admin:
+       if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master == session['username']:
            this_team = Team.query.filter_by(name=team_name).first()
            db.session.delete(this_team)
            db.session.commit()
