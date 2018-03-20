@@ -211,7 +211,6 @@ def user_info_id(username):
     for message in messages:
         if message.new:
             new_messages += 1
-    print(teams)
     return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=in_teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages)
 
 @app.route('/user/<username>/messages')

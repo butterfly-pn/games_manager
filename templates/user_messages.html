@@ -18,14 +18,15 @@
           {%if message.new%}
       <li class="list-group-item">
           <a href="/message/{{message.id}}">
-              <h3>{{message.title}} <span class="badge badge-secondary">New</span></h3><b>wysłana przez {{message.author}}</b>
+              <h3>{{message.title}} <span class="badge badge-secondary">New</span></h3><b>wysłana przez {{message.author}} | {{message.created}}</b>
           </a></li>
           {%endif%}
       {% endfor %}
 
         {% for message in messages %}
           {%if not message.new %}
-              <li class="list-group-item"><a class="text-secondary" href="/message/{{message.id}}"><h4>{{message.title}}</h4> wysłana przez {{message.author}}</a></li>
+              <li class="list-group-item"><a class="text-secondary" href="/message/{{message.id}}"><h4>
+                  {{message.title}}</h4> wysłana przez {{message.author}} | {{message.created}}</a></li>
           {%endif%}
       {% endfor %}
           </ul>
