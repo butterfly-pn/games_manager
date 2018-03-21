@@ -182,8 +182,39 @@
                     <dt><label for="fullname">Pełne imię i nazwisko</label></dt>
                     <dd><input id="fullname" name="fullname" type="text" value="" autofocus></dd>
 
-                    <dt><label for="birthdate">Data urodzenia</label></dt>
-                    <dd><input id="birthdate" name="birthdate" type="text" value=""></dd>
+                    <!--<dt><label for="birthdate">Data urodzenia</label></dt>-->
+                    <!--<dd><input id="birthdate" name="birthdate" type="text" value=""></dd>-->
+
+                    <dt><label for="birthdate_day">Podaj swoją datę urodzenia</label></dt>
+                    <dd>
+
+                    <select id="birthdate_day" name="birthdate_day" type="text">
+                      {% for a in range(1,32) %}
+                    <option value="{{a}}">{{a}}</option>
+                      {% endfor%}
+                    </select>
+
+                      <select id="birthdate_month" name="birthdate_month" type="text">
+                      <option value="01">Styczeń</option>
+                      <option value="02">Luty</option>
+                        <option value="03">Marzec</option>
+                        <option value="04">Kwiecień</option>
+                        <option value="05">Maj</option>
+                        <option value="06">Czerwiec</option>
+                        <option value="07">Lipiec</option>
+                        <option value="08">Sierpień</option>
+                        <option value="09">Wrzesień</option>
+                        <option value="10">Październik</option>
+                        <option value="11">Listopad</option>
+                        <option value="12">Grudzień</option>
+                      </select>
+
+                   <select id="birthdate_year"    name="birthdate_year" type="text">
+                      {% for a in range(2017, 1800,-1) %}
+                    <option value="{{a}}">{{a}}</option>
+                      {% endfor%}
+                  </select>
+                    </dd>
 
                       <dt><label for="about">Napisz coś o sobie</label></dt>
                       <dt><textarea name="about" id="about" style="width:250px;height:150px;"></textarea></dt>
