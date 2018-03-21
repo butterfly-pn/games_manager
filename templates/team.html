@@ -4,10 +4,10 @@
 <center>
 {% block content %}
   <div class="row mt-3">
-    <div class="col-8">
+    <div class="col-md-8 mb-3">
       <h2>{{ team.name }}</h2>
     </div>
-    <div class="col-4">
+    <div class="col-md-4">
       <a class="btn btn-primary btn-block" href="/user/{{team.master}}">Szef zespołu: {{team.master}}</a><br>
       <a class="btn btn-primary btn-block" href="">Mail: {{ team.master_email }}</a>
       {% if admin or team.master==session['username'] %}

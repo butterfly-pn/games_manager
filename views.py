@@ -392,9 +392,15 @@ Koniec usuwania użytkownika, początek obsługi drużyn
 @app.route('/teams')
 def teams():
     """Wyświetla listę zarejstrowanych drużyn, z linkami do nich"""
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
+    except KeyError:
+        organizer = False
+        admin = False
     if User.query.filter_by(username=session['username']).first().admin:
         teams = Team.query.order_by(Team.id.asc()).all()
-        return render_template("teams.html", teams=teams)
+        return render_template("teams.html", teams=teams, organizer=organizer, admin=admin)
     return redirect('/')
 
 @app.route("/team/<team_name>")
