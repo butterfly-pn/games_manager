@@ -4,18 +4,28 @@
 <center>
 {% block content %}
   <div class="row">
-      <center>
-        <h3>{{message.title}}</h3>
-        <br><h5>Wysłane przez: {{message.author}} w dniu {{message.created}}</h5>
+      <div class="col-lg-3 mt-3">
+          <a class="btn btn-secondary btn-block" href="/user/{{user}}/messages">< Powrót do wiadomości</a>
+          <a class="btn btn-danger btn-block" href="/message/{{message.id}}/delete">Usuń wiadomość</a>
+          <hr>
+      </div>
+      <div class="col-lg-8 mt-3">
+        <table class="table">
+            <tr><h3><th>Tytuł</th> <th class="col-md-5">{{message.title}}</th></h3></tr>
+            <tr><h5><th>Wysłane przez</th><th class="col-md-5">
+                <a href="/user/{% if message.author=="GAMEJAM"%}piotr{%else%}{{message.author}}{%endif%}">
+                    {{message.author}}
+                </a>
+            </th> </h5></tr>
+            <tr><h6><th>W dniu</th><th class="col-md-5">{{message.created}}</th></h6></tr>
+        </table>
+          <hr>
           <br>{{message.content | safe}}
           {% if "Zaproszenie do drużyny " in message.title %}
           <br><a href="/team/{{message.title[23:]}}/join/{{message.adresser}}">Dołącz do drużyny {{message.title[23:]}}</a>
           {%endif%}
           <br>
-      <a class="btn btn-secondary" href="/user/{{user}}/messages">< Powrót do wiadomości</a>
-      </center>
-    <div class="col-12">
-    </div>
+      </div>
   </div>
 {% endblock %}
 </center>

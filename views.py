@@ -211,9 +211,11 @@ def user_info_id(username):
     for message in messages:
         if message.new:
             new_messages += 1
-    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=in_teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages)
+    return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job,
+                           user=user, teams=in_teams,teams2=user_teams, organizer=organizer, admin=admin,
+                           new_messages=new_messages)
 
-@app.route('/user/<username>/messages')
+@app.route('/user/<username>/messages/')
 @login_required
 def user_messages(username):
     try:
@@ -226,11 +228,12 @@ def user_messages(username):
 
         messages=Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
         try:
-            return render_template('user_messages.html', messages=messages, user=username, organizer=organizer, admin=admin)
+            return render_template('user_messages.html', messages=messages,
+                                   user=username, organizer=organizer, admin=admin)
         except:
             return redirect('/')
 
-@app.route('/message/<id>')
+@app.route('/message/<id>/')
 @login_required
 def message_print(id):
     try:
@@ -239,13 +242,30 @@ def message_print(id):
     except KeyError:
         organizer = False
         admin = False
-    if session['username'] == Message.query.filter_by(id=id).first().adresser or User.query.filter_by(username=session['username']).first().admin:
+    if session['username'] == Message.query.filter_by(id=id).first().adresser or User.query.filter_by(
+            username=session['username']).first().admin:
         message=Message.query.filter_by(id=id).first()
         if message.new:
             message.new=False
             db.session.commit()
-        return render_template("message_normal.html", message=message, user=Message.query.filter_by(id=id).first().adresser, organizer=organizer, admin=admin)
+        return render_template("message_normal.html", message=message,
+                               user=Message.query.filter_by(id=id).first().adresser, organizer=organizer, admin=admin)
     return redirect("/")
+
+
+@app.route('/message/<id>/delete/')
+@login_required
+def delete_message(id):
+    if session['username'] == Message.query.filter_by(id=id).first().adresser or User.query.filter_by(
+        username=session['username']).first().admin:
+        message = Message.query.filter_by(id=id).first()
+        db.session.delete(message)
+        db.session.commit()
+        flash("Usunięto wiadomość!")
+        return redirect('/user/'+session['username']+'/messages')
+    else:
+        flash("Błąd: Nie masz uprawnień!", category='error')
+        return redirect('/message/'+id)
 
 
 @app.route('/message/create', methods=['GET','POST'])
@@ -253,7 +273,9 @@ def message_print(id):
 def message_create():
 
     if request.method=='GET':
-        return render_template('user_messages.html', organizer=User.query.filter_by(username=session['username']).first().organizer, admin=User.query.filter_by(username=session['username']).first().admin)
+        return render_template('user_messages.html',
+                               organizer=User.query.filter_by(username=session['username']).first().organizer,
+                               admin=User.query.filter_by(username=session['username']).first().admin)
     else:
         name=request.form['username']
         title=request.form['title']
@@ -315,7 +337,11 @@ def become_organizer():
             for admin in User.query.filter_by(admin=True).all():
                 name = admin.username
                 title = 'Nowe zgłoszenie na organizatora'
-                content = 'Użytkownik '+str(session['username'])+' chce zostać organizatorem <br> Imię i nazwisko: '+str(fullname)+'<br> Data urodzenia: '+str(birthdate)+'<br> O mnie: '+str(about) +'<br> Dlaczego: '+str(why) +'<br><br> <a href=\'/make-organizer/'+session['username']+'\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
+                content = 'Użytkownik ' + str(
+                    session['username']) + ' chce zostać organizatorem <br> Imię i nazwisko: ' + str(
+                    fullname) + '<br> Data urodzenia: ' + str(birthdate) + '<br> O mnie: ' + str(
+                    about) + '<br> Dlaczego: ' + str(why) + '<br><br> <a href=\'/make-organizer/' + session[
+                              'username'] + '\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
                 new_message = Message()
                 new_message.adresser = name
                 new_message.title = title
@@ -358,7 +384,8 @@ Koniec informacji o organizatorach, początek usuwania użytkownika
 @login_required
 def delete(id):
     """NIE DZIAłA NA UŻYTKOWNIKA PIOTR"""
-    """Funkcja usuwa użytkownika, po czym jeżeli zalogoway użytkownik to admin, zwraca listę użytkowników, w przeciwnym przypadku wraca na stronę główną"""
+    """Funkcja usuwa użytkownika, po czym jeżeli zalogoway użytkownik to admin, zwraca listę użytkowników, w przeciwnym
+     przypadku wraca na stronę główną"""
     if id == User.query.filter_by(username=session['username']).first().id or User.query.filter_by(
             username=session['username']).first().admin:
         user = User.query.filter_by(id=id).first()
