@@ -526,7 +526,7 @@ def team_join(team_name, username):
 @app.route('/team/<team_name>/delete/<username>')
 @login_required
 def team_delete(team_name, username):
-    if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master == session['username']:
+    if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master == session['username'] or username == session['username']:
         for contributor in Team.query.filter_by(name=team_name).first().contributors:
             if contributor == username:
                 contributors = Team.query.filter_by(name=team_name).first().contributors
