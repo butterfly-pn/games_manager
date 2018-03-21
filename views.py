@@ -282,7 +282,9 @@ Koniec informacji o użytkowniku, początek informacji o organizatorach
 
 class OrganizerForm(Form):
     fullname = StringField('Imię i nazwisko', [validators.InputRequired(' ')])
-    birthdate = StringField('Data urodzenia', [validators.Length(min=6)])
+    birthdate_day = StringField('Data urodzenia', [validators.Length(min=1)])
+    birthdate_month = StringField('Data urodzenia', [validators.Length(min=2)])
+    birthdate_year = StringField('Data urodzenia', [validators.Length(min=4)])
     about = TextAreaField('O sobie')
     why = TextAreaField('Dlaczego chcesz organizować gamejam?')
 
@@ -300,7 +302,10 @@ def become_organizer():
         if request.method == "POST" and form.validate():
             print('gg')
             fullname = form.fullname.data
-            birthdate = form.birthdate.data
+            birthdate_day = form.birthdate_day.data
+            birthdate_month = form.birthdate_month.data
+            birthdate_year = form.birthdate_year.data
+            birthdate=birthdate_day+"."+birthdate_month+"."+birthdate_year
             about = form.about.data
             why = form.why.data
             organizer = User.query.filter_by(username=session['username']).first()
