@@ -24,6 +24,7 @@ def db_start():
     user.birthdate = "01.01.1999"
     user.about = "Jestem dobrym adminem"
     user.why = "Chcę organizować gamejam, poniewż uważam, że jest to jest to idealna forma rozwoju dla młodych ludzi."
+    user.a=True
     db.session.add(user)
     db.session.commit()
 
@@ -45,9 +46,12 @@ def db_start():
     db.session.commit()
 
 
+
+
     jam = models.Jam()
     jam.title = "Jam testowy"
     jam.master="piotr"
+    jam.description = "testowy jam"
     jam.master_email = 'piotr@dyba.com.pl'
     jam.teams=['BestTeam']
     db.session.add(jam)
