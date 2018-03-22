@@ -76,6 +76,7 @@ class Jam(db.Model):
     id = Column(Integer, autoincrement=True, primary_key=True)
     title = Column(String(20), unique=True)
     theme = Column(String(100))
+    description = Column(db.Text())
     master_email = Column(String(200))
     master = Column(String(200))
     teams = Column(PickleType())

@@ -3,13 +3,10 @@
 {% set page_id = "{{ session['username'] }}" %}
 <center>
 {% block content %}
-  <div class="row">
-      <br>
-      <ul>
-          <a class="btn btn-primary" href="/user_list">Lista użytkowników ><span class="ml-2 badge badge-primary badge-pill" style="background-color: #999999;"></span></a><br>
-            <br>
-          <a class="btn btn-primary" href="/teams">Lista drużyn ><span class="ml-2 badge badge-primary badge-pill" style="background-color: #999999;"></span></a><br>
-      </ul>
+ <div class="row mt-3">
+      <div class="col-lg-4 mb-3"><a class="btn btn-primary btn-block" href="/user_list">Lista użytkowników</a></div>
+      <div class="col-lg-4 mb-3"><a class="btn btn-primary btn-block" href="/teams">Lista drużyn</a></div>
+      <div class="col-lg-4 mb-3"><a class="btn btn-primary btn-block" href="">Lista jamów</a></div>
   </div>
 {% endblock %}
 </center>

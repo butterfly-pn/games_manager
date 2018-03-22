@@ -48,6 +48,7 @@ def db_start():
     jam = models.Jam()
     jam.title = "Jam testowy"
     jam.master="piotr"
+    jam.description = "testowy jam"
     jam.master_email = 'piotr@dyba.com.pl'
     jam.teams=['BestTeam']
     db.session.add(jam)
