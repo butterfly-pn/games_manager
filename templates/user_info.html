@@ -7,9 +7,9 @@
       <div class="col-md-8">
 
             {%if user.username==session['username']%}
-                <h2>Jesteś zalogowany jako {{ session['username'] }}</h2><br>
+          <h2>{{ session['username']}}<span class="ml-3 badge badge-secondary">TO TY!</span></h2>
             {%else%}
-                <h2>Widzisz profil użytkownika {{user.username}}</h2><br>
+                <h2>{{user.username}}</h2>
             {%endif%}
 
 
