@@ -697,7 +697,11 @@ def user_list():
         admin = False
     if User.query.filter_by(username=session['username']).first().admin:
         users=User.query.order_by(User.id.asc()).all()
-        return render_template('user_list.html', users=users, organizer=organizer, admin=admin)
+        admini = 0
+        for user in users:
+            if user.admin:
+                admini+=1
+        return render_template('user_list.html', users=users, admini=admini, organizer=organizer, admin=admin)
     flash('Nie dla psa kiełbasa')
     return redirect('/')
 
