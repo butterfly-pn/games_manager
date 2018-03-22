@@ -24,6 +24,7 @@ def db_start():
     user.birthdate = "01.01.1999"
     user.about = "Jestem dobrym adminem"
     user.why = "Chcę organizować gamejam, poniewż uważam, że jest to jest to idealna forma rozwoju dla młodych ludzi."
+    user.a=True
     db.session.add(user)
     db.session.commit()
 

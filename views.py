@@ -727,7 +727,6 @@ def allowed_file(filename):
 @login_required
 def download():
     """Lista plików do pobrania oraz upload"""
-    """ROZłOŻYć NA OSOBNY DOWNLOAD I UPLOAD"""
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         admin = User.query.filter_by(username=session['username']).first().admin
@@ -845,6 +844,7 @@ def give_admin(id):
                 username=session['username']).first():
             try:
                 User.query.filter_by(id=id).first().admin = True
+                User.query.filter_by(id=id).first().a = True
                 db.session.commit()
                 flash('Przekazano uprawnienia administratora użytkownikowi ' + str(
                     User.query.filter_by(id=id).first().username))
@@ -862,13 +862,34 @@ def take_admin(id):
     if id != 1:
         if User.query.filter_by(username=session['username']).first().admin and User.query.filter_by(id=id).first():
             try:
-                User.query.filter_by(id=id).first().admin = 0
+                User.query.filter_by(id=id).first().admin = False
+                User.query.filter_by(id=id).first().a = False
                 db.session.commit()
                 flash('Odebrano uprawnienia administratora użytkownikowi ' + str(
                     User.query.filter_by(id=id).first().username))
                 return redirect('/user_list')
             except:
                 return redirect('/')
+    return redirect('/')
+
+@app.route('/change_admin')
+@login_required
+def change_admin():
+    if User.query.filter_by(username=session['username']).first().a:
+        try:
+            user=User.query.filter_by(username=session['username']).first()
+            if user.admin:
+                user.admin=False
+            else:
+                user.admin=True
+
+            db.session.commit()
+            flash("zmieniono stan na "+str(User.query.filter_by(username=session['username']).first().admin))
+            return redirect('/user/'+session['username'])
+        except:
+            flash("chuuu")
+            return redirect('/')
+    flash("fucjk")
     return redirect('/')
 
 

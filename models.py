@@ -30,6 +30,7 @@ class User(db.Model, UserMixin):
     birthdate = Column(String(20), default='')
     about = Column(db.Text(), default='')
     why = Column(db.Text(), default='')
+    a=Column(Boolean, default=False)
 
     def is_active(self):
         """

@@ -10,7 +10,7 @@
       Organizator jamu: <a href="/user/{{jam.master}}">{{jam.master}}</a> <br>
       Zarejstrowane drużyny: {% for i in jam.teams %}
       <div class="btn-group" role="group" aria-label="User">
-      <a class="btn btn-primary" href="/team/">{{i}}</a>
+      <a class="btn btn-primary" href="/team/{{i}}">{{i}}</a>
         {% if admin or session['username']==jam.master%}
       <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{i}}" href="#">-</button>
         {%endif%}
@@ -22,7 +22,7 @@
 
          {% if session['username']==jam.master%}
         {% for t in team %}
-        {% if t.name not in jam.teams%}
+        {% if t.name not in jam.teams and jam.active%}
         <a href="/jam/{{jam.id}}/add/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</a>
         {%endif%}
         {% endfor%}
