@@ -45,7 +45,7 @@
   </div>
     <hr>
     <div class="row">
-        <div class="col-lg-4 mt-3">
+        <div class="col-md-6 mt-3">
           <div class="list-group">
               <li class="list-group-item active" href="">
                      {%if user.username==session['username']%}
@@ -63,7 +63,7 @@
           {%endif%}
           </div>
         </div>
-        <div class="col-lg-4 mt-3">
+        <div class="col-md-6 mt-3">
           <div class="list-group">
               <li class="list-group-item list-group-item-action active" href="">
                   {% if user.username==session['username'] %}
@@ -80,9 +80,6 @@
               <li class="list-group-item" href="">-</li>
       {%endif%}
           </div>
-        </div>
-        <div class="col-4">
-
         </div>
     </div>
 {% endblock %}
