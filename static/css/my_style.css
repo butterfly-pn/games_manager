@@ -1,7 +1,7 @@
 .xxx {
    max-width: 65.5rem;
    margin: auto;
-   }
+}
 
 .hr-nav{
     display: none;
@@ -11,5 +11,5 @@
     .hr-nav{
         border-color: white;
         display: block;
-   }
+    }
 }

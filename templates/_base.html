@@ -12,7 +12,6 @@
   {% endif %}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/my_style.css') }}">
 </head>
 
 <body>
@@ -38,7 +37,6 @@
         <li class="nav-item{% if page_id == 'download' %} active{% endif %}">
           <a class="nav-link" href="{{ url_for('download') }}">Download</a>
         </li>
-
         {% endif %}
         {% if session['logged_in'] %}
         <li class="nav-item{% if page_id == 'create-team' %} active{% endif %}">
@@ -50,20 +48,10 @@
         <li class="nav-item{% if page_id == 'logout' %} active{% endif %}">
           <a class="nav-link" href="{{ url_for('logout') }}">Wyloguj się</a>
         </li>
-          {% if admin or organizer or member %}
-          <li class="nav-item{% if page_id == 'jams' %} active{% endif %}">
-          <a class="nav-link" href="/jams">Game Jamy</a>
+        {% if admin %}
+        <li class="nav-item{% if page_id == 'admin' %} active{% endif %}">
+          <a class="btn btn-warning" href="/admin">Funkcje administratora  </a>
         </li>
-       {%endif%}
-
-{% if admin %}
-        <hr class="hr-nav">
-         <li class="nav-item{% if page_id == 'admin' %} active{% endif %}">
-
-          <a class="btn btn-warning btn-block" href="/admin">Funkcje administratora  </a>
-         </li>
-        <hr class="hr-nav">
-
         {%endif%}
         {% endif %}
 
@@ -162,9 +150,6 @@
 
                     <dt><label for="jam_theme">Motyw przewodni jamu</label></dt>
                     <dd><input id="jam_theme" name="jam_theme" type="text" value=""></dd>
-
-                    <dt><label for="jam_description">Opis jamu</label></dt>
-                      <dt><textarea name="jam_description" id="jam_description" style="width:250px;height:150px;"></textarea></dt>
                    </dl>
                   <p><input class="btn btn-primary" type=submit value="Stwórz"></p>
                 </form>
@@ -196,6 +181,8 @@
                     <dt><label for="fullname">Pełne imię i nazwisko</label></dt>
                     <dd><input id="fullname" name="fullname" type="text" value="" autofocus></dd>
 
+                    <!--<dt><label for="birthdate">Data urodzenia</label></dt>-->
+                    <!--<dd><input id="birthdate" name="birthdate" type="text" value=""></dd>-->
 
                     <dt><label for="birthdate_day">Podaj swoją datę urodzenia</label></dt>
                     <dd>
