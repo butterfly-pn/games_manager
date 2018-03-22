@@ -14,6 +14,7 @@
         {% if admin or session['username']==jam.master%}
       <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{i}}" href="#">-</button>
         {%endif%}
+
       </div>
       {% if loop.index != jam.teams|length %},{%endif%} {%endfor%}
       {% if admin or team.master==session['username'] %}

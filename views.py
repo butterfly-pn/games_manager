@@ -96,6 +96,7 @@ def register():
         return redirect(url_for('homepage'))
 
 
+
 """
 Koniec Rejstracji, Początek Logowania i Wylogowywania 
 """

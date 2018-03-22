@@ -70,6 +70,7 @@ class Team(db.Model):
 
 class Jam(db.Model):
     """
+
     Jam model
     """
     __tablename__ = 'jam'
