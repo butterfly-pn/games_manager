@@ -37,7 +37,7 @@
   </div>
 
   {% if admin or team.master==session['username'] %}
-  <div class="modal fade" id="add-to-team" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+  <div class="modal fade" id="add-to-team" tabindex="-5" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -58,7 +58,7 @@
           </div>
         </div>
       </div>
-  <div class="modal fade" id="are-you-sure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+  <div class="modal fade" id="are-you-sure" tabindex="-6" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -76,8 +76,26 @@
           </div>
         </div>
       </div>
+  <div class="modal fade" id="are-you-sure-you" tabindex="-7" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <p>Właśnie zamierzasz opuścić zespół <b>{{team.name}}</b>. Jesteś tego pewien?</p>
+                <a class="btn btn-danger" href="/team/{{team.name}}/delete/{{session['username']}}">Opuść</a>
+                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   {% for cont in team.contributors %}
-   <div class="modal fade" id="are-you-sure-{{cont}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+   <div class="modal fade" id="are-you-sure-{{cont}}" tabindex="-{{8 + loop.index}}" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -97,23 +115,5 @@
       </div>
   {%endfor%}
 {%endif%}
-  <div class="modal fade" id="are-you-sure-you" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-              <div class="container">
-                <p>Właśnie zamierzasz opuścić zespół <b>{{team.name}}</b>. Jesteś tego pewien?</p>
-                <a class="btn btn-danger" href="/team/{{team.name}}/delete/{{session['username']}}">Opuść</a>
-                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 {% endblock %}
 </center>

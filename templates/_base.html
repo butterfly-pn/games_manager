@@ -138,7 +138,7 @@
         </div>
       </div>
   <!--create-jam-->
-  <div class="modal fade" id="create-jam" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+  <div class="modal fade" id="create-jam" tabindex="-2" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -151,7 +151,7 @@
                 <form method=post action="/create-jam/">
                   <dl>
                     <dt><label for="jam_name">Nazwa GAME-JAMu</label></dt>
-                    <dd><input id="jam_name" name="jam_name" type="text" value="" autofocus></dd>
+                    <dd><input id="jam_name" name="jam_name" type="text" value=""></dd>
 
                     <dt><label for="jam_theme">Motyw przewodni jamu</label></dt>
                     <dd><input id="jam_theme" name="jam_theme" type="text" value=""></dd>
@@ -172,7 +172,7 @@
         </div>
       </div>
 <!-- Become organizer -->
-<div class="modal fade" id="become-organizer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+<div class="modal fade" id="become-organizer" tabindex="-3" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -234,7 +234,7 @@
         </div>
       </div>
 <!--The end of new jam form,, the beginning of login form-->
-<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+<div class="modal fade" id="login" tabindex="-4" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -288,5 +288,10 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+    $('.modal').on('shown.bs.modal', function() {
+  $(this).find('input:first').focus();
+});
+  </script>
 </body>
 </html>
