@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+<title>{{ session['username'] }}</title>
+{% set page_id = "messages_normal" %}
+<center>
+{% block content %}
+  <div class="row">
+      <center>
+
+
+
+        Game jamy:
+    <br>
+           {% for t in jams %}
+    {% if t.active%}
+          <a class="btn btn-primary" href="/jam/{{t.id}}">{{t.title}}></a><br>
+{%endif%}
+            {% endfor %}
+
+
+
+      </center>
+    <div class="col-12">
+    </div>
+  </div>
+{% endblock %}
+</center>

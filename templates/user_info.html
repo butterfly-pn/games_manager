@@ -11,8 +11,10 @@
             {%else%}
                 <h2>{{user.username}}</h2>
             {%endif%}
-
-
+            {% if user.a %}
+          <div class="col-lg-4 mb-3"><a class="btn btn-primary btn-block" href="/change_admin">{%if user.admin%}Wyłącz widok administratora{%else%}Włącz widok ądministratora{% endif %}</a></div>
+        <br>
+          {%endif%}
 
 </div>
     <div class="col-md-4">

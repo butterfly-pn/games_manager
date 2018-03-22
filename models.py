@@ -30,6 +30,7 @@ class User(db.Model, UserMixin):
     birthdate = Column(String(20), default='')
     about = Column(db.Text(), default='')
     why = Column(db.Text(), default='')
+    a=Column(Boolean, default=False)
 
     def is_active(self):
         """
@@ -70,12 +71,14 @@ class Team(db.Model):
 
 class Jam(db.Model):
     """
+
     Jam model
     """
     __tablename__ = 'jam'
     id = Column(Integer, autoincrement=True, primary_key=True)
     title = Column(String(20), unique=True)
     theme = Column(String(100))
+    description = Column(db.Text())
     master_email = Column(String(200))
     master = Column(String(200))
     teams = Column(PickleType())

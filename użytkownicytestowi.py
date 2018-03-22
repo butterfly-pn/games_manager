@@ -18,6 +18,7 @@ user.job = i
 user.birthdate = "01.01.1999"
 user.about = "Jestem użytkownikiem testowym"
 user.why = "blablabla"
+user.a=True
 db.session.add(user)
 db.session.commit()
 
