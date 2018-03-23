@@ -443,7 +443,7 @@ def teams():
         try:
             organizer = User.query.filter_by(username=session['username']).first().organizer
             admin = User.query.filter_by(username=session['username']).first().admin
-            teams = Team.query.order_by(Team.id.asc()).all
+            teams = Team.query.order_by(Team.id.asc()).all()
             for t in teams:
                 if session['username'] in t.contributors:
                     user_member = True
