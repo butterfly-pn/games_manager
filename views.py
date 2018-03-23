@@ -887,9 +887,7 @@ def change_admin():
             flash("zmieniono stan na "+str(User.query.filter_by(username=session['username']).first().admin))
             return redirect('/user/'+session['username'])
         except:
-            flash("chuuu")
             return redirect('/')
-    flash("fucjk")
     return redirect('/')
 
 
