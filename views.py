@@ -77,6 +77,7 @@ def register():
             if "@" not in email:
                 flash('Podałeś nieprawidłowy adres email')
                 return render_template('register.html', form=form)
+            user=User()
             user.email = email
             user.password = password
             user.username = username
@@ -208,32 +209,37 @@ def user_info_id(username):
     Tu będą wyświetlane gamejamy, drużyny, gry i dokłade dane dotyczące użytkownika
     """
     if username==session['username'] and session['username']=='piotr' or username!="piotr":
-        user_member=False
-        try:
-            organizer = User.query.filter_by(username=session['username']).first().organizer
-            admin = User.query.filter_by(username=session['username']).first().admin
-            teams=Team.query.order_by(Team.id.asc()).all()
-            for t in teams:
-                if session['username'] in t.contributors:
-                    user_member = True
-        except KeyError:
-            organizer = False
-            admin = False
-            user_member=False
         user=User.query.filter_by(username=username).first()
-        user_teams=Team.query.filter_by(master=username).all()
-        teams = Team.query.order_by(Team.id.asc()).all()
-        in_teams = []
-        for team in teams:
-            if user.username in team.contributors:
-                in_teams.append(team)
-        messages = Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
-        new_messages=0
-        for message in messages:
-            if message.new:
-                new_messages += 1
-        print(teams)
-        return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=in_teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages, member=user_member)
+        if user:
+
+            user_member=False
+            try:
+                organizer = User.query.filter_by(username=session['username']).first().organizer
+                admin = User.query.filter_by(username=session['username']).first().admin
+                teams=Team.query.order_by(Team.id.asc()).all()
+                for t in teams:
+                    if session['username'] in t.contributors:
+                        user_member = True
+            except KeyError:
+                organizer = False
+                admin = False
+                user_member=False
+            user=User.query.filter_by(username=username).first()
+            user_teams=Team.query.filter_by(master=username).all()
+            teams = Team.query.order_by(Team.id.asc()).all()
+            in_teams = []
+            for team in teams:
+                if user.username in team.contributors:
+                    in_teams.append(team)
+            messages = Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
+            new_messages=0
+            for message in messages:
+                if message.new:
+                    new_messages += 1
+            print(teams)
+            return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=in_teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages, member=user_member)
+        flash("Błąd, nie ma tego użytkownika")
+        return redirect("/")
     return redirect('/user/'+session['username'])
 
 @app.route('/user/<username>/messages')
@@ -624,8 +630,6 @@ def jam_creation():
         organizer = User.query.filter_by(username=session['username']).first().organizer
         admin = User.query.filter_by(username=session['username']).first().admin
         teams=Team.query.order_by(Team.id.asc()).all()
-
-
         for t in teams:
             if session['username'] in t.contributors:
                 user_member = True
@@ -684,7 +688,6 @@ def jams():
     if admin or organizer or user_member:
         jams = Jam.query.order_by(Jam.id.asc()).all()
         return render_template("jams.html", jams=jams, admin=admin, organizer=organizer, member=user_member)
-
     return redirect('/')
 
 @app.route("/jam/<jam_id>")
@@ -706,12 +709,60 @@ def jam(jam_id):
     this_jam = Jam.query.filter_by(id=jam_id).first()
     admin = User.query.filter_by(username=session['username']).first().admin
     team = Team.query.filter_by(master=session['username']).all()
+    jam_master=Jam.query.filter_by(master=session['username'])
     teams = Team.query.order_by(Team.id.asc()).all()
-    if this_jam and team:
-        return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member, team=team, teams=teams)
-    if this_jam:
-        return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member, teams=teams)
+    if this_jam and team or admin or jam_master:
+        return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=teams, team=team)
     return render_template('404.html'), 404
+
+@app.route('/jam/<jam_id>/invite/<team_name>')
+@login_required
+def jam_invite(jam_id,team_name):
+    try:
+        jam=Jam.query.filter_by(id=jam_id).first()
+        message=Message()
+        message.title="Prośba o dołączenie drużyny team do twojego gamejamu".replace("team",team_name)
+        message.adresser=jam.master
+        message.author=team_name
+        message.content='Drużyna '+team_name+' chce brać udział w twoim jamie <br><br>  <a href=\'/jam/'+jam_id+'/add/'+team_name+'\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenieKliknij tu</a> aby zatwierdzić to zgłoszenie'
+        message.created=datetime.now()
+        db.session.add(message)
+        db.session.commit()
+        flash("Zgłoszenie wysłane")
+        return redirect("/jam/"+jam_id)
+    except:
+        return redirect("/")
+
+@app.route('/jam/<jam_id>/add/<team_name>')
+@login_required
+def jam_add(jam_id, team_name):
+
+    admin=User.query.filter_by(username=session['username']).first().admin
+    jam_master=Jam.query.filter_by(id=jam_id).first().master
+    title = "Prośba o dołączenie drużyny team do twojego gamejamu".replace("team", team_name)
+    message=Message.query.filter_by(adresser=jam_master,title=title)
+
+    if admin or message and jam_master==session['username']:
+        jam = Jam.query.filter_by(id=jam_id).first()
+        if jam:
+            if jam.teams:
+                if not team_name in jam.teams:
+                    jam = Jam.query.filter_by(id=jam_id).first()
+                    jam.teams.append(team_name)
+                    db.session.commit()
+                    flash('Pomyślnie dodamo drużyne do jamu2')
+
+            else:
+                jam.teams=[]
+                jam.teams.append(team_name)
+                db.session.commit()
+                flash('Pomyślnie dodamo drużyne do jamu1')
+
+            return redirect('/jam/' + jam_id)
+        return redirect("/")
+    return redirect('/')
+
+
 
 
 """
