@@ -6,13 +6,13 @@ db_start()
 from models import User, Team, Message, Jam
 
 from reset_main import db as rdb
-import models
+import reset_models
 
 def new_database():
     users=User.query.order_by(User.id.asc()).all()
     for u in users:
         print(u.username)
-        user = models.User()
+        user = reset_models.User()
         user.username = u.username
         user.password = u.password
         user.email = u.email
@@ -30,7 +30,7 @@ def new_database():
 
     teams=Team.query.order_by(Team.id.asc()).all()
     for t in teams:
-        team = models.Team()
+        team = reset_models.Team()
         team.name = t.name
         team.master = t.master
         team.master_email = t.master_email
@@ -40,7 +40,7 @@ def new_database():
 
     jams = Jam.query.order_by(Jam.id.asc()).all()
     for j in jams:
-        jam = models.Jam()
+        jam = reset_models.Jam()
         jam.title = j.title
         jam.master=j.master
         jam.description = j.description
@@ -51,7 +51,7 @@ def new_database():
 
     messages = Message.query.order_by(Message.id.asc()).all()
     for m in messages:
-        message=models.Message()
+        message=reset_models.Message()
         message.title = m.title
         message.adresser=m.adresser
         message.author=m.author
@@ -63,4 +63,3 @@ def new_database():
     return 0
 
 new_database()
-print("teraz włącz rest_final")

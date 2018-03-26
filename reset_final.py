@@ -9,11 +9,11 @@ db_start()
 from reset_models import User, Team, Message, Jam
 
 from main import db as rdb
-import reset_models
+import models
 
 users = User.query.order_by(User.id.asc()).all()
 for u in users:
-    user = reset_models.User()
+    user = models.User()
     user.username = u.username
     user.password = u.password
     user.email = u.email
@@ -29,7 +29,7 @@ for u in users:
 
 teams = Team.query.order_by(Team.id.asc()).all()
 for t in teams:
-    team = reset_models.Team()
+    team = models.Team()
     team.name = t.name
     team.master = t.master
     team.master_email = t.master_email
@@ -39,7 +39,7 @@ for t in teams:
 
 jams = Jam.query.order_by(Jam.id.asc()).all()
 for j in jams:
-    jam = reset_models.Jam()
+    jam = models.Jam()
     jam.title = j.title
     jam.master = j.master
     jam.description = j.description
@@ -50,7 +50,7 @@ for j in jams:
 
 messages = Message.query.order_by(Message.id.asc()).all()
 for m in messages:
-    message = reset_models.Message()
+    message = models.Message()
     message.title = m.title
     message.adresser = m.adresser
     message.author = m.author
@@ -59,3 +59,4 @@ for m in messages:
     rdb.session.add(message)
     rdb.session.commit()
 
+print("teraz przekopiuj ZMIANY z models do reset_models")
