@@ -813,7 +813,7 @@ Koniec obsługi plików, początek obsługi konta administratora
 """
 
 
-@app.route("/admin")
+@app.route("/admin/")
 @login_required
 def admin():
     """to samo co user info tylko dla admina"""
