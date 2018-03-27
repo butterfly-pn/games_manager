@@ -1,7 +1,5 @@
 """w budowie sqlalchemmy"""
 
-#from django import forms
-
 import os
 from main import app
 from main import db
@@ -213,39 +211,42 @@ def user_info_id(username):
     """
     Tu będą wyświetlane gamejamy, drużyny, gry i dokłade dane dotyczące użytkownika
     """
-    if username==session['username'] and session['username']=='piotr' or username!="piotr":
-        user=User.query.filter_by(username=username).first()
-        if user:
-
-            user_member=False
-            try:
-                organizer = User.query.filter_by(username=session['username']).first().organizer
-                admin = User.query.filter_by(username=session['username']).first().admin
-                teams=Team.query.order_by(Team.id.asc()).all()
-                for t in teams:
-                    if session['username'] in t.contributors:
-                        user_member = True
-            except KeyError:
-                organizer = False
-                admin = False
-                user_member=False
+    if User.query.filter_by(username=username).first():
+        if username==session['username'] and session['username']=='piotr' or username!="piotr":
             user=User.query.filter_by(username=username).first()
-            user_teams=Team.query.filter_by(master=username).all()
-            teams = Team.query.order_by(Team.id.asc()).all()
-            in_teams = []
-            for team in teams:
-                if user.username in team.contributors:
-                    in_teams.append(team)
-            messages = Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
-            new_messages=0
-            for message in messages:
-                if message.new:
-                    new_messages += 1
-            print(teams)
-            return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=in_teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages, member=user_member)
-        flash("Błąd, nie ma tego użytkownika", 'warning')
-        return redirect("/")
-    return redirect('/user/'+session['username'])
+            if user:
+
+                user_member=False
+                try:
+                    organizer = User.query.filter_by(username=session['username']).first().organizer
+                    admin = User.query.filter_by(username=session['username']).first().admin
+                    teams=Team.query.order_by(Team.id.asc()).all()
+                    for t in teams:
+                        if session['username'] in t.contributors:
+                            user_member = True
+                except KeyError:
+                    organizer = False
+                    admin = False
+                    user_member=False
+                user=User.query.filter_by(username=username).first()
+                user_teams=Team.query.filter_by(master=username).all()
+                teams = Team.query.order_by(Team.id.asc()).all()
+                in_teams = []
+                for team in teams:
+                    if user.username in team.contributors:
+                        in_teams.append(team)
+                messages = Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
+                new_messages=0
+                for message in messages:
+                    if message.new:
+                        new_messages += 1
+                print(teams)
+                return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=in_teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages, member=user_member)
+            flash("Błąd, nie ma tego użytkownika", 'warning')
+            return redirect("/")
+        return redirect('/user/'+session['username'])
+    flash("Nie ma tego użytkownika", 'warning')
+    return redirect("/")
 
 @app.route('/user/<username>/messages')
 @login_required
