@@ -46,8 +46,6 @@ def db_start():
     db.session.commit()
 
 
-
-
     jam = models.Jam()
     jam.title = "Jam testowy"
     jam.master="piotr"

@@ -6,13 +6,24 @@
       <br>
       <ul>
 
-          <br> <a href='/delete/{{user.id}}' >Usuń konto użytkownika {{username}}</a></h3>
+          <br> <a class="btn btn-primary btn-block" href='/delete/{{user.id}}' >Usuń konto użytkownika {{username}}</a></h3>
+
           {% if user.admin%}
-          <br> <a href='/take_admin/{{user.id}}' >Odbierz uprawnienia administratora użytkownikowi {{username}}</a></h3>
+          <br> <a class="btn btn-primary btn-block" href='/take_admin/{{user.id}}' >Odbierz uprawnienia administratora użytkownikowi {{username}}</a></h3>
 
           {% else %}
 
-            <br> <a href='/give_admin/{{user.id}}' >Przekaż uprawnienia administratora użytkownikowi {{username}}</a></h3>
+            <br> <a class="btn btn-primary btn-block" href='/give_admin/{{user.id}}' >Przekaż uprawnienia administratora użytkownikowi {{username}}</a></h3>
+
+          {% endif %}
+
+           {% if user.organizer%}
+
+          <br> <a class="btn btn-primary btn-block" href='/take-organizer/{{user.username}}' >Odbierz uprawnienia organizatora użytkownikowi {{username}}</a></h3>
+
+          {% else %}
+
+            <br> <a class="btn btn-primary btn-block" href='/make-organizer/{{user.username}}' >Przekaż uprawnienia organizatora użytkownikowi {{username}}</a></h3>
 
           {% endif %}
 <br>

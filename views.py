@@ -1,4 +1,7 @@
 """w budowie sqlalchemmy"""
+
+from django import forms
+
 import os
 from main import app
 from main import db
@@ -9,7 +12,7 @@ import gc
 from passlib.hash import sha256_crypt
 from functools import wraps
 from flask import Flask, render_template, flash, request, redirect, url_for, session, send_from_directory
-from wtforms import Form, validators, StringField, PasswordField, BooleanField, TextAreaField
+from wtforms import Form, validators, StringField, PasswordField, BooleanField, TextAreaField, SelectField
 from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -54,7 +57,9 @@ class RegistrationForm(Form):
                               validators.EqualTo('confirm',
                                                  message='Hasła muszą być jednakowe')])
     confirm = PasswordField('Powtórz hasło')
-    job = StringField('Czym się zajmujesz')
+
+    job = SelectField('jaka jest twoja funkcja', choices=[('Programista', 'Programista'), ('Grafik', 'Grafik'), ('Dźwiękowiec', 'Dźwiękowiec')])
+
     accept_tos = BooleanField('Akceptuję Warunki użytkowania i Politykę prywatności'
                               '(zaktualizowana 17 stycznia 2018r.)', [validators.Required()])
 
@@ -260,8 +265,10 @@ def user_messages(username):
     if session['username']==username or User.query.filter_by(username=session['username']).first().admin:
 
         messages=Message.query.filter_by(adresser=username).order_by(Message.created.desc()).all()
+        new_messages=Message.query.filter_by(adresser=username, new=True).order_by(Message.created.desc()).all()
+        old_messages = Message.query.filter_by(adresser=username, new=False).order_by(Message.created.desc()).all()
         try:
-            return render_template('user_messages.html', messages=messages, user=username, organizer=organizer, admin=admin, member=user_member)
+            return render_template('user_messages.html', messages=messages, user=username, organizer=organizer, admin=admin, member=user_member, new_messages=new_messages, old_messages=old_messages)
         except:
             return redirect('/')
 
@@ -301,7 +308,7 @@ def message_create():
         content=request.form['content']
         if not User.query.filter_by(username=name).first():
             flash("nie ma takiego użytkownika")
-            return redirect("/message/create")
+            return redirect('/user/' + session['username']+"/messages")
 
         new_message=Message()
         new_message.adresser=name
@@ -314,6 +321,15 @@ def message_create():
         flash("Wiadomość została wysłana")
         return redirect('/user/' + session['username']+"/messages")
 
+@app.route('/message/<id>/delete')
+@login_required
+def message_delete(id):
+    message=Message.query.filter_by(adresser=session["username"], id=id).first()
+    if message:
+        db.session.delete(message)
+        db.session.commit()
+    flash("Wiadomość została usunięta")
+    return redirect('/user/' + session['username']+"/messages")
 
 """
 Koniec informacji o użytkowniku, początek informacji o organizatorach
@@ -387,13 +403,29 @@ def make_organizer(username):
             User.query.filter_by(username=username).first().organizer = True
             db.session.commit()
             flash("Użytkownik "+username+" jest organizatorem!")
-            return redirect('/user/' + session['username'] + '/messages')
+            return redirect('/admin/user/' + str(User.query.filter_by(username=username).first().id))
         else:
             flash("Błąd: Użytkownik nie istnieje")
-            return redirect('/user/'+session['username']+'/messages')
+            return redirect('/admin/')
     else:
         flash("Błąd: Nie masz uprawnień")
-        return redirect('/user/' + session['username'] + '/messages')
+        return redirect('/user/' + session['username'])
+
+@app.route('/take-organizer/<username>')
+@login_required
+def take_organizer(username):
+    if User.query.filter_by(username=session['username']).first().admin:
+        if User.query.filter_by(username=username).first():
+            User.query.filter_by(username=username).first().organizer = False
+            db.session.commit()
+            flash("Użytkownik "+username+" już nie jest organizatorem!")
+            return redirect('/admin/user/' + str(User.query.filter_by(username=username).first().id))
+        else:
+            flash("Błąd: Użytkownik nie istnieje")
+            return redirect('/admin/')
+    else:
+        flash("Błąd: Nie masz uprawnień")
+        return redirect('/user/' + session['username'])
 
 
 """
@@ -530,6 +562,10 @@ def delete_team(team_name):
     try:
        if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master == session['username']:
            this_team = Team.query.filter_by(name=team_name).first()
+           messages=Message.query.filter_by(author=this_team.master, title="Zaproszenie do drużyny "+team_name).all()
+           for message in messages:
+               db.session.delete(message)
+               db.session.commit()
            db.session.delete(this_team)
            db.session.commit()
            flash("Usunięto zespół!")
@@ -561,15 +597,19 @@ def invite_redirect(team_name):
 @login_required
 def team_invite(team_name,username):
     if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master==session['username']:
-        new_message = Message()
-        new_message.title ="Zaproszenie do drużyny "+team_name
-        new_message.author =Team.query.filter_by(name=team_name).first().master
-        new_message.adresser =username
-        new_message.created=datetime.now()
-        new_message.content = "Zostałeś zaproszony do drużyny "+team_name+". W tej drużynie znajdują się: "+str(Team.query.filter_by(name=team_name).first().contributors)
-        db.session.add(new_message)
-        db.session.commit()
-        flash("użytkownik został zaproszony")
+        message=Message.query.filter_by(author=Team.query.filter_by(name=team_name).first().master, adresser=username, title="Zaproszenie do drużyny "+team_name).first()
+        if not message:
+            new_message = Message()
+            new_message.title ="Zaproszenie do drużyny "+team_name
+            new_message.author =Team.query.filter_by(name=team_name).first().master
+            new_message.adresser =username
+            new_message.created=datetime.now()
+            new_message.content = "Zostałeś zaproszony do drużyny "+team_name+". W tej drużynie znajdują się: "+str(Team.query.filter_by(name=team_name).first().contributors)
+            db.session.add(new_message)
+            db.session.commit()
+            flash("użytkownik został zaproszony")
+        else:
+            flash("Użytkonik był już zaproszony. Poczekaj na jego gdpowiedź")
         return redirect('/team/'+team_name)
     return redirect("/")
 
@@ -578,14 +618,23 @@ def team_invite(team_name,username):
 @login_required
 def team_join(team_name, username):
     if User.query.filter_by(username=session['username']).first().admin or Message.query.filter_by(title="Zaproszenie do drużyny "+team_name, adresser=username).first().adresser==username:
-        if not username in Team.query.filter_by(name=team_name).first().contributors:
-            team=Team.query.filter_by(name=team_name).first()
-            cont=team.contributors[:]
-            cont.append(username)
-            team.contributors=cont[:]
-            db.session.commit()
-            flash('Pomyślnie dołączono do drużyny')
-        return redirect('/team/'+team_name)
+        team=Team.query.filter_by(name=team_name).first()
+        if team:
+            if not username in Team.query.filter_by(name=team_name).first().contributors:
+                if team.contributors:
+                    cont=team.contributors[:]
+                    cont.append(username)
+                    team.contributors=cont[:]
+                    db.session.commit()
+                    flash('Pomyślnie dołączono do drużyny')
+                else:
+                    cont=team.contributors[:]
+                    cont=[team_name]
+                    team.contributors=cont[:]
+                    db.session.commit()
+                    flash('Pomyślnie dołączono do drużyny')
+            return redirect('/team/'+team_name)
+        flash("Błąd:  nie ma takiej drużyny")
     return redirect('/')
 
 @app.route('/team/<team_name>/delete/<username>')
@@ -613,9 +662,11 @@ def team_delete(team_name, username):
         flash("Błąd: Nie masz uprawnień", category='error')
         return redirect('team/'+team_name)
 
+
 """
 Koniec obsługi drużyn, początek obsługi jamów
 """
+
 
 class JamCreationForm(Form):
     jam_name =  StringField("nazwa GAME-JAMu", [validators.InputRequired(' ')])
@@ -705,14 +756,12 @@ def jam(jam_id):
         organizer = False
         admin = False
         user_member=False
-
     this_jam = Jam.query.filter_by(id=jam_id).first()
     admin = User.query.filter_by(username=session['username']).first().admin
     team = Team.query.filter_by(master=session['username']).all()
     jam_master=Jam.query.filter_by(master=session['username'])
-    teams = Team.query.order_by(Team.id.asc()).all()
-    if this_jam and team or admin or jam_master:
-        return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=teams, team=team)
+    if this_jam:
+        return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=team)
     return render_template('404.html'), 404
 
 @app.route('/jam/<jam_id>/invite/<team_name>')
@@ -720,16 +769,26 @@ def jam(jam_id):
 def jam_invite(jam_id,team_name):
     try:
         jam=Jam.query.filter_by(id=jam_id).first()
-        message=Message()
-        message.title="Prośba o dołączenie drużyny team do twojego gamejamu".replace("team",team_name)
-        message.adresser=jam.master
-        message.author=team_name
-        message.content='Drużyna '+team_name+' chce brać udział w twoim jamie <br><br>  <a href=\'/jam/'+jam_id+'/add/'+team_name+'\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenieKliknij tu</a> aby zatwierdzić to zgłoszenie'
-        message.created=datetime.now()
-        db.session.add(message)
-        db.session.commit()
-        flash("Zgłoszenie wysłane")
-        return redirect("/jam/"+jam_id)
+        if jam.master==session['username'] or User.query.filter_by(username=session['username']).first().admin:
+            return redirect("/jam/jam_id/add/team".replace("jam_id", jam_id).replace("team", team_name))
+
+        jam_master = Jam.query.filter_by(id=jam_id).first().master
+        title = "Prośba o dołączenie drużyny do jamu gamejam".replace("gamejam", jam.title)
+        message = Message.query.filter_by(adresser=jam_master, title=title, author="Drużyna " + team_name ).first()
+
+        if not message:
+            message=Message()
+            message.title="Prośba o dołączenie drużyny do jamu gamejam".replace("gamejam",jam.title)
+            message.adresser=jam.master
+            message.author="Drużyna "+team_name
+            message.content='Drużyna '+team_name+' chce brać udział w twoim jamie <br><br>  <a href=\'/jam/'+jam_id+'/add/'+team_name+'\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenieKliknij tu</a> aby zatwierdzić to zgłoszenie'
+            message.created=datetime.now()
+            db.session.add(message)
+            db.session.commit()
+            flash("Zgłoszenie wysłane")
+            return redirect("/jam/"+jam_id)
+        flash("Już wysłałeś zgłoszenie. Poczekaj na zatwierdzenie go przez organizatora")
+        return redirect("/jam/" + jam_id)
     except:
         return redirect("/")
 
@@ -748,13 +807,19 @@ def jam_add(jam_id, team_name):
             if jam.teams:
                 if not team_name in jam.teams:
                     jam = Jam.query.filter_by(id=jam_id).first()
-                    jam.teams.append(team_name)
+                    teams=jam.teams[:]
+                    teams.append(team_name)
+                    jam.teams=teams[:]
+                    print(jam.teams)
                     db.session.commit()
                     flash('Pomyślnie dodamo drużyne do jamu2')
+                    print(jam.teams)
 
             else:
-                jam.teams=[]
-                jam.teams.append(team_name)
+                jam = Jam.query.filter_by(id=jam_id).first()
+                jam.teams=[team_name]
+                print(jam.teams)
+                db.session.commit()
                 db.session.commit()
                 flash('Pomyślnie dodamo drużyne do jamu1')
 
@@ -762,8 +827,57 @@ def jam_add(jam_id, team_name):
         return redirect("/")
     return redirect('/')
 
+@app.route('/jam/<jam_id>/delete/<team_name>')
+@login_required
+def jam_delete(team_name, jam_id):
+    if User.query.filter_by(username=session['username']).first().admin or Jam.query.filter_by(id=jam_id).first().master == session['username']:
+        jam=Jam.query.filter_by(id=jam_id).first()
+        if jam:
+            if jam.teams:
+                if team_name in jam.teams:
+                    teams = jam.teams[:]
+                    teams.remove(team_name)
+                    jam.teams=teams[:]
+                    print(teams)
+                    db.session.commit()
+                    invite_message = Message.query.filter_by(adresser=jam.master, author=team_name).first()
+                    if invite_message:
+                        db.session.delete(invite_message)
+                        db.session.commit()
+                        print("usunięte")
+                    flash('Pomyślnie usunięto team z jamu'.replace('team', team_name))
+                    return redirect('jam/'+jam_id)
+            flash('Błąd: W tym jamie nie ma drużyny team'.replace('team', team_name))
+            return redirect('jam/' + jam_id)
+        flash('Błąd: Nie ma takiego jamu')
+        return redirect('jam/'+jam_id)
+    else:
+        flash("Błąd: Nie masz uprawnień", category='error')
+        return redirect('team/'+team_name)
 
+@app.route('/jam/<jam_id>/delete')
+@login_required
+def delete_jam(jam_id):
+    try:
+       if User.query.filter_by(username=session['username']).first().admin or Jam.query.filter_by(id=jam_id).first().master == session['username']:
+           this_jam = Jam.query.filter_by(id=jam_id).first()
+           if this_jam:
+               messages=Message.query.filter_by(title="Prośba o dołączenie drużyny do jamu gamejam".replace("gamejam", this_jam.title), adresser=this_jam.master).all()
+               if messages:
+                   for message in messages:
+                       db.session.delete(message)
+                       db.session.commit()
+               db.session.delete(this_jam)
+               db.session.commit()
+               flash("Usunięto jam!")
+           return redirect(url_for('homepage'))
 
+       else:
+           flash("Nie masz uprawnień")
+           return redirect(url_for('homepage'))
+    except Exception as error:
+        flash(error)
+        return redirect(url_for('homepage'))
 
 """
 Koniec jamów początek plików
