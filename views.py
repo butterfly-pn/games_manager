@@ -1,6 +1,6 @@
 """w budowie sqlalchemmy"""
 
-from django import forms
+#from django import forms
 
 import os
 from main import app
@@ -35,7 +35,7 @@ def login_required(func):
     @wraps(func)
     def wrap(*args, **kwargs):
         if not 'logged_in' in session:
-            flash("Musisz być zalogowany.")
+            flash("Musisz być zalogowany.", 'danger')
             return redirect('/')
         else:
             return func(*args, **kwargs)
@@ -243,7 +243,7 @@ def user_info_id(username):
                     new_messages += 1
             print(teams)
             return render_template('user_info.html', job=User.query.filter_by(username=session['username']).first().job, user=user, teams=in_teams,teams2=user_teams, organizer=organizer, admin=admin, new_messages=new_messages, member=user_member)
-        flash("Błąd, nie ma tego użytkownika")
+        flash("Błąd, nie ma tego użytkownika", 'warning')
         return redirect("/")
     return redirect('/user/'+session['username'])
 
@@ -1060,6 +1060,10 @@ def change_admin():
 Koniec obsługi konta administratora, koniec funkcji obsługujących zdarzenia zainicjowane celowo przez użytkownika
 """
 
+@app.route('/clear/')
+def clear():
+    session.clear()
+    return redirect('/')
 
 @app.errorhandler(404)
 def page_not_found(e):
