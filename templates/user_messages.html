@@ -23,16 +23,25 @@
           {%if messages %}
           <ul class="list-group list-group-flush">
 
-        {% for message in messages %}
+        {% for message in new_messages %}
               <li class="list-group-item">
-                  <!--<input class="form-check-input" id="message" type="checkbox" value="{{id}}" id="defaultCheck1" onclick="validate()">-->
                   <div class="col-lg-10">
                     <a class="text-secondary" href="/message/{{message.id}}">
           {%if message.new%}
                         <h3>{{message.title}} <span class="badge badge-secondary">New</span></h3>
                     </a>
                     <b>wysłana przez {{message.author}} | {{message.created}}</b>
-          {%else%}
+          {%endif%}
+                  </div>
+              </li>
+      {% endfor %}
+
+
+          {% for message in old_messages%}
+              <li class="list-group-item">
+                  <div class="col-lg-10">
+                    <a class="text-secondary" href="/message/{{message.id}}">
+          {%if  not message.new%}
                         <h4>{{message.title}}</h4>
                     </a>
                     wysłana przez {{message.author}} | {{message.created}}

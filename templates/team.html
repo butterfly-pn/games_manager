@@ -30,7 +30,6 @@
       {% if admin or team.master==session['username'] %}
       <button class="ml-5 btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#add-to-team" href="#">+
         </button><br>
-      <br><button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#">Usuń ten zespół</button>
       {% endif %}
     </div>
     <div class="col-6"></div>
