@@ -3,48 +3,72 @@
 {% set page_id = "user_control" %}
 {% block content %}
   <div class="row">
-      <br>
-      <ul>
+     <ul>
+         <br>
+<center>
+  <h1> Użytkownik  <b>{{user.username}} </b></h1>
+</center>
 
-          <br> <a class="btn btn-primary btn-block" href='/delete/{{user.id}}' >Usuń konto użytkownika {{username}}</a></h3>
+      <br>
+    <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#" > Usuń konto użytkownika {{user.username}}</button>
 
           {% if user.admin%}
-          <br> <a class="btn btn-primary btn-block" href='/take_admin/{{user.id}}' >Odbierz uprawnienia administratora użytkownikowi {{username}}</a></h3>
+          <br> <a class="btn btn-primary btn-block" href='/take_admin/{{user.id}}' >Odbierz uprawnienia administratora użytkownikowi {{user.username}}</a></h3>
 
           {% else %}
 
-            <br> <a class="btn btn-primary btn-block" href='/give_admin/{{user.id}}' >Przekaż uprawnienia administratora użytkownikowi {{username}}</a></h3>
+            <br> <a class="btn btn-primary btn-block" href='/give_admin/{{user.id}}' >Przekaż uprawnienia administratora użytkownikowi {{user.username}}</a></h3>
 
           {% endif %}
 
            {% if user.organizer%}
 
-          <br> <a class="btn btn-primary btn-block" href='/take-organizer/{{user.username}}' >Odbierz uprawnienia organizatora użytkownikowi {{username}}</a></h3>
+          <br> <a class="btn btn-primary btn-block" href='/take-organizer/{{user.username}}' >Odbierz uprawnienia organizatora użytkownikowi {{user.username}}</a></h3>
 
           {% else %}
 
-            <br> <a class="btn btn-primary btn-block" href='/make-organizer/{{user.username}}' >Przekaż uprawnienia organizatora użytkownikowi {{username}}</a></h3>
+            <br> <a class="btn btn-primary btn-block" href='/make-organizer/{{user.username}}' >Przekaż uprawnienia organizatora użytkownikowi {{user.username}}</a></h3>
 
           {% endif %}
 <br>
-          Zespoły należące do użytkownika:
+
+          <h5>Zespoły należące do użytkownika:</h5>
           {% for t in teams%}
           <ol>
           {% if t.master==user.username%}
-            <li> <a href="/team/{{t.name}}">{{t.name}}</a>,</li>
+              <li> <a class="btn btn-primary btn-block" href="/team/{{t.name}}">{{t.name}}</a>,</li>
               {%endif%}
         </ol>
           {% endfor %}
-
-          Zespoły, do których użytkownik jest zapisany:
+{% if member%}
+          <h5>Zespoły, do których użytkownik jest zapisany:</h5>
           {% for t in teams%}
           <ol>
               {%if user.username in t.contributors%}
-              <li> <a href="/team/{{t.name}}">{{t.name}}</a>,</li>
+              <li> <a class="btn btn-primary btn-block" href="/team/{{t.name}}">{{t.name}}</a>,</li>
               {%endif%}
           </ol>
          {%endfor%}
-
+{% endif %}
       </ul>
   </div>
+
+         <div class="modal fade" id="are-you-sure" tabindex="-5" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <p>Właśnie zamierzasz usunąć użytkownika <b>{{user.username}}</b>. Jesteś tego pewien?</p>
+                <a class="btn btn-danger" href="/delete/{{user.id}}">Usuń</a>
+                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 {% endblock %}

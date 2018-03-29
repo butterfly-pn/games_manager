@@ -40,32 +40,35 @@
           <a class="nav-link" href="{{ url_for('download') }}">Download</a>
         </li>
 
-        {% endif %}
-        {% if session['logged_in'] %}
         <li class="nav-item{% if page_id == 'create-team' %} active{% endif %}">
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-team" href="#">Stwórz zespół</a>
         </li>
         <li class="nav-item{% if page_id == 'create-jam' %} active{% endif %}">
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-jam" href="#">Organizuj GAME-JAM</a>
-        </li>
-        <li class="nav-item{% if page_id == 'logout' %} active{% endif %}">
-          <a class="nav-link" href="{{ url_for('logout') }}">Wyloguj się</a>
-        </li>
+
+
           {% if admin or organizer or member %}
           <li class="nav-item{% if page_id == 'jams' %} active{% endif %}">
           <a class="nav-link" href="/jams">Game Jamy</a>
         </li>
        {%endif%}
 
-{% if admin %}
+        {% if admin %}
         <hr class="hr-nav">
          <li class="nav-item{% if page_id == 'admin' %} active{% endif %}">
 
           <a class="btn btn-warning btn-block" href="/admin">Funkcje administratora  </a>
          </li>
         <hr class="hr-nav">
-
         {%endif%}
+
+
+        <hr class="hr-nav">
+         <li class="nav-item{% if page_id == 'logout' %} active{% endif %}">
+
+          <a class="btn btn-secondary btn-block" href="{{ url_for('logout') }}">Wyloguj się</a>
+         </li>
+        <hr class="hr-nav">
         {% endif %}
 
         {% if not session['logged_in']%}
