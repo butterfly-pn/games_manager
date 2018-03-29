@@ -1176,7 +1176,8 @@ def take_admin(id):
                 flash('Odebrano uprawnienia administratora użytkownikowi ' + str(
                     User.query.filter_by(id=id).first().username))
                 return redirect('/user_list')
-            except:
+            except Exception as e:
+                flash('Błąd: ' + str(e), 'danger')
                 return redirect('/')
     return redirect('/')
 
@@ -1194,7 +1195,8 @@ def change_admin():
             db.session.commit()
             flash("zmieniono stan na " + str(User.query.filter_by(username=session['username']).first().admin))
             return redirect('/user/' + session['username'])
-        except:
+        except Exception as e:
+            flash('Błąd: ' + str(e), 'danger')
             return redirect('/')
     return redirect('/')
 
