@@ -663,6 +663,92 @@ def team_delete(team_name, username):
         return redirect('team/'+team_name)
 
 
+@app.route("/team/<team_name>/give_redirect",methods=["GET","POST"])
+@login_required
+def give_redirect(team_name):
+    if request.method=="GET":
+        return render_template("team.html",team=Team.query.filter_by(name=team_name).first())
+    name = request.form['give_name']
+    if User.query.filter_by(username=name).first():
+        return redirect('/team/'+team_name+'/give/'+name+'/1')
+    flash('nie ma takiego użytkownika',"warning")
+    return redirect('/team/'+team_name)
+
+@app.route('/team/<team_name>/give/<username>/<int:i>')
+@login_required
+def team_give(team_name,username,i):
+    if username and User.query.filter_by(username=username).first():
+        if i==1:
+            if User.query.filter_by(username=session['username']).first().admin and not Team.query.filter_by(name=team_name).first().master==session['username']:
+                return redirect('/team/'+team_name+"/give/"+username+"/2")
+            if Team.query.filter_by(name=team_name).first().master==session['username']:
+                message=Message.query.filter_by(author=Team.query.filter_by(name=team_name).first().master, adresser=username, title="Prośba o przejęcie drużyny "+team_name).first()
+                if not message:
+                    new_message = Message()
+                    new_message.title ="Prośba o przejęcie drużyny "+team_name
+                    new_message.author =Team.query.filter_by(name=team_name).first().master
+                    new_message.adresser =username
+                    new_message.created=datetime.now()
+                    new_message.content = "Zostałeś zaproszony do objcia prowadzenia w drużynie "+team_name+"<br> Dotychczasowym szefem tej drużyny był "+Team.query.filter_by(name=team_name).first().master+' <br><br> <a href=\'/team/'+team_name+'/give/'+username+'/2''\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenie '
+                    db.session.add(new_message)
+                    db.session.commit()
+                    flash("użytkownik został zaproszony")
+                else:
+                    flash("Użytkonik był już zaproszony. Poczekaj na jego gdpowiedź")
+                return redirect('/team/'+team_name)
+            flash("nie masz uprawnień")
+            return redirect("/")
+
+        if i==2:
+            try:
+                message=message=Message.query.filter_by(author=Team.query.filter_by(name=team_name).first().master, adresser=username, title="Prośba o przejęcie drużyny "+team_name).first()
+            except:
+                pass
+            if message:
+                if message.adresser==session['username']:
+                    team=Team.query.filter_by(name=team_name).first()
+                    if not User.query.filter_by(username=session['username']).first().admin:
+                        new_message = Message()
+                        new_message.title = "Drużyna  " + team_name+" została przekazana"
+                        new_message.author = username
+                        new_message.adresser = Team.query.filter_by(name=team_name).first().master
+                        new_message.created = datetime.now()
+                        new_message.content = "Drużyna team została przez ciebie przekazana użytkownikowi user. " \
+                                              "<br> Jeżeli nie było to twoje działanie, możesz skontaktować się z naszą administracją.".replace("user",username)
+                        db.session.add(new_message)
+                        db.session.commit()
+
+
+                    user=User.query.filter_by(username=username).first()
+                    team.master=user.username
+                    team.master_email=user.email
+                    db.session.commit()
+                    team = Team.query.filter_by(name=team_name).first()
+                    if team:
+                        if not user.username in Team.query.filter_by(name=team_name).first().contributors:
+                            if team.contributors:
+                                cont = team.contributors[:]
+                                cont.append(user.username)
+                                team.contributors = cont[:]
+                                db.session.commit()
+                                flash('Pomyślnie dołączono do drużyny')
+                            else:
+                                cont = team.contributors[:]
+                                cont = [username]
+                                team.contributors = cont[:]
+                                db.session.commit()
+                                flash('Pomyślnie dołączono do drużyny')
+
+                    return redirect("/team/"+team_name)
+                return redirect("/")
+        elif User.query.filter_by(username=session['username']).first().admin:
+            team = Team.query.filter_by(name=team_name).first()
+            team.master = username
+            db.session.commit()
+            return redirect("/team/" + team_name)
+    return redirect("/")
+
+
 """
 Koniec obsługi drużyn, początek obsługi jamów
 """
