@@ -1,1 +1,15 @@
-404 wiewiórka
+{% extends "_base.html" %}
+<title>{{ session['username'] }}</title>
+{% set page_id = "messages_normal" %}
+<center>
+{% block content %}
+  <div class="row">
+      <center>
+<h1>Strona nie została odnaleiona</h1>
+<a class="btn btn-primary btn-block" href="/">< Powrót na stronę główną</a>
+      </center>
+    <div class="col-12">
+    </div>
+  </div>
+{% endblock %}
+</center>
