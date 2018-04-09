@@ -36,7 +36,7 @@
         {% if jam.teams%}
         {% for t in teams %}
       {% if t.name not in jam.teams%}
-        <a class="btn btn-primary" href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</aclass><br>
+        <a class="btn btn-primary" href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</class><br>
       {% endif%}
         {% endfor%}
         {% else%}

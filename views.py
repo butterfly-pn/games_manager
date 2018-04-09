@@ -461,12 +461,9 @@ def delete(id):
                         cont=team.contributors[:]
                         cont.remove(user.username)
                         team.contributrs=cont[:]
-                        flash(team.contributors)
                         db.session.commit()
-                        flash(team.contributors)
                         del(team.contributors[0])
                         db.session.commit()
-                        flash(team.contributors)
                         flash("usunięto usera z drużyny")
                         db.session.commit()
 
@@ -638,7 +635,7 @@ def team_invite(team_name,username):
             db.session.commit()
             flash("użytkownik został zaproszony")
         else:
-            flash("Użytkonik był już zaproszony. Poczekaj na jego gdpowiedź")
+            flash("Użytkonik był już zaproszony. Poczekaj na jego odpowiedź")
         return redirect('/team/'+team_name)
     return redirect("/")
 
@@ -669,12 +666,14 @@ def team_join(team_name, username):
 @app.route("/team/<team_name>/give//1")
 @login_required
 def team_redirect(team_name):
+    """obsługa wrednego błędu"""
     flash("nie ma takiego użytkownika", 'warning')
     return redirect('/team/'+team_name)
 
 @app.route("/team/<team_name>/give_redirect",methods=["GET","POST"])
 @login_required
 def give_redirect(team_name):
+    """zbiera informacje s formulaża"""
     if request.method=="GET":
         return render_template("team.html",team=Team.query.filter_by(name=team_name).first())
     name = request.form['give_name']
@@ -686,6 +685,10 @@ def give_redirect(team_name):
 @app.route('/team/<team_name>/give/<username>/<int:i>')
 @login_required
 def team_give(team_name,username,i):
+    """przekazuje drużynę
+    'i' jest etapem przekazywania
+    nnie chciałem tego pisaćw dwuch funkcjach
+    """
     if i==1:
         if User.query.filter_by(username=session['username']).first().admin and not Team.query.filter_by(name=team_name).first().master==session['username']:
             return redirect('/team/'+team_name+"/give/"+username+"/2")
