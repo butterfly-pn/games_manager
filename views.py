@@ -713,9 +713,11 @@ def team_give(team_name,username,i):
 
     if i==2:
         try:
-            message=message=Message.query.filter_by(author=Team.query.filter_by(name=team_name).first().master, adresser=username, title="Prośba o przejęcie drużyny "+team_name).first()
-        except:
-            pass
+            message=Message.query.filter_by(author=Team.query.filter_by(name=team_name).first().master, adresser=username, title="Prośba o przejęcie drużyny "+team_name).first()
+        except Exception as e:
+            flash(e)
+            return redirect("/")
+
         if message:
             if message.adresser==session['username']:
                 team=Team.query.filter_by(name=team_name).first()
@@ -913,7 +915,8 @@ def jam_invite(jam_id,team_name):
             return redirect("/jam/"+jam_id)
         flash("Już wysłałeś zgłoszenie. Poczekaj na zatwierdzenie go przez organizatora")
         return redirect("/jam/" + jam_id)
-    except:
+    except Exception as e:
+        flash(e)
         return redirect("/")
 
 @app.route('/jam/<jam_id>/add/<team_name>')
