@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 
-{% set page_id = "team" %}
-<center>
+{% set page_id = "jam" %}
+
 {% block content %}
     {% if admn or session['username'] == jam.master%}
       <div class="row">
@@ -92,4 +92,3 @@
         </div>
       </div>
 {% endblock %}
-</center>
