@@ -1,4 +1,4 @@
-__author__ = 'Piotr Dyba'
+ # __author__ = 'Piotr Dyba'
 
 from flask_login import UserMixin
 

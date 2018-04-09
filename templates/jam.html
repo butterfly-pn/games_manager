@@ -1,12 +1,12 @@
 {% extends "_base.html" %}
 
-{% set page_id = "team" %}
-<center>
+{% set page_id = "jam" %}
+
 {% block content %}
     {% if admn or session['username'] == jam.master%}
       <div class="row">
       <div class="col-lg-3 mt-3">
-              <a class="btn btn-secondary btn-block" href="/jam/{{jam.id}}/close">Zamknij jam</a><br>
+              {% if jam.active %}<a class="btn btn-secondary btn-block" href="/jam/{{jam.id}}/close">Zamknij jam</a><br>{%endif%}
           <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-close" href="#">Usuń jam</button>
           <hr>
       </div>
@@ -15,11 +15,10 @@
     <div class="col-12">
 
             <h3>Nazwa jamu: {{ jam.title }}<br></h3>
-      <h5>Organizator jamu: <a href="/user/{{jam.master}}">{{jam.master}}</a> <br>
+      <h5>Organizator jamu: <a class=" btn btn-primary "href="/user/{{jam.master}}">{{jam.master}}</a> <br>
           Motyw porzewodni jamu: {{jam.theme}}<br></h5>
 
-<br>
-        <br>
+
       {% if jam.teams %}
       Zarejstrowane drużyny: {% for i in jam.teams %}
       <div class="btn-group" role="group" aria-label="User">
@@ -37,12 +36,12 @@
         {% if jam.teams%}
         {% for t in teams %}
       {% if t.name not in jam.teams%}
-        <a href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</a><br>
+        <a class="btn btn-primary" href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</class><br>
       {% endif%}
         {% endfor%}
         {% else%}
         {% for t in teams %}
-        <a href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</a><br>
+        <a class="btn btn-primary" href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</a><br>
         {% endfor%}
         {%endif %}
         {%endif%}
@@ -93,4 +92,3 @@
         </div>
       </div>
 {% endblock %}
-</center>

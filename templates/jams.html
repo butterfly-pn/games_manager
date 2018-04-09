@@ -12,7 +12,13 @@
     <br>
            {% for t in jams %}
     {% if t.active%}
-          <a class="btn btn-primary" href="/jam/{{t.id}}">{{t.title}}></a><br>
+          <a class="btn btn-primary" href="/jam/{{t.id}}">{{t.title}}></a><br><br>
+{%endif%}
+            {% endfor %}
+
+          {% for t in jams %}
+    {% if not t.active%}
+          <a class="btn btn-secondary" href="/jam/{{t.id}}">{{t.title}}></a><br><br>
 {%endif%}
             {% endfor %}
 
