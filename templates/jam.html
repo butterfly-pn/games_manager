@@ -6,8 +6,8 @@
     {% if admn or session['username'] == jam.master%}
       <div class="row">
       <div class="col-lg-3 mt-3">
-              {% if jam.active %}<a class="btn btn-secondary btn-block" href="/jam/{{jam.id}}/close">Zamknij jam</a><br>{%endif%}
-          <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-close" href="#">Usuń jam</button>
+              {% if jam.active %}<a class="btn btn-secondary btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-close" href="#">Zamknij jam</a><br>{%endif%}
+          <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-delete" href="#">Usuń jam</button>
           <hr>
       </div>
           {%endif%}
@@ -73,7 +73,7 @@
       </div>
   {%endfor%}
   {% endif%}
-           <div class="modal fade" id="are-you-sure-close" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+           <div class="modal fade" id="are-you-sure-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -84,6 +84,25 @@
               <div class="container">
                 <p>Właśnie zamierzasz usunąć gamejam  <b>{{jam.title}}</b>. Jesteś tego pewien?</p>
                 <a class="btn btn-danger" href="/jam/{{jam.id}}/delete">Usuń</a>
+                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+          <div class="modal fade" id="are-you-sure-close" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <p>Właśnie zamierzasz zamknąć gamejam  <b>{{jam.title}}</b>. Jesteś tego pewien?</p>
+                <a class="btn btn-danger" href="/jam/{{jam.id}}/close">Zamknij</a>
                 <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
                 </form>
               </div>
