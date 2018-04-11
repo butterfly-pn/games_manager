@@ -12,7 +12,7 @@
       </div>
           {%endif%}
   <div class="row">
-    <div class="col-12">
+    <div class="col-8">
 
             <h3>Nazwa jamu: {{ jam.title }}<br></h3>
       <h5>Organizator jamu: <a class=" btn btn-primary "href="/user/{{jam.master}}">{{jam.master}}</a> <br>
@@ -50,6 +50,9 @@
 
 
     </div>
+      <div class="col-4">
+          <h4>{{jam.description}}</h4>
+      </div>
   </div>
   {% if jam.teams%}
       {% for cont in jam.teams %}

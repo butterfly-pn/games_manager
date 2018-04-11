@@ -29,7 +29,6 @@ user = User()
 def login_required(func):
     """Dekorator po którego dodaniu do ścieżki mają dostęp tylko zalogowani
     użytkownicy"""
-
     @wraps(func)
     def wrap(*args, **kwargs):
         if not 'logged_in' in session:
@@ -39,6 +38,17 @@ def login_required(func):
             return func(*args, **kwargs)
 
     return wrap
+
+
+"""początek akceptowania plików cookies"""
+@app.route("/cookies-accept")
+def cookies_accept():
+    session['accepted']=True
+    return redirect('/')
+
+@app.route("/cookies-about")
+def cookies_about():
+    session['accepted']=False
 
 
 """

@@ -1,4 +1,4 @@
 class Config():
     DEBUG = True
-    HOST = "127.0.0.1"
+    HOST = "192.168.1.7"
     PORT = 5000
