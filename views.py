@@ -17,7 +17,7 @@ from datetime import datetime
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 target = os.path.join(APP_ROOT, 'games')
 UPLOAD_FOLDER = target
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'zip', 'rar', 'tar', 'gz2'])
+ALLOWED_EXTENSIONS = set(['zip', 'rar', 'tar', 'gz2'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
