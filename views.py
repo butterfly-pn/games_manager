@@ -40,8 +40,7 @@ def login_required(func):
     return wrap
 
 
-"""
-początek akceptowania plików cookies"""
+
 @app.route("/cookies-accept")
 def cookies_accept():
     session['accepted']=True
