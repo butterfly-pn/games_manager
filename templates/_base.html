@@ -11,9 +11,74 @@
   <title>Game Jam</title>
 
   {% endif %}
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/my_style.css') }}">
+
+
+<!--Tworzenie nowej klasy mynewmodal do wyświetlania informacji o cookies-->
+    <style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.mynewmodal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 100;
+    top: 100;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.mynewmodal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:3000px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+
+
+
+
+.mynewmodal-header {
+    padding: 2px 16px;
+    background-color: #1491e5;
+    color: white;
+}
+
+.mynewmodal-body {padding: 2px 16px;}
+
+.xdcolour{
+color: #1491e5;
+}
+</style>
+
+<!--koniec nowej klasy mynewmodal-->
+
 
 </head>
 
@@ -34,7 +99,7 @@
         </li>
 
         <li class="nav-item{% if page_id == 'info' %} active{% endif %}">
-          <a class="nav-link" href="{{ url_for('info') }}">Info</a>
+          <a class="nav-link xdcolour" href="{{ url_for('info') }}">Info</a>
         </li>
         {% if session['logged_in'] %}
         <li class="nav-item{% if page_id == 'download' %} active{% endif %}">
@@ -85,6 +150,14 @@
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
       </form>
+
+      <!--{% if not session['accepted']%}-->
+  <!--<li class="nav-item{% if page_id == 'accept' %} active{% endif %}">-->
+          <!--<a role="presentation" class="nav-link" data-toggle="modal" data-target="#accept" href="#">cookies</a>-->
+        <!--</li>-->
+
+    <!--{%endif%}-->
+      <!--cookies accept form-->
 
         <!--Beginning of register form-->
       <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
@@ -275,6 +348,11 @@
   <!-- The end of login form -->
     </div>
   </nav>
+
+
+
+
+
   <div class="container">
     <div class="row">
       <div class="col-12">
@@ -295,9 +373,31 @@
       </div>
     </div>
 
-    {% block content %}{% endblock %}
+    {% block content %}
+
+      {% endblock %}
   </div>
 
+     {% if not session['accepted']%}
+      <div id="myModal" class="mynewmodal-show">
+
+  <!-- Modal content -->
+  <div class="mynewmodal-content">
+    <div class="mynewmodal-header">
+      <h2>Pliki Cookies</h2>
+    </div>
+    <div class="mynewmodal-body">
+              <div class="container">
+                  <h3>Ta witryna obsługuje pliki cookies</h3>
+                  <br><br>
+                  <a class="btn btn-success" href="/cookies-accept">Akceptuję</a>
+                  <a class="btn btn-secondary" href="/cookies-about">Dowiedz się więcej</a>
+
+              </div>
+    </div>
+  </div>
+
+</div>{% endif %}
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
