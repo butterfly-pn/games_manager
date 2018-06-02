@@ -3,24 +3,32 @@
 {% set page_id = "download" %}
 <center>
 {% block content %}
-  <div class="row">
-    <div class="col-12">
-      <h3>Gry do pobrania:<br></h3>
-      <ol>
-        {% for file in files %}
-        <div class="row">
-        <a href="/download/{{file}}" download="{{file}}"><button>Download</button></a>
-        <li style="margin-left: 50px"><a href="/download/{{file}}"> {{ file }} </a> </li>
-          </div>
-        <br>
-        {% endfor %}
-      </ol>
-      <h3>Dodaj nowy plik</h3>
-      <form method=post enctype=multipart/form-data>
-        <p><input type=file name=file>
-           <input type=submit value=Upload>
-      </form>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="row-2">
+          <h3>Gry do pobrania:<br></h3>
+              <br>
+          <ol>
+            {% for file in files %}
+            <div class="row">
+            <a class="btn btn-info" role="button" href="/download/{{file}}" download="{{file}}">Download</a>
+            <li style="margin-left: 50px"><a href="/download/{{file}}"> {{ file }} </a> </li>
+              </div>
+            <br>
+            {% endfor %}
+          </ol>
+            </div>
+            </div>
+        <div class="col">
+          <h3>Dodaj nowy plik</h3>
+          <form method=post enctype=multipart/form-data>
+            <p><input type=file name=file>
+               <input class="btn btn-info" type=submit value=Upload>
+          </form>
+            </div>
+        </div>
     </div>
-  </div>
+
 {% endblock %}
 </center>

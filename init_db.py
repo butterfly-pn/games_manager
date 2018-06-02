@@ -53,5 +53,13 @@ def db_start():
     db.session.add(jam)
     db.session.commit()
 
+    game = models.Game()
+    game.title = "Demolition n' Destruction"
+    game.team = "jakisteam"
+    game.description = 'gra o rozwalaniu i zniszczeniu'
+    game.jam = ['jakisjam']
+    db.session.add(game)
+    db.session.commit()
+
 if __name__ == '__main__':
     db_start()
