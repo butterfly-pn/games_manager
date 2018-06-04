@@ -31,7 +31,7 @@ def db_start():
     team.name = "BestTeam"
     team.master = "piotr"
     team.master_email = 'piotr@dyba.com.pl'
-    team.contributors = ['adam', 'twojamama', 'jakiskoles']
+    team.contributors = ['adam', 'innygosc', 'jakiskoles']
     db.session.add(team)
     db.session.commit()
 
@@ -53,11 +53,29 @@ def db_start():
     db.session.add(jam)
     db.session.commit()
 
+    jam = models.Jam()
+    jam.title = "Jam testowy2"
+    jam.master = "piotr"
+    jam.master_email = 'piotr@dyba.com.pl'
+    jam.teams = ['BestTeam']
+    db.session.add(jam)
+    db.session.commit()
+
     game = models.Game()
     game.title = "Demolition n' Destruction"
-    game.team = "jakisteam"
+    game.team = "BestTeam"
     game.description = 'gra o rozwalaniu i zniszczeniu'
-    game.jam = ['jakisjam']
+    game.jam = 'Jam testowy'
+    game.path = "Demolition n' Destruction.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Demolition n' Destruction"
+    game.team = "BestTeam"
+    game.description = 'gra o rozwalaniu i zniszczeniu'
+    game.jam = 'Jam testowy'
+    game.path = "Demolition n' Destruction.zip"
     db.session.add(game)
     db.session.commit()
 

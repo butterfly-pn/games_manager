@@ -4,7 +4,7 @@ from main import app
 from main import db
 from main import bcrypt
 from main import lm
-from models import User, Team, Message, Jam
+from models import User, Team, Message, Jam, Game
 import gc
 from passlib.hash import sha256_crypt
 from functools import wraps
@@ -603,7 +603,9 @@ def download():
     except KeyError:
         organizer = False
         admin = False
-    files = os.listdir(UPLOAD_FOLDER)
+    # files = os.listdir(UPLOAD_FOLDER)
+    files = Game.query.order_by(Game.title.asc()).all()
+    print(files)
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
