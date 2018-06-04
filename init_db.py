@@ -71,11 +71,20 @@ def db_start():
     db.session.commit()
 
     game = models.Game()
-    game.title = "Demolition n' Destruction"
+    game.title = "Doom 0"
     game.team = "BestTeam"
-    game.description = 'gra o rozwalaniu i zniszczeniu'
+    game.description = 'Prequel Doom'
     game.jam = 'Jam testowy'
-    game.path = "Demolition n' Destruction.zip"
+    game.path = "Doom 0.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Jabba The Hutt - Fat worm story"
+    game.team = "BestTeam"
+    game.description = 'Przemierzaj pustynię Tatooine pod postacią grubego robaka i zjadaj szturmowców'
+    game.jam = 'Jam testowy'
+    game.path = "Jabba The Hutt - Fat worm story.zip"
     db.session.add(game)
     db.session.commit()
 

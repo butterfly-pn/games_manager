@@ -7,18 +7,22 @@
       <div class="row">
         <div class="col">
           <div class="row-2">
-          <h3>Gry do pobrania:<br></h3>
+          <h2>Gry do pobrania:<br></h2>
               <br>
 
           <ul style="list-style-type: none;">
 
             {% for file in files %}
-              <div style="background-color: #cccccc">
+              <div style="background-color: #cccccc" class="container">
                 <div class="col">
-                    <div class="row">
-                <h3 style="margin:12px;"> {{ file.title }}  </h3>
+                    <div class="row projects-button">
+
+                        <h3 style="margin:12px;"> <u>{{ file.title }}</u>  </h3>
                      </div>
-                    <div>
+                    <div class="projects"><script>function main(){
+	$('.projects').hide();
+  $('.projects-button').on('click', function(){
+                           $(this).toggleClass('active');</script>
                       <h4>
                       O grze:<br>
                       </h4>
@@ -28,7 +32,7 @@
                   </div>
                     <div class="row justify-content-end">
                       <li>
-                      <a class="btn-sm btn-info" style="margin-right:20px;" role="button" href="/download/{{file.path}}" download="{{file.path}}">Download</a>
+                      <a class="btn btn-info" style="margin-right:20px; margin-top:20px;" role="button" href="/download/{{file.path}}" download="{{file.path}}">Download</a>
                           <br>
                       </li>
                   </div>
