@@ -13,11 +13,13 @@ from wtforms import Form, validators, StringField, PasswordField, BooleanField, 
 from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from flask_wtf import Form
+from flask_wtf.file import FileField, FileRequired
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 target = os.path.join(APP_ROOT, 'games')
 UPLOAD_FOLDER = target
-ALLOWED_EXTENSIONS = set(['zip', 'rar', 'tar', 'gz2'])
+ALLOWED_EXTENSIONS = set(['zip', 'rar', 'tar', 'gz2', 'tar.xz'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
@@ -592,6 +594,13 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+class NewFile(Form):
+    title = StringField('Nazwa gry:', [validators.Length(min=4, max=20)])
+    description = TextAreaField('O grze:', [validators.Length(min=4, max=200)])
+    file = FileField()
+
+
 @app.route("/download", methods=['GET', 'POST'])
 @login_required
 def download():
@@ -605,8 +614,27 @@ def download():
         admin = False
     # files = os.listdir(UPLOAD_FOLDER)
     files = Game.query.order_by(Game.title.asc()).all()
-    if request.method == 'POST':
-        # check if the post request has the file part
+    form = NewFile(request.form)
+    if request.method == "POST":
+        title = form.title.data
+        used_title = Game.query.filter_by(title=title).first()
+        description = form.description.data
+        path = form.file.has_file()
+        print(path)
+        if used_title:
+            flash('Ta nazwa gry jest już zajęta, proszę wybierz inną.')
+            files = Game.query.order_by(Game.title.asc()).all()
+            return render_template('download.html', files=files, organizer=organizer, admin=admin)
+        new_game = Game()
+        new_game.title = title
+        new_game.team = Team.query.filter_by(master=session['username']).first().name
+        new_game.description = description
+        new_game.jam = Jam.query.filter_by(master=session['username']).first().title
+        new_game.path = request.files['file'].filename
+        db.session.add(new_game)
+        db.session.commit()
+        flash("Gra dodana!")
+        gc.collect()
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -619,11 +647,29 @@ def download():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('download',
-                                    files=files))
+        files = Game.query.order_by(Game.title.asc()).all()
+        return render_template('download.html', files=files, organizer=organizer, admin=admin)
+    # if request.method == 'POST':
+    #     # check if the post request has the file part
+    #     if 'file' not in request.files:
+    #         flash('No file part')
+    #         return redirect(request.url)
+    #     file = request.files['file']
+    #     # if user does not select file, browser also
+    #     # submit a empty part without filename
+    #     if file.filename == '':
+    #         flash('No selected file')
+    #         return redirect(request.url)
+    #     if file and allowed_file(file.filename):
+    #         filename = secure_filename(file.filename)
+    #         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    #         return redirect(url_for('download',
+    #                                 files=files))
     return render_template('download.html', files=files, organizer=organizer, admin=admin)
 
+
 @app.route('/download/<filename>')
+@login_required
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)

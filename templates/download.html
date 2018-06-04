@@ -10,19 +10,17 @@
           <h2>Gry do pobrania:<br></h2>
               <br>
 
+              <!--Render listy gier-->
           <ul style="list-style-type: none;">
 
             {% for file in files %}
               <div style="background-color: #cccccc" class="container">
-                <div class="col">
+                <div class="col-12">
                     <div class="row projects-button">
 
                         <h3 style="margin:12px;"> <u>{{ file.title }}</u>  </h3>
                      </div>
-                    <div class="projects"><script>function main(){
-	$('.projects').hide();
-  $('.projects-button').on('click', function(){
-                           $(this).toggleClass('active');</script>
+                    <div>
                       <h4>
                       O grze:<br>
                       </h4>
@@ -32,6 +30,7 @@
                   </div>
                     <div class="row justify-content-end">
                       <li>
+                           <!--download="{{file.path}}"-->
                       <a class="btn btn-info" style="margin-right:20px; margin-top:20px;" role="button" href="/download/{{file.path}}" download="{{file.path}}">Download</a>
                           <br>
                       </li>
@@ -51,14 +50,42 @@
           </ul>
             </div>
             </div>
-        <div class="col">
-          <h3>Dodaj nowy plik</h3>
-          <form method=post enctype=multipart/form-data>
-            <p><input type=file name=file>
-               <input class="btn btn-info" type=submit value=Upload>
-          </form>
-            </div>
-        </div>
+
+        <!--<div class="col">-->
+          <!--<h3>Dodaj nowy plik</h3>-->
+          <!--<form method=post enctype=multipart/form-data>-->
+              <!--<input>-->
+            <!--<p><input type=file name=file>-->
+               <!--<input class="btn btn-info" type=submit value=Upload>-->
+          <!--</form>-->
+
+          <div class="col">
+              <br><br><br>
+              <div class="container" style="background-color: #cccccc">
+        <form method=post enctype=multipart/form-data>
+                  <dl>
+                    <dt><label for="title">Tytuł gry:</label></dt>
+                    <dd><input id="title" name="title" type="text" value="" autofocus></dd>
+
+                    <dt><label for="description">O grze:</label></dt>
+                    <dd><input id="description" name="description" type="text" value=""></dd>
+
+                    <dt><label for="file">Dodaj plik</label></dt>
+                    <dd><input id="file" name="file" type="file"></dd>
+                  </dl>
+                  <p style="padding-bottom:20px;"><input class="btn btn-primary" type=submit value="Upload"></p>
+                </form>
+
+              </div>
+          </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+
+    <div class="col-2"></div>
+
     </div>
 
 {% endblock %}
