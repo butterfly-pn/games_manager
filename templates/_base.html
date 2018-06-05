@@ -82,9 +82,9 @@ color: #1491e5;
 
 </head>
 
-<body>
+<body style="background-image:url(../static/sw.jpg); background-repeat: no-repeat; background-attachment: fixed;">
 
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="/">Game Jams</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
             aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -373,6 +373,11 @@ color: #1491e5;
       </div>
     </div>
 
+    <div style="padding: 80px">
+    {% block content %}{% endblock %}
+      </div>
+
+
     {% block content %}
 
       {% endblock %}
@@ -395,6 +400,7 @@ color: #1491e5;
 
               </div>
     </div>
+
   </div>
 
 </div>{% endif %}

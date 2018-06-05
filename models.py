@@ -82,4 +82,16 @@ class Jam(db.Model):
     master_email = Column(String(200))
     master = Column(String(200))
     teams = Column(PickleType())
-    active= Column(Boolean, default=True)
+    active = Column(Boolean, default=True)
+
+class Game(db.Model):
+    """
+    Game model
+    """
+    __tablename__ = 'game'
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    title = Column(String(50), unique=True)
+    team = Column(String(20), nullable=False)
+    description = Column(String(200))
+    jam = Column(String(20))
+    path = Column(String(100))
