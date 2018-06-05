@@ -13,6 +13,7 @@ def db_start():
     db.create_all()
     db.session.commit()
 
+
     user = models.User()
     user.username = "piotr"
     user.password = sha256_crypt.encrypt("pppp1234")

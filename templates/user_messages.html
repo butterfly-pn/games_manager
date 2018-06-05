@@ -3,38 +3,59 @@
 {% set page_id = "user_messages" %}
 <center>
 {% block content %}
+    <!--<script type="text/javascript">
+    function validate() {
+        if (document.getElementById('message').checked) {
+            document.getElementById('przycisk').innerHTML = "hyhy";
+        } else {
+            document.getElementById('przycisk').innerHTML = "";
+        }
+    }
+    </script>-->
   <div class="row">
-      <div class="col-3">
-          <ul class="navbar-nav mr-auto">
-              <li class="nav-item"><a class="mt-2 btn btn-secondary btn-block" href="/user/{{user}}/">< Powrót do użytkownika</a></li>
-              <li class="nav-item"><button class="mt-2 btn btn-primary btn-block" role="presentation" data-toggle="modal" data-target="#send_message" href="#">+ Nowa wiadomość</button></li>
-          </ul>
+      <div class="col-lg-3 mt-3">
+              <a class="btn btn-secondary btn-block" href="/user/{{user}}/">< Powrót do użytkownika</a>
+              <button class="btn btn-primary btn-block" role="presentation" data-toggle="modal" data-target="#send_message" href="#">+ Nowa wiadomość</button>
+              <!--<p id="przycisk"></p>-->
+          <hr>
       </div>
-      <div class="col-lg-9">
+      <div class="col-lg-9 mt-3">
           {%if messages %}
           <ul class="list-group list-group-flush">
 
-        {% for message in messages %}
+        {% for message in new_messages %}
+              <li class="list-group-item">
+                  <div class="col-lg-10">
+                    <a class="text-secondary" href="/message/{{message.id}}">
           {%if message.new%}
-      <li class="list-group-item">
-          <a href="/message/{{message.id}}">
-              <h3>{{message.title}} <span class="badge badge-secondary">New</span></h3><b>wysłana przez {{message.author}}</b>
-          </a></li>
+                        <h3>{{message.title}} <span class="badge badge-secondary">New</span></h3>
+                    </a>
+                    <b>wysłana przez {{message.author}} | {{message.created}}</b>
           {%endif%}
+                  </div>
+              </li>
       {% endfor %}
 
-        {% for message in messages %}
-          {%if not message.new %}
-              <li class="list-group-item"><a class="text-secondary" href="/message/{{message.id}}"><h4>{{message.title}}</h4> wysłana przez {{message.author}}</a></li>
+
+          {% for message in old_messages%}
+              <li class="list-group-item">
+                  <div class="col-lg-10">
+                    <a class="text-secondary" href="/message/{{message.id}}">
+          {%if  not message.new%}
+                        <h4>{{message.title}}</h4>
+                    </a>
+                    wysłana przez {{message.author}} | {{message.created}}
           {%endif%}
+                  </div>
+              </li>
       {% endfor %}
           </ul>
           {% else%}
-          <h3>Narazie nie masz żadnych wiadomości</h3>
+          <center><h3>Brak wiadomości 🙁</h3></center>
           {% endif%}
     </div>
   </div>
-      <div class="modal fade" id="send_message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+      <div class="modal fade" id="send_message" tabindex="-5" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">

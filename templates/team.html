@@ -3,29 +3,59 @@
 {% set page_id = "team" %}
 <center>
 {% block content %}
-  <div class="row">
-    <div class="col-12">
+  <div class="row mt-3">
+    <div class="col-md-4 mb-3">
+      <h2>{{ team.name }}</h2>
+    </div>
+    <div class="col-md-4">
+      <a class="btn btn-primary btn-block" href="/user/{{team.master}}">Szef zespołu: {{team.master}}</a><br>
+    </div>
+    <div class="col-md-4">
+      <a class="btn btn-primary btn-block" href="">Mail: {{ team.master_email }}</a>
+    </div>
 
-            <h3>Nazwa zespołu: {{ team.name }}<br></h3>
-      Szef zespołu: <a href="/user/{{team.master}}">{{team.master}}</a> <br>
-      Mail: {{ team.master_email }}<br>
+      {% if admin or team.master==session['username'] %}
+  </div>
+  <hr>
+  <div class="row mt-3 ">
+
+        <div class="col-4 ">
+          {% if team.master==session['username']%}
+          <h3><span class="badge badge-primary">Jesteś szefem tego zespołu</span></h3>
+          {% elif admin %}
+          <h3><span class="badge badge-primary">Jesteś adminem</span></h3>
+          {%endif%}
+     </div>
+    <div class="col-md-4  ">
+      <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#">Usuń ten zespół</button>
+    </div>
+    <div class="col-md-4 ">
+      <button class="btn btn-warning btn-block" role="presentation" data-toggle="modal" data-target="#give-team" href="#">przekaż ten zespół</button>
+      {%endif%}
+    </div>
+    </div>
+
+  <hr>
+  <div class="row">
+    <div class="col-6">
       Członkowie: {% for i in team.contributors %}
       <div class="btn-group" role="group" aria-label="User">
       <a class="btn btn-primary" href="/user/{{i}}">{{i}}</a>
-        {% if admin or team.master==session['username'] %}
-      <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{i}}" href="#">-</button>
+        {% if admin or team.master==session['username']  or i==session['username']%}
+      <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="{%if i==session['username']%}#are-you-sure-you{%else%}#are-you-sure-{{i}}{%endif%}" href="#">-</button>
         {%endif%}
       </div>
       {% if loop.index != team.contributors|length %},{%endif%} {%endfor%}
       {% if admin or team.master==session['username'] %}
       <button class="ml-5 btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal" data-target="#add-to-team" href="#">+
         </button><br>
-      <br><button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#">Usuń ten zespół</button>
       {% endif %}
     </div>
+    <div class="col-6"></div>
   </div>
+
   {% if admin or team.master==session['username'] %}
-  <div class="modal fade" id="add-to-team" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+  <div class="modal fade" id="add-to-team" tabindex="-5" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -46,7 +76,51 @@
           </div>
         </div>
       </div>
-  <div class="modal fade" id="are-you-sure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+
+    <div class="modal fade" id="give-team" tabindex="-5" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Przekaż zespół</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form method=post action="/team/{{team.name}}/give_redirect">
+                  <dl>
+                    <dt><label for="give_name">Nazwa użytkownika</label></dt>
+                    <dd><input id="give_name" name="give_name" type="text" value="" autofocus></dd>
+                   </dl>
+                  <button class="btn btn-warning btn-block" role="presentation" data-toggle="modal" data-target="#give-team-sure" href="#">przekaż ten zespół</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+   <div class="modal fade" id="team-give-sure" tabindex="-6" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <p>Właśnie zamierzasz przekazać <b>{{team.name}}</b>. Jesteś tego pewien?</p>
+                <a class="btn btn-danger" type="submit" data-target="#give-team" href="#" >Przekaż</a>
+
+                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  <div class="modal fade" id="are-you-sure" tabindex="-6" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -64,8 +138,26 @@
           </div>
         </div>
       </div>
+  <div class="modal fade" id="are-you-sure-you" tabindex="-7" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <p>Właśnie zamierzasz opuścić zespół <b>{{team.name}}</b>. Jesteś tego pewien?</p>
+                <a class="btn btn-danger" href="/team/{{team.name}}/delete/{{session['username']}}">Opuść</a>
+                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   {% for cont in team.contributors %}
-   <div class="modal fade" id="are-you-sure-{{cont}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+   <div class="modal fade" id="are-you-sure-{{cont}}" tabindex="-{{8 + loop.index}}" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">

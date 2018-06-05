@@ -1,4 +1,4 @@
-__author__ = 'Piotr Dyba'
+__author__ = 'Wiktor Wojtkowiak & Sebastian Cichy & Patryk Niedźwiedziński'
 
 from os import path
 from config import Config
