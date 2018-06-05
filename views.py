@@ -614,27 +614,16 @@ def download():
         admin = False
     # files = os.listdir(UPLOAD_FOLDER)
     files = Game.query.order_by(Game.title.asc()).all()
-    form = NewFile(request.form)
     if request.method == "POST":
-        title = form.title.data
+        title = request.form.get('title')
         used_title = Game.query.filter_by(title=title).first()
-        description = form.description.data
-        path = form.file.has_file()
-        print(path)
+        description = request.form.get('description')
+        # path = request.files['file'].filename
         if used_title:
             flash('Ta nazwa gry jest już zajęta, proszę wybierz inną.')
             files = Game.query.order_by(Game.title.asc()).all()
             return render_template('download.html', files=files, organizer=organizer, admin=admin)
-        new_game = Game()
-        new_game.title = title
-        new_game.team = Team.query.filter_by(master=session['username']).first().name
-        new_game.description = description
-        new_game.jam = Jam.query.filter_by(master=session['username']).first().title
-        new_game.path = request.files['file'].filename
-        db.session.add(new_game)
-        db.session.commit()
-        flash("Gra dodana!")
-        gc.collect()
+
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -645,8 +634,20 @@ def download():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
+            print(file.filename)
             filename = secure_filename(file.filename)
+            print(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            new_game = Game()
+            new_game.title = title
+            new_game.team = Team.query.filter_by(master=session['username']).first().name
+            new_game.description = description
+            new_game.jam = Jam.query.filter_by(master=session['username']).first().title
+            new_game.path = filename
+            db.session.add(new_game)
+            db.session.commit()
+            flash("Gra dodana!")
+            gc.collect()
         files = Game.query.order_by(Game.title.asc()).all()
         return render_template('download.html', files=files, organizer=organizer, admin=admin)
     # if request.method == 'POST':
