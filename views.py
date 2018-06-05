@@ -181,6 +181,7 @@ Koniec Logowania, Początek Podstawowych informacji o stronie
 def homepage():
     """Wyświetla stronę do testowania rejestracji i logowania"""
     user_member=False
+    team_leader=False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         admin = User.query.filter_by(username=session['username']).first().admin
@@ -201,6 +202,7 @@ def homepage():
 @app.route("/info/")
 def info():
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
@@ -239,6 +241,7 @@ def user_info_id(username):
             if user:
 
                 user_member=False
+                team_leader = False
                 try:
                     organizer = User.query.filter_by(username=session['username']).first().organizer
                     team = Team.query.filter_by(master=session['username']).all()
@@ -278,6 +281,7 @@ def user_info_id(username):
 @login_required
 def user_messages(username):
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
@@ -307,6 +311,7 @@ def user_messages(username):
 @login_required
 def message_print(id):
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
@@ -385,6 +390,7 @@ class OrganizerForm(Form):
 @login_required
 def become_organizer():
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         admin = User.query.filter_by(username=session['username']).first().admin
@@ -562,6 +568,7 @@ def teams():
 def team(team_name):
     """wyświetla informacje o drużynie"""
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         admin = User.query.filter_by(username=session['username']).first().admin
@@ -592,6 +599,7 @@ class NewTeamForm(Form):
 @login_required
 def create_team():
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
@@ -852,6 +860,7 @@ class JamCreationForm(Form):
 @login_required
 def jam_creation():
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
@@ -899,6 +908,7 @@ def jams():
     """Wyświetla listę jamów, z linkami do nich"""
     teams=Team.query.order_by(Team.id).all()
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
@@ -926,6 +936,7 @@ def jams():
 def jam(jam_id):
     """wyświetla informacje o jamie"""
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
@@ -1162,6 +1173,7 @@ Koniec obsługi plików, początek obsługi konta administratora
 def admin():
     """to samo co user info tylko dla admina"""
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
@@ -1187,6 +1199,7 @@ def user_list():
     """wyświetla listę użytkowników wraz z linkami dla adminów do edycji kont użytkowników"""
     """nie wyświetla użytkownika piotr"""
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
@@ -1218,6 +1231,7 @@ def user_control(id):
     """umożliwia adminowi kontrolę nad użytkownikiem"""
     """nie działa na użytkownia piotr"""
     user_member=False
+    team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
         team = Team.query.filter_by(master=session['username']).all()
