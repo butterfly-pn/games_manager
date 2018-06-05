@@ -1111,6 +1111,8 @@ class NewFile(Form):
     description = TextAreaField('O grze:', [validators.Length(min=4, max=200)])
     file = FileField()
 
+@app.route("/download", methods=['GET', 'POST'])
+@login_required
 def download():
     """Lista plików do pobrania oraz upload"""
     """ROZłOŻYć NA OSOBNY DOWNLOAD I UPLOAD"""
