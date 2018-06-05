@@ -105,10 +105,11 @@ color: #1491e5;
         <li class="nav-item{% if page_id == 'download' %} active{% endif %}">
           <a class="nav-link" href="{{ url_for('download') }}">Download</a>
         </li>
-
+    {% if not team_leader%}
         <li class="nav-item{% if page_id == 'create-team' %} active{% endif %}">
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-team" href="#">Stwórz zespół</a>
         </li>
+          {%endif%}
         <li class="nav-item{% if page_id == 'create-jam' %} active{% endif %}">
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-jam" href="#">Organizuj GAME-JAM</a>
 
@@ -378,9 +379,6 @@ color: #1491e5;
       </div>
 
 
-    {% block content %}
-
-      {% endblock %}
   </div>
 
      {% if not session['accepted']%}
