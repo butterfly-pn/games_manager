@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang=en>
 <meta charset=utf-8>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
   {% if session['logged_in'] %}
   <title> {{ session['username'] }}</title>
@@ -10,20 +11,87 @@
   <title>Game Jam</title>
 
   {% endif %}
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/my_style.css') }}">
+
+
+<!--Tworzenie nowej klasy mynewmodal do wyświetlania informacji o cookies-->
+    <style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.mynewmodal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 100;
+    top: 100;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.mynewmodal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:3000px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+
+
+
+
+.mynewmodal-header {
+    padding: 2px 16px;
+    background-color: #1491e5;
+    color: white;
+}
+
+.mynewmodal-body {padding: 2px 16px;}
+
+.xdcolour{
+color: #1491e5;
+}
+</style>
+
+<!--koniec nowej klasy mynewmodal-->
+
+
 </head>
 
 <body style="background-image:url(../static/sw.jpg); background-repeat: no-repeat; background-attachment: fixed;">
 
   <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="/">Game Jams</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
             aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse">
+    <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="navbar-nav mr-auto">
 
         <li class="nav-item{% if page_id == 'user_info_id' %} active{% endif %}">
@@ -31,28 +99,42 @@
         </li>
 
         <li class="nav-item{% if page_id == 'info' %} active{% endif %}">
-          <a class="nav-link" href="{{ url_for('info') }}">Info</a>
+          <a class="nav-link xdcolour" href="{{ url_for('info') }}">Info</a>
         </li>
         {% if session['logged_in'] %}
         <li class="nav-item{% if page_id == 'download' %} active{% endif %}">
           <a class="nav-link" href="{{ url_for('download') }}">Download</a>
         </li>
-        {% endif %}
-        {% if session['logged_in'] %}
+
         <li class="nav-item{% if page_id == 'create-team' %} active{% endif %}">
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-team" href="#">Stwórz zespół</a>
         </li>
         <li class="nav-item{% if page_id == 'create-jam' %} active{% endif %}">
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-jam" href="#">Organizuj GAME-JAM</a>
+
+
+          {% if admin or organizer or member %}
+          <li class="nav-item{% if page_id == 'jams' %} active{% endif %}">
+          <a class="nav-link" href="/jams">Game Jamy</a>
         </li>
-        <li class="nav-item{% if page_id == 'logout' %} active{% endif %}">
-          <a class="nav-link" href="{{ url_for('logout') }}">Wyloguj się</a>
-        </li>
+       {%endif%}
+
         {% if admin %}
-        <li class="nav-item{% if page_id == 'admin' %} active{% endif %}">
-          <a class="btn btn-warning" href="/admin">Funkcje administratora  </a>
-        </li>
+        <hr class="hr-nav">
+         <li class="nav-item{% if page_id == 'admin' %} active{% endif %}">
+
+          <a class="btn btn-warning btn-block" href="/admin">Funkcje administratora  </a>
+         </li>
+        <hr class="hr-nav">
         {%endif%}
+
+
+        <hr class="hr-nav">
+         <li class="nav-item{% if page_id == 'logout' %} active{% endif %}">
+
+          <a class="btn btn-secondary btn-block" href="{{ url_for('logout') }}">Wyloguj się</a>
+         </li>
+        <hr class="hr-nav">
         {% endif %}
 
         {% if not session['logged_in']%}
@@ -68,6 +150,14 @@
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
       </form>
+
+      <!--{% if not session['accepted']%}-->
+  <!--<li class="nav-item{% if page_id == 'accept' %} active{% endif %}">-->
+          <!--<a role="presentation" class="nav-link" data-toggle="modal" data-target="#accept" href="#">cookies</a>-->
+        <!--</li>-->
+
+    <!--{%endif%}-->
+      <!--cookies accept form-->
 
         <!--Beginning of register form-->
       <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
@@ -150,6 +240,9 @@
 
                     <dt><label for="jam_theme">Motyw przewodni jamu</label></dt>
                     <dd><input id="jam_theme" name="jam_theme" type="text" value=""></dd>
+
+                    <dt><label for="jam_description">Opis jamu</label></dt>
+                      <dt><textarea name="jam_description" id="jam_description" style="width:250px;height:150px;"></textarea></dt>
                    </dl>
                   <p><input class="btn btn-primary" type=submit value="Stwórz"></p>
                 </form>
@@ -181,8 +274,37 @@
                     <dt><label for="fullname">Pełne imię i nazwisko</label></dt>
                     <dd><input id="fullname" name="fullname" type="text" value="" autofocus></dd>
 
-                    <dt><label for="birthdate">Data urodzenia</label></dt>
-                    <dd><input id="birthdate" name="birthdate" type="text" value=""></dd>
+
+                    <dt><label for="birthdate_day">Podaj swoją datę urodzenia</label></dt>
+                    <dd>
+
+                    <select id="birthdate_day" name="birthdate_day" type="text">
+                      {% for a in range(1,32) %}
+                    <option value="{{a}}">{{a}}</option>
+                      {% endfor%}
+                    </select>
+
+                      <select id="birthdate_month" name="birthdate_month" type="text">
+                      <option value="01">Styczeń</option>
+                      <option value="02">Luty</option>
+                        <option value="03">Marzec</option>
+                        <option value="04">Kwiecień</option>
+                        <option value="05">Maj</option>
+                        <option value="06">Czerwiec</option>
+                        <option value="07">Lipiec</option>
+                        <option value="08">Sierpień</option>
+                        <option value="09">Wrzesień</option>
+                        <option value="10">Październik</option>
+                        <option value="11">Listopad</option>
+                        <option value="12">Grudzień</option>
+                      </select>
+
+                   <select id="birthdate_year"    name="birthdate_year" type="text">
+                      {% for a in range(2017, 1800,-1) %}
+                    <option value="{{a}}">{{a}}</option>
+                      {% endfor%}
+                  </select>
+                    </dd>
 
                       <dt><label for="about">Napisz coś o sobie</label></dt>
                       <dt><textarea name="about" id="about" style="width:250px;height:150px;"></textarea></dt>
@@ -226,32 +348,69 @@
   <!-- The end of login form -->
     </div>
   </nav>
+
+
+
+
+
   <div class="container">
     <div class="row">
       <div class="col-12">
         <div id="messages">
-          {% with messages = get_flashed_messages() %}
+          {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-              <div data-alert class="alert alert-success alert-dismissible show">
-                {% for message in messages %}
-                  <li>{{ message|urlize(30) }}</li>
-                {% endfor %}
+          {% for category, message in messages %}
+              <div data-alert class="alert alert-{%if not category=='message'%}{{category}}{%else%}primary{%endif%} alert-dismissible show">
+                  {{ message|urlize(30) }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
+          {% endfor %}
             {% endif %}
           {% endwith %}
         </div>
       </div>
     </div>
+
     <div style="padding: 80px">
     {% block content %}{% endblock %}
       </div>
+
+
+    {% block content %}
+
+      {% endblock %}
   </div>
 
+     {% if not session['accepted']%}
+      <div id="myModal" class="mynewmodal-show">
+
+  <!-- Modal content -->
+  <div class="mynewmodal-content">
+    <div class="mynewmodal-header">
+      <h2>Pliki Cookies</h2>
+    </div>
+    <div class="mynewmodal-body">
+              <div class="container">
+                  <h3>Ta witryna obsługuje pliki cookies</h3>
+                  <br><br>
+                  <a class="btn btn-success" href="/cookies-accept">Akceptuję</a>
+                  <a class="btn btn-secondary" href="/cookies-about">Dowiedz się więcej</a>
+
+              </div>
+    </div>
+
+  </div>
+
+</div>{% endif %}
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script>
+      $('.modal').on('shown.bs.modal', function() {
+    $(this).find('input:first').focus();
+  });
+    </script>
 </body>
 </html>

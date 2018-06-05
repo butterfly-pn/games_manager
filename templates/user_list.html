@@ -1,37 +1,60 @@
 {% extends "_base.html" %}
 <title> Lista użytkowników </title>
 {% set page_id = "user_list" %}
-<center>
 {% block content %}
-  <div class="row">
-      <br>
-      <ul>
-          <h4>ADMINI:</h4>
-              {%for u in users%}
-          {%if u.admin and u.id!=1%}
-          <a class="btn btn-primary" href="/admin/user/{{u.id}}"> Użytkownik {{u.username}} ><span class="ml-2 badge badge-primary badge-pill" style="background-color: #999999;"></span></a><br>
-              <br>
-          <br>
+  <div class="row mt-3">
+      <div class="col-xl-3">
+          <a class="btn btn-warning btn-block" href="/admin">< Funkcje administratora</a>
+          <hr>
+      </div>
+  <div class="col-xl-4 mb-3">
+        <div class="list-group">
+            <li class="list-group-item active" href=""><h4>Admini<span class="float-right badge badge-light badge-pill">{{admini - 1}}</span></h4></li>
+            {%for a in users%}
+            {%if a.admin and a.id!=1%}
+            <li class="list-group-item list-group-item-active">
+                <a class="btn m-1" href="/admin/user/{{a.id}}"><h5>{{a.username}}</h5></a>
+                <a class="float-right btn btn-info m-1" href="/take_admin/{{a.id}}">Odbierz admina</a>
+            </li>
           {%endif%}
               {%endfor%}
-          
-          <h4>UŻYTKOWNICY: </h4>
-          {%for a in users%}
+        </div>
+    </div>
+    <div class="col-xl-5 mb-3">
+        <div class="list-group">
+            <li class="list-group-item active" href=""><h4>Użytkownicy<span class="float-right badge badge-light badge-pill">{{users|length - 1}}</span></h4></li>
+            {%for a in users%}
             {%if a.id!=1%}
-               <a class="btn btn-primary" href="/admin/user/{{a.id}}"> Użytkownik {{a.username}} ><span class="ml-2 badge badge-primary badge-pill" style="background-color: #999999;"></span></a><br>
-                        <br>
-
+            <li class="list-group-item">
+                <a class="btn m-1" href="/admin/user/{{a.id}}"><h5>{{a.username}}</h5></a>
+                <button class="float-right btn btn-danger m-1" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{a.id}}" href="#" > Usuń</button>
+                {% if not a.admin%}<a class="float-right btn btn-info m-1" href="/give_admin/{{a.id}}">Daj admina</a>{%endif%}
+            </li>
           {%endif%}
               {%endfor%}
-          <br>
-
-      </ul>
-
-
-  </div>
+        </div>
+    </div>
+</div>
+{%for a in users%}
+{%if a.id!=1%}
+         <div class="modal fade" id="are-you-sure-{{a.id}}" tabindex="-5" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <p>Właśnie zamierzasz usunąć użytkownika <b>{{a.username}}</b>. Jesteś tego pewien?</p>
+                <a class="btn btn-danger" href="/delete/{{a.id}}">Usuń</a>
+                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{%endif%}
+{% endfor%}
 {% endblock %}
-</center>
-</head>
-<body>
-</body>
-</html>

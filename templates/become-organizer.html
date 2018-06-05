@@ -13,7 +13,9 @@
 		<form method=post action="/become-organizer/">
 			<dl>
 				{{render_field(form.fullname)}}
-				{{render_field(form.birthdate)}}
+				{{render_field(form.birthdate_day)}}
+				{{render_field(form.birthdate_month)}}
+				{{render_field(form.birthdate_year)}}
 				{{render_field(form.about)}}
 				{{render_field(form.why)}}
 			</dl>

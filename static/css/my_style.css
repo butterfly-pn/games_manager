@@ -2,3 +2,14 @@
    max-width: 65.5rem;
    margin: auto;
 }
+
+.hr-nav{
+    display: none;
+}
+
+@media (max-width: 800px){
+    .hr-nav{
+        border-color: white;
+        display: block;
+    }
+}
