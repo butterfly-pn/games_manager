@@ -89,5 +89,50 @@ def db_start():
     db.session.add(game)
     db.session.commit()
 
+    game = models.Game()
+    game.title = "Lightsaber tactics"
+    game.team = "BestTeam"
+    game.description = 'Platformowa gra 2D, w której poruszasz się zbuntowanym rycerzem Jedi i zabijasz młodych adeptów'
+    game.jam = 'Jam testowy'
+    game.path = "Lightsaber tactics.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Military trucks"
+    game.team = "BestTeam"
+    game.description = 'Prosta gra wyścigowa z pojazdami wojskowymi'
+    game.jam = 'Jam testowy'
+    game.path = "Military trucks.tar.xz"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Quit now"
+    game.team = "BestTeam"
+    game.description = 'Ciężka gra platformowa'
+    game.jam = 'Jam testowy'
+    game.path = "Quit now.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Satelite destroyer"
+    game.team = "BestTeam"
+    game.description = 'Jako operator działa niszcz zbliżające się satelity wroga'
+    game.jam = 'Jam testowy'
+    game.path = "Satelite destroyer.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Shoot fast! Don't die!"
+    game.team = "BestTeam"
+    game.description = 'Multiplayer FPS typu arena'
+    game.jam = 'Jam testowy'
+    game.path = "Shoot fast! Don't die!.7z"
+    db.session.add(game)
+    db.session.commit()
+
 if __name__ == '__main__':
     db_start()
