@@ -4,7 +4,7 @@ from main import app
 from main import db
 from main import bcrypt
 from main import lm
-from models import User, Team, Message, Jam
+from models import User, Team, Message, Jam, Game
 import gc
 from passlib.hash import sha256_crypt
 from functools import wraps
@@ -1111,6 +1111,8 @@ class NewFile(Form):
     description = TextAreaField('O grze:', [validators.Length(min=4, max=200)])
     file = FileField()
 
+@app.route("/download", methods=['GET', 'POST'])
+@login_required
 def download():
     """Lista plików do pobrania oraz upload"""
     """ROZłOŻYć NA OSOBNY DOWNLOAD I UPLOAD"""
