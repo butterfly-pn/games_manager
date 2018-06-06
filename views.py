@@ -13,8 +13,8 @@ from wtforms import Form, validators, StringField, PasswordField, BooleanField, 
 from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
 from datetime import datetime
-from flask_wtf import Form
-from flask_wtf.file import FileField
+# from flask_wtf import Form
+# from flask_wtf.file import FileField
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 target = os.path.join(APP_ROOT, 'games')
