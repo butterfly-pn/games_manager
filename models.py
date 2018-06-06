@@ -83,6 +83,7 @@ class Jam(db.Model):
     master = Column(String(200))
     teams = Column(PickleType())
     active = Column(Boolean, default=True)
+    created = Column(String(20), nullable=False)
 
 class Game(db.Model):
     """

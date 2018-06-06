@@ -887,6 +887,13 @@ def jam_creation():
                 new_jam.description = description
                 new_jam.master=master.username
                 new_jam.master_email=master.email
+
+
+                time_now = str(datetime.now())
+                day = time_now[9:12]
+                hour = time_now[11:14]
+                minute = time_now[15:18]
+                new_jam.created = str(day)+":"+str(hour)+":"+str(minute)
                 new_jam.active=True
                 db.session.add(new_jam)
                 db.session.commit()
@@ -925,9 +932,13 @@ def jams():
         organizer = False
         admin = False
         user_member=False
-    if admin or organizer or user_member:
-        jams = Jam.query.order_by(Jam.id.asc()).all()
-        return render_template("jams.html", jams=jams, admin=admin, organizer=organizer, member=user_member, team_leader=team_leader)
+
+    time_now=str(datetime.now())
+    day=time_now[9:12]
+    hour=time_now[11:14]
+    minute=time_now[15:18]
+    jams = Jam.query.order_by(Jam.id.asc()).all()
+    return render_template("jams.html", jams=jams, admin=admin, organizer=organizer, member=user_member, team_leader=team_leader, day=day, hour=hour, minute=minute)
     return redirect('/')
 
 @app.route("/jam/<jam_id>")
