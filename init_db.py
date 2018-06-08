@@ -49,8 +49,11 @@ def db_start():
     jam = models.Jam()
     jam.title = "Jam testowy"
     jam.master="piotr"
+    jam.theme="destruction"
+    jam.description="Jam o rozwalaniu"
     jam.master_email = 'piotr@dyba.com.pl'
     jam.teams=['BestTeam']
+    jam.created="06:21:15"
     db.session.add(jam)
     db.session.commit()
 

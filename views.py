@@ -549,6 +549,7 @@ def teams():
     """Wyświetla listę zarejstrowanych drużyn, z linkami do nich"""
     if User.query.filter_by(username=session['username']).first().admin:
         user_member = False
+        team_leader = False
         try:
             organizer = User.query.filter_by(username=session['username']).first().organizer
             admin = User.query.filter_by(username=session['username']).first().admin
@@ -556,6 +557,9 @@ def teams():
             for t in teams:
                 if session['username'] in t.contributors:
                     user_member = True
+            team = Team.query.filter_by(master=session['username']).all()
+            if team:
+                team_leader = True
         except KeyError:
             organizer = False
             admin = False
@@ -891,11 +895,6 @@ def jam_creation():
                 new_jam.master_email=master.email
 
 
-                time_now = str(datetime.now())
-                day = time_now[9:12]
-                hour = time_now[11:14]
-                minute = time_now[15:18]
-                new_jam.created = str(day)+":"+str(hour)+":"+str(minute)
                 new_jam.active=True
                 db.session.add(new_jam)
                 db.session.commit()
@@ -940,7 +939,7 @@ def jams():
     hour=time_now[11:14]
     minute=time_now[15:18]
     jams = Jam.query.order_by(Jam.id.asc()).all()
-    return render_template("jams.html", jams=jams, admin=admin, organizer=organizer, member=user_member, team_leader=team_leader, day=day, hour=hour, minute=minute)
+    return render_template("jams.html", jams=jams, admin=admin, organizer=organizer, member=user_member, team_leader=team_leader)
     return redirect('/')
 
 @app.route("/jam/<jam_id>")
@@ -1007,6 +1006,13 @@ def jam_add(jam_id, team_name):
     jam_master=Jam.query.filter_by(id=jam_id).first().master
     title = "Prośba o dołączenie drużyny team do twojego gamejamu".replace("team", team_name)
     message=Message.query.filter_by(adresser=jam_master,title=title)
+    team= Team.query.filter_by(name=team_name).first()
+    jams=Jam.query.order_by(Jam.id.asc()).all()
+    for jam in jams:
+        if team.name in jam.teams:
+            flash("ta drużyna jest już w jakimś jamie")
+            return redirect("/jam/"+str(Jam.query.filter_by(id=jam_id).first().id))
+            break
 
     if admin or message and jam_master==session['username']:
         jam = Jam.query.filter_by(id=jam_id).first()
@@ -1019,7 +1025,7 @@ def jam_add(jam_id, team_name):
                     jam.teams=teams[:]
                     print(jam.teams)
                     db.session.commit()
-                    flash('Pomyślnie dodamo drużyne do jamu2')
+                    flash('Pomyślnie dodamo drużyne do jamu')
                     print(jam.teams)
 
             else:
@@ -1028,7 +1034,7 @@ def jam_add(jam_id, team_name):
                 print(jam.teams)
                 db.session.commit()
                 db.session.commit()
-                flash('Pomyślnie dodamo drużyne do jamu1')
+                flash('Pomyślnie dodamo drużyne do jamu')
 
             return redirect('/jam/' + jam_id)
         return redirect("/")
@@ -1077,7 +1083,7 @@ def delete_jam(jam_id):
                db.session.delete(this_jam)
                db.session.commit()
                flash("Usunięto jam!")
-           return redirect(url_for('homepage'))
+           return redirect("/jams")
 
        else:
            flash("Nie masz uprawnień")
@@ -1097,7 +1103,7 @@ def close_jam(jam_id):
                this_jam.active=False
                db.session.commit()
                flash("Zamknięto jam!")
-           return redirect(url_for('homepage'))
+           return redirect("/jams")
 
        else:
            flash("Nie masz uprawnień")
@@ -1328,7 +1334,46 @@ def change_admin():
 
 
 """
-Koniec obsługi konta administratora, koniec funkcji obsługujących zdarzenia zainicjowane celowo przez użytkownika
+Koniec obsługi konta administratora, wyszukiwanie 
+"""
+
+
+@app.route('/search/', methods=['GET'])
+def search():
+    search = request.args.get('search')
+    sjams=Jam.query.filter_by(title=search).all()
+    sjams += Jam.query.filter_by(description=search).all()
+    steams = Team.query.filter_by(name=search).all()
+    susers = User.query.filter_by(username=search).all()
+
+    user_member=False
+    team_leader = False
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        team = Team.query.filter_by(master=session['username']).all()
+        if team:
+            team_leader = True
+        admin = User.query.filter_by(username=session['username']).first().admin
+        admin = User.query.filter_by(username=session['username']).first().admin
+        teams=Team.query.order_by(Team.id.asc()).all()
+        for t in teams:
+            if session['username'] in t.contributors:
+                user_member = True
+    except KeyError:
+        organizer = False
+        admin = False
+        user_member=False
+    if User.query.filter_by(username=session['username']).first().admin:
+        return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, susers=susers, sjams=sjams, steams=steams)
+
+
+
+
+
+
+
+"""
+koniec funkcji obsługujących zdarzenia zainicjowane celowo przez użytkownika
 """
 
 

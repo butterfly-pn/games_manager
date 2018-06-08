@@ -1,0 +1,63 @@
+{% extends "_base.html" %}
+
+{% set page_id = "info" %}
+<center>
+{% block content %}
+  <div class="row">
+    <div class="col-4">
+        <h2>Wyszukane Jamy:</h2>
+        {% if sjams%}
+        {% for jam in sjams%}
+        <div style="background-color: #cccccc" class="container">
+
+        <a class="btn btn-secondary" href="/jam/{{jam.id}}"{{ jam.title }} style="margin:12px;" ><h3>{{ jam.title }}</h3></a>
+                        <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{jam.master}}">{{jam.master}}</a></h5>
+
+
+
+                                              <h4>
+                      Motyw przewodni:<br>
+                      </h4>
+                        <h5>{{ jam.theme }}</h5>
+
+
+                      <h4>
+                      Opis:<br>
+                      </h4>
+                        <h5>{{ jam.description }}</h5>
+
+                        <br>
+
+
+        </div>
+        {%endfor%}
+                {%else%}
+      <h5> Nie znaleziono </h5>
+      {% endif%}
+
+    </div>
+
+      <h3>Wyszukane drużyny</h3>
+        {%if steams%}
+        {% for team in steams%}
+        <div clas="col-4">
+            <div style="background-color: #cccccc" class="container">
+
+                <a class="btn btn-secondary" href="/team/{{team.name}}"style="margin:12px;" ><h3>Drużyna {{ team.name }}</h3></a>
+                        <h5 style="marigin-left:10px; margin-top:10px;"> Założona przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{team.master}}">{{team.master}}</a></h5>
+
+
+            </div>
+        </div>
+        {%endfor%}
+        {%else%}
+      <h5> Nie znaleziono </h5>
+      {% endif%}
+    </div>
+
+
+
+    </div>
+  </div>
+{% endblock %}
+</center>
