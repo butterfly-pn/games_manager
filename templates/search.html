@@ -4,6 +4,47 @@
 <center>
 {% block content %}
   <div class="row">
+
+      <div class="col-4">
+        <h2>Wyszukane Jamy:</h2>
+        {% if sgames%}
+        {% for file in sgames%}
+        <div style="background-color: #cccccc" class="container">
+
+        <div class="row projects-button">
+
+                        <h3 style="margin:12px;"> <strong>{{ file.title }}</strong>  </h3>
+            <div style="text-align:left;"> <a class="btn btn-info " style="margin-left:20px;  margin-top:12px;" role="button" href="/download/{{file.path}}" download="{{file.path}}">Download</a></div>
+
+                     </div>
+                    <div>
+                      <h4>
+                      O grze:<br>
+                      </h4>
+
+                        <h6>{{ file.description }}</h6>
+
+                  </div>
+
+                    <div class="row justify-content-end" style="margin-top:10px; margin-left:0px;">
+
+                          <i>Made by: {{ file.team }}<br>For: {{file.jam}}</i>
+                          <br><br>
+
+                  </div>
+
+        </div>
+        {%endfor%}
+                {%else%}
+      <h5> Nie znaleziono </h5>
+      {% endif%}
+
+    </div>
+
+
+
+
+
     <div class="col-4">
         <h2>Wyszukane Jamy:</h2>
         {% if sjams%}
@@ -36,23 +77,25 @@
       {% endif%}
 
     </div>
+<div clas="col-4">
+      <h2>Wyszukane drużyny:</h2>
 
-      <h3>Wyszukane drużyny</h3>
         {%if steams%}
         {% for team in steams%}
-        <div clas="col-4">
+
             <div style="background-color: #cccccc" class="container">
 
-                <a class="btn btn-secondary" href="/team/{{team.name}}"style="margin:12px;" ><h3>Drużyna {{ team.name }}</h3></a>
-                        <h5 style="marigin-left:10px; margin-top:10px;"> Założona przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{team.master}}">{{team.master}}</a></h5>
+                <a class="btn btn-secondary" href="/team/{{team.name}}"style="margin:10px;" ><h3>Drużyna {{ team.name }}</h3></a>
+                        <h5 style="margin-left:10px;"> Założona przez: <a   class="btn btn-outline-secondary " style="margin-bottom:10px;" href="/user/{{team.master}}">{{team.master}}</a></h5>
 
 
             </div>
-        </div>
+
         {%endfor%}
         {%else%}
       <h5> Nie znaleziono </h5>
       {% endif%}
+        </div>
     </div>
 
 

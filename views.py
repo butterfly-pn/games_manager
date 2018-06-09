@@ -1342,9 +1342,9 @@ Koniec obsługi konta administratora, wyszukiwanie
 def search():
     search = request.args.get('search')
     sjams=Jam.query.filter_by(title=search).all()
-    sjams += Jam.query.filter_by(description=search).all()
+    sjams += Jam.query.filter_by(theme=search).all()
     steams = Team.query.filter_by(name=search).all()
-    susers = User.query.filter_by(username=search).all()
+    sgames = Game.query.filter_by(title=search).all()
 
     user_member=False
     team_leader = False
@@ -1364,7 +1364,7 @@ def search():
         admin = False
         user_member=False
     if User.query.filter_by(username=session['username']).first().admin:
-        return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, susers=susers, sjams=sjams, steams=steams)
+        return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, sgames=sgames, sjams=sjams, steams=steams)
 
 
 
