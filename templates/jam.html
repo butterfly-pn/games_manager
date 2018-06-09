@@ -11,12 +11,14 @@
           <hr>
       </div>
           {%endif%}
+      </div>
   <div class="row">
     <div class="col-8">
 
             <h3>Nazwa jamu: {{ jam.title }}<br></h3>
-      <h5>Organizator jamu: <a class=" btn btn-primary "href="/user/{{jam.master}}">{{jam.master}}</a> <br>
-          Motyw porzewodni jamu: {{jam.theme}}<br></h5>
+      <h5>  Motyw porzewodni jamu: {{jam.theme}}<br><
+      Organizator jamu: <a class=" btn btn-primary "href="/user/{{jam.master}}">{{jam.master}}</a> <br></h5>
+
 
 
       {% if jam.teams %}
@@ -36,9 +38,10 @@
         {% if jam.teams%}
         {% for t in teams %}
       {% if t.name not in jam.teams%}
-        <a class="btn btn-primary" href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</class><br>
+        <a class="btn btn-primary" href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</a><br>
       {% endif%}
         {% endfor%}
+
         {% else%}
         {% for t in teams %}
         <a class="btn btn-primary" href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</a><br>
@@ -50,10 +53,14 @@
 
 
     </div>
-      <div class="col-4">
+      <div class="col-4" >
           <h4>{{jam.description}}</h4>
       </div>
   </div>
+
+
+
+
   {% if jam.teams%}
       {% for cont in jam.teams %}
    <div class="modal fade" id="are-you-sure-{{cont}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
