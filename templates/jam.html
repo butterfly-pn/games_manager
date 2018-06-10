@@ -60,7 +60,7 @@
         {% for team in jam.teams %}
       <div class="list-group-item ">
           <div class="row">
-              <div class="col-2">
+              <div class="col-3">
                   <a style="color:#000000; " href="/team/{{team}}"><h4 style="margin:10px 0px 0px 10px;">{{team}}</h4></a>
 
               </div>
@@ -72,16 +72,16 @@
                     <div style="background-color: #dddddd"  class="container">
                   <div class="row" >
                   <div class="col-4">
-                  <h6 style="margin:10px 8px 8px 8px;"><b>{{ game.title}}</b></h6>
+                  <h6 style="margin:10px 0px 8px 8px;"><b>{{ game.title}}</b></h6>
                   </div>
 
                       <div class="col-6">
-                      <h7 style="margin:15px 10px 10px 0px;">{{game.description}} </h7>
+                      <h7 style="margin:15px 0px 10px 0px;">{{game.description}} </h7>
                       </div>
 
                       <div class="col-2">
 
-                           <div style="text-align:left;"> <a class="btn btn-info " style="margin:4px 4px 4px 0px;" role="button" href="/download/{{game.path}}" download="{{game.path}}">Pobierz</a></div>
+                           <div style="text-align:left;"> <a class="btn btn-info " style="margin:4px 0px 4px 0px;" role="button" href="/download/{{game.path}}" download="{{game.path}}">Pobierz</a></div>
 
                       </div>
 
@@ -97,8 +97,8 @@
 
               </div>
               <div class="col-1">
-{% if userteam == team or jam.master == session['username'] or admin%}
-              <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{team}}" href="#are-you-sure-{{team}}">Wyrzyć</button>
+    {% if userteam == team or jam.master == session['username'] or admin%}
+              <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{team}}" href="#are-you-sure-{{team}}">Wyrzuć</button>
               {%endif%}
           </div>
           </div>
