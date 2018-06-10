@@ -14,12 +14,13 @@
           <ul style="list-style-type: none;">
 
             {% for file in files %}
-              <div style="background-color: #cccccc" class="container">
+              <div style="background-color: rgba(204, 204, 204,.8); border-radius: 25px;" class="container">
                 <div class="col-12">
-                    <div class="row projects-button">
+                    <div class="row" data-toggle="collapse" data-target="#{{ file.id }}">
 
                         <h3 style="margin:12px;"> <strong>{{ file.title }}</strong>  </h3>
                      </div>
+                    <div id="{{ file.id }}" class="collapse">
                     <div>
                       <h4>
                       O grze:<br>
@@ -40,6 +41,7 @@
                           <br><br>
                       </li>
                   </div>
+                </div>
                 </div>
 
               </div>
