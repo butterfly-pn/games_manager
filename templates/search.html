@@ -3,12 +3,15 @@
 {% set page_id = "info" %}
 <center>
 {% block content %}
-  <div class="row">
 
+    {% if sgames%}
+    <h2>Wyszukane Gry:</h2>
+    <div class="row">
+{% for file in sgames%}
       <div class="col-4">
-        <h2>Wyszukane Jamy:</h2>
-        {% if sgames%}
-        {% for file in sgames%}
+
+
+
         <div style="background-color: #cccccc" class="container">
 
         <div class="row projects-button">
@@ -34,24 +37,50 @@
                   </div>
 
         </div>
-        {%endfor%}
-                {%else%}
-      <h5> Nie znaleziono </h5>
-      {% endif%}
+
+
+{% if loop.index0 is divisibleby 3 %}<br>{%endif%}
 
     </div>
+        {%endfor%}
+    </div>
+{% endif%}
+
+
+{%if steams%}
+    <h2>Wyszukane drużyny:</h2>
+<div class="row">
+    {% for team in steams%}
+<div class="col-4">
+
+            <div style="background-color: #cccccc" class="container">
+
+                <a class="btn btn-secondary" href="/team/{{team.name}}"style="margin:10px;" ><h3>Drużyna {{ team.name }}</h3></a>
+                        <h5 style="margin-left:10px;"> Założona przez: <a   class="btn btn-outline-secondary " style="margin-bottom:10px;" href="/user/{{team.master}}">{{team.master}}</a></h5>
+
+
+            </div>
 
 
 
+        </div>
+    {% if loop.index0 is divisibleby 3 %}<br>{%endif%}
+    {%endfor%}
+</div>
 
+{% endif%}
 
-    <div class="col-4">
-        <h2>Wyszukane Jamy:</h2>
-        {% if sjams%}
+    {% if sjams%}
+    <h2>Wyszukane Jamy:</h2>
+    <div class="row">
         {% for jam in sjams%}
+<div class="col-5">
+
+
+
         <div style="background-color: #cccccc" class="container">
 
-        <a class="btn btn-secondary" href="/jam/{{jam.id}}"{{ jam.title }} style="margin:12px;" ><h3>{{ jam.title }}</h3></a>
+        <a class="btn btn-secondary" href="/jam/{{jam.id}}"{{ jam.title }} style="margin:12 0px;" ><h3>{{ jam.title }}</h3></a>
                         <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{jam.master}}">{{jam.master}}</a></h5>
 
 
@@ -71,36 +100,15 @@
 
 
         </div>
-        {%endfor%}
-                {%else%}
-      <h5> Nie znaleziono </h5>
-      {% endif%}
 
-    </div>
-<div clas="col-4">
-      <h2>Wyszukane drużyny:</h2>
-
-        {%if steams%}
-        {% for team in steams%}
-
-            <div style="background-color: #cccccc" class="container">
-
-                <a class="btn btn-secondary" href="/team/{{team.name}}"style="margin:10px;" ><h3>Drużyna {{ team.name }}</h3></a>
-                        <h5 style="margin-left:10px;"> Założona przez: <a   class="btn btn-outline-secondary " style="margin-bottom:10px;" href="/user/{{team.master}}">{{team.master}}</a></h5>
-
-
-            </div>
-
-        {%endfor%}
-        {%else%}
-      <h5> Nie znaleziono </h5>
-      {% endif%}
-        </div>
-    </div>
 
 
 
     </div>
-  </div>
+        {% if loop.index0 is divisibleby 2 %}<br>{%endif%}
+ {%endfor%}
+
+    </div>
+    {% endif%}
 {% endblock %}
 </center>

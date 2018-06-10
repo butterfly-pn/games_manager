@@ -1443,16 +1443,18 @@ def search():
     for i in a:
         jams.remove(i)
 
-    teams = Team.query.filter_by(name=search).all()
+    steams = Team.query.order_by(Team.id.asc()).all()
     a=[]
-    for team in teams:
-        found=re.findall(r'.*search.*'.replace('search', search), team.name)
-        if len(found)==0 :
-            a.append(team)
+    for steam in steams:
+        found=re.findall(r'.*search.*'.replace('search', search), steam.name)
+        if len(found)==0:
+            a.append(steam)
     for i in a:
-        teams.remove(i)
+        steams.remove(i)
 
-    games = Game.query.filter_by(title=search).all()
+
+
+    games = Game.query.order_by(Game.id.asc()).all()
     a = []
     for game in games:
         found = re.findall(r'.*search.*'.replace('search', search), game.title)
@@ -1479,7 +1481,7 @@ def search():
         admin = False
         user_member=False
     if User.query.filter_by(username=session['username']).first().admin:
-        return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, sgames=games, sjams=jams, steams=teams)
+        return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, sgames=games, sjams=jams, steams=steams)
 
 
 
