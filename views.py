@@ -2,19 +2,16 @@
 import os
 from main import app
 from main import db
-from main import bcrypt
-from main import lm
 from models import User, Team, Message, Jam, Game
 import gc
+import re
 from passlib.hash import sha256_crypt
 from functools import wraps
-from flask import Flask, render_template, flash, request, redirect, url_for, session, send_from_directory
+from flask import  render_template, flash, request, redirect, url_for, session, send_from_directory
 from wtforms import Form, validators, StringField, PasswordField, BooleanField, TextAreaField, SelectField, FileField
-from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
 from datetime import datetime
-# from flask_wtf import Form
-# from flask_wtf.file import FileField
+
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 target = os.path.join(APP_ROOT, 'games')
@@ -1037,6 +1034,9 @@ def jam(jam_id):
     jam_master=Jam.query.filter_by(master=session['username'])
     game=Game.query.filter_by(jam=this_jam.title).all()
 
+
+
+
     userteam=Team.query.filter_by(master=session['username']).first()
     if this_jam:
         return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=team, team_leader=team_leader, games=game, userteam=userteam)
@@ -1434,10 +1434,32 @@ Koniec obsługi konta administratora, wyszukiwanie
 @app.route('/search/', methods=['GET'])
 def search():
     search = request.args.get('search')
-    sjams=Jam.query.filter_by(title=search).all()
-    sjams += Jam.query.filter_by(theme=search).all()
-    steams = Team.query.filter_by(name=search).all()
-    sgames = Game.query.filter_by(title=search).all()
+    jams=Jam.query.order_by(Jam.id.asc()).all()
+    a=[]
+    for jam in jams:
+        found=re.findall(r'.*search.*'.replace('search', search), jam.title)
+        if len(found)==0 :
+            a.append(jam)
+    for i in a:
+        jams.remove(i)
+
+    teams = Team.query.filter_by(name=search).all()
+    a=[]
+    for team in teams:
+        found=re.findall(r'.*search.*'.replace('search', search), team.name)
+        if len(found)==0 :
+            a.append(team)
+    for i in a:
+        teams.remove(i)
+
+    games = Game.query.filter_by(title=search).all()
+    a = []
+    for game in games:
+        found = re.findall(r'.*search.*'.replace('search', search), game.title)
+        if len(found) == 0:
+            a.append(game)
+    for i in a:
+        games.remove(i)
 
     user_member=False
     team_leader = False
@@ -1457,7 +1479,7 @@ def search():
         admin = False
         user_member=False
     if User.query.filter_by(username=session['username']).first().admin:
-        return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, sgames=sgames, sjams=sjams, steams=steams)
+        return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, sgames=games, sjams=jams, steams=teams)
 
 
 
