@@ -16,22 +16,25 @@
                 <div class="col-12">
                     <div class="row ">
 
-                        <a class="btn btn-secondary" href="/jam/{{t.id}}" style="margin:12px;" ><h3>{{ t.title }}</h3></a>
-                        <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{t.master}}">{{t.master}}</a></h5>
+                        <a class="btn btn-info" href="/jam/{{t.id}}" style="margin:12px;" ><h3>{{ t.title }}</h3></a>
+
                      </div>
                     <div>
 
-                                              <h4>
-                      Motyw przewodni:<br>
-                      </h4>
+                        <h4><b>Motyw przewodni:</b><br></h4>
                         <h5>{{ t.theme }}</h5>
 
 
                       <h4>
-                      Opis:<br>
+                      <b>Opis:</b><br>
                       </h4>
                         <h5>{{ t.description }}</h5>
-
+                        <div class="row justify-content-center">
+                            <h5> <b>założony przez:</b><br></h5>
+</div>
+                        <div class="row justify-content-center">
+                        <a   class="btn btn-outline-info " style="marigin:5px;" href="/user/{{t.master}}">{{t.master}}</a>
+                            </div>
                         <br>
 
                 </div>
@@ -55,21 +58,25 @@
                 <div class="col-12">
                     <div class="row ">
 
-                        <a class="btn btn-secondary" href="/jam/{{t.id}}"{{ t.title }} style="margin:12px;" ><h3>{{ t.title }}</h3></a>
-                        <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{t.master}}">{{t.master}}</a></h5>
+                        <a class="btn btn-info" href="/jam/{{t.id}}"{{ t.title }} style="margin:12px;" ><h3>{{ t.title }}</h3></a>
                      </div>
                     <div>
 
                                               <h4>
-                      Motyw przewodni:<br>
+                                                  <b>Motyw przewodni:</b><br>
                       </h4>
                         <h5>{{ t.theme }}</h5>
 
                       <h4>
-                      Opis:<br>
+                      <b>Opis:</b><br>
                       </h4>
                         <h5>{{ t.description }}</h5>
-
+                        <div class="row justify-content-center">
+                            <h5> <b>założony przez:</b><br></h5>
+                        </div>
+                        <div class="row justify-content-center">
+                        <a   class="btn btn-outline-info" style="marigin:5px;" href="/user/{{t.master}}">{{t.master}}</a>
+                            </div>
                         <br>
 
                 </div>
