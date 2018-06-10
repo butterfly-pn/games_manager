@@ -13,11 +13,24 @@ def db_start():
     db.create_all()
     db.session.commit()
 
-
     user = models.User()
     user.username = "piotr"
     user.password = sha256_crypt.encrypt("pppp1234")
-    user.email = 'piotr@dyba.com.pl'
+    user.email = 'piotr@pn.com.pl'
+    user.job= "szef projektu"
+    user.admin = True
+    user.poweruser = True
+    user.organizer = True
+    user.birthdate = "01.01.1999"
+    user.about = "Jestem dobrym adminem"
+    user.why = "Chcę organizować gamejam, poniewż uważam, że jest to jest to idealna forma rozwoju dla młodych ludzi."
+    db.session.add(user)
+    db.session.commit()
+
+    user = models.User()
+    user.username = "patryk"
+    user.password = sha256_crypt.encrypt("pppp1234")
+    user.email = 'patryk@pn.com.pl'
     user.job= "szef projektu"
     user.admin = True
     user.poweruser = True
@@ -42,10 +55,33 @@ def db_start():
     db.session.add(user)
     db.session.commit()
 
+    user = models.User()
+    user.username = "marek"
+    user.password = sha256_crypt.encrypt("marek")
+    user.email = 'marek@mc.com'
+    user.job= "programista"
+    user.admin = False
+    user.poweruser = True
+    user.organizer = False
+    user.birthdate = "01.01.1889"
+    db.session.add(user)
+    db.session.commit()
+
+    user = models.User()
+    user.username = "stefan"
+    user.password = sha256_crypt.encrypt("stefan")
+    user.email = 'stefan@onet.com'
+    user.job = "dzwiękowiec"
+    user.admin = False
+    user.poweruser = True
+    user.birthdate = "01.01.1889"
+    db.session.add(user)
+    db.session.commit()
+
     team = models.Team()
     team.name = "BestTeam"
-    team.master = "piotr"
-    team.master_email = 'piotr@dyba.com.pl'
+    team.master = "patryk"
+    team.master_email = 'patyk@pn.com.pl'
     team.contributors = ['adam', 'innygosc', 'jakiskoles']
     db.session.add(team)
     db.session.commit()
@@ -58,9 +94,25 @@ def db_start():
     db.session.add(team)
     db.session.commit()
 
+    team = models.Team()
+    team.name = "MonsterCouch"
+    team.master = "marek"
+    team.master_email = 'Marek@mc.coml'
+    team.contributors = ['Krzyś', 'artur', 'Helena']
+    db.session.add(team)
+    db.session.commit()
+
+    team = models.Team()
+    team.name = "LameTeam"
+    team.master = "stefan"
+    team.master_email = 'stefan@onet.com'
+    team.contributors = ['Chyzio', 'Zyzio', 'Dyzio']
+    db.session.add(team)
+    db.session.commit()
+
     message=models.Message()
     message.title = 'testowa wiadomość'
-    message.adresser='piotr'
+    message.adresser='patryk'
     message.author='wikwoj'
     message.content='No hej'
     message.created=datetime.now()
@@ -70,22 +122,69 @@ def db_start():
 
     jam = models.Jam()
     jam.title = "Jam testowy"
-    jam.master="piotr"
+    jam.master="patryk"
     jam.theme="destruction"
     jam.description="Jam o rozwalaniu"
-    jam.master_email = 'piotr@dyba.com.pl'
-    jam.teams=['BestTeam']
+    jam.master_email = 'patryk@pn.com.pl'
+    jam.teams=['BestTeam', "DrozynaWygrywów"]
+    jam.active = False
     db.session.add(jam)
     db.session.commit()
 
+    game = models.Game()
+    game.title = "Demolition n' Destruction"
+    game.team = "BestTeam"
+    game.description = 'gra o rozwalaniu i zniszczeniu'
+    game.jam = 'Jam testowy'
+    game.path = "Demolition n' Destruction.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Diablo Origins"
+    game.team = "DrozynaWygrywów"
+    game.description = 'gra o niszczniu potworów'
+    game.jam = 'Jam testowy'
+    game.path = "Diablo Origins.zip"
+    db.session.add(game)
+    db.session.commit()
+
+
     jam = models.Jam()
-    jam.title = "Jam testowy2"
-    jam.master = "piotr"
+    jam.title = "Pierwszy jam"
+    jam.master = "patryk"
     jam.theme="destruction"
     jam.description="Jam o rozwalaniu"
-    jam.master_email = 'piotr@dyba.com.pl'
-    jam.teams = ['BestTeam', "DrużynaWygrywów"]
+    jam.master_email = 'patryk@pn.com.pl'
+    jam.teams = ['BestTeam', "MonsterCouch", 'LameTeam']
     db.session.add(jam)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Doom 0"
+    game.team = "BestTeam"
+    game.description = 'Prequel Doom'
+    game.jam = 'Pierwszy jam'
+    game.path = "Doom 0.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Jabba The Hutt - Fat worm story"
+    game.team = "MonsterCouch"
+    game.description = 'Przemierzaj pustynię Tatooine pod postacią grubego robaka i zjadaj szturmowców'
+    game.jam = 'Pierwszy jam'
+    game.path = "Jabba The Hutt - Fat worm story.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Devil ain't cry"
+    game.team = "LameTeam"
+    game.description = 'Doprowadź diabła do płaczu'
+    game.jam = 'Pierwszy jam'
+    game.path = "devil ain't cry.zip"
+    db.session.add(game)
     db.session.commit()
 
     jam = models.Jam()
@@ -94,18 +193,76 @@ def db_start():
     jam.theme="Stranger things"
     jam.description="Jam o dziwnych i zwariowanych grach"
     jam.master_email = 'wikwoj@xd.com'
-    jam.teams = ['DrozynaWygrywów']
+    jam.teams = ['DrozynaWygrywów', 'MonsterCouch', 'LameTeam']
     db.session.add(jam)
     db.session.commit()
 
+    game = models.Game()
+    game.title = "Lightsaber tactics"
+    game.team = "DrozynaWygrywów"
+    game.description = 'Platformowa gra 2D, w której poruszasz się zbuntowanym rycerzem Jedi i zabijasz młodych adeptów'
+    game.jam = 'Szybki jam o dziwnych grach'
+    game.path = "Lightsaber tactics.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Quit now"
+    game.team = "MonsterCouch"
+    game.description = 'Ciężka gra platformowa'
+    game.jam = 'Szybki jam o dziwnych grach'
+    game.path = "Quit now.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Worms arena"
+    game.team = "LameTeam"
+    game.description = 'Bijesz się na areni będąc robakiem'
+    game.jam = 'Szybki jam o dziwnych grach'
+    game.path = "worms arena.zip"
+    db.session.add(game)
+    db.session.commit()
+
+
+
+
     jam = models.Jam()
     jam.title = "Ten jam nie istnieje"
-    jam.master = "wikwoj"
+    jam.master = "patryk"
     jam.theme="matrix"
     jam.description="Jam o rniebyciu"
-    jam.master_email = 'wikwoj@xd.com'
-    jam.teams = ['DrozynaWygrywów']
+    jam.master_email = 'patryk@pn.com'
+    jam.teams = ['DrozynaWygrywów', 'BestTeam', 'MonsterCouch']
+    jam.active = False
     db.session.add(jam)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Satelite destroyer"
+    game.team = "BestTeam"
+    game.description = 'Jako operator działa niszcz zbliżające się satelity wroga'
+    game.jam = 'Ten jam nie istnieje'
+    game.path = "Satelite destroyer.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Wolfenstein: the old order"
+    game.team = "DrozynaWygrywów"
+    game.description = 'Gra, w której musisz zabić Wiliama Josepha Blazkowicza'
+    game.jam = 'Ten jam nie istnieje'
+    game.path = "Wolfenstein the old order!.zip"
+    db.session.add(game)
+    db.session.commit()
+
+    game = models.Game()
+    game.title = "Path of Neo"
+    game.team = "MonsterCouch"
+    game.description = 'Symulator Wiary'
+    game.jam = 'Ten jam nie istnieje'
+    game.path = "Path of neo.zip"
+    db.session.add(game)
     db.session.commit()
 
 
@@ -115,79 +272,35 @@ def db_start():
     jam.theme="Wszystkie gry"
     jam.description="Jam, w ktorym tolerowane sa wszystkie gatunki gier"
     jam.master_email = 'wikwoj@xd.com'
-    jam.teams = ['DrozynaWygrywów']
+    jam.teams = ['DrozynaWygrywów', "MonsterCouch", 'LameTeam']
+    jam.active = False
     db.session.add(jam)
     db.session.commit()
 
     game = models.Game()
-    game.title = "Demolition n' Destruction"
-    game.team = "BestTeam"
-    game.description = 'gra o rozwalaniu i zniszczeniu'
-    game.jam = 'Szybki jam o dziwnych grach'
-    game.path = "Demolition n' Destruction.zip"
-    db.session.add(game)
-    db.session.commit()
-
-    game = models.Game()
-    game.title = "Doom 0"
-    game.team = "BestTeam"
-    game.description = 'Prequel Doom'
-    game.jam = 'Jam testowy'
-    game.path = "Doom 0.zip"
-    db.session.add(game)
-    db.session.commit()
-
-    game = models.Game()
-    game.title = "Jabba The Hutt - Fat worm story"
-    game.team = "BestTeam"
-    game.description = 'Przemierzaj pustynię Tatooine pod postacią grubego robaka i zjadaj szturmowców'
-    game.jam = 'Global game jam'
-    game.path = "Jabba The Hutt - Fat worm story.zip"
-    db.session.add(game)
-    db.session.commit()
-
-    game = models.Game()
-    game.title = "Lightsaber tactics"
-    game.team = "DrozynaWygrywów"
-    game.description = 'Platformowa gra 2D, w której poruszasz się zbuntowanym rycerzem Jedi i zabijasz młodych adeptów'
-    game.jam = 'JaTen jam nie istnieje'
-    game.path = "Lightsaber tactics.zip"
-    db.session.add(game)
-    db.session.commit()
-
-    game = models.Game()
     game.title = "Military trucks"
-    game.team = "DrozynaWygrywów"
+    game.team = "MonsterCouch"
     game.description = 'Prosta gra wyścigowa z pojazdami wojskowymi'
-    game.jam = 'Jam testowy'
+    game.jam = 'Global game jam'
     game.path = "Military trucks.tar.xz"
     db.session.add(game)
     db.session.commit()
 
     game = models.Game()
-    game.title = "Quit now"
-    game.team = "BestTeam"
-    game.description = 'Ciężka gra platformowa'
-    game.jam = 'Jam testowy2'
-    game.path = "Quit now.zip"
-    db.session.add(game)
-    db.session.commit()
-
-    game = models.Game()
-    game.title = "Satelite destroyer"
+    game.title = "Battle of tatooine"
     game.team = "DrozynaWygrywów"
-    game.description = 'Jako operator działa niszcz zbliżające się satelity wroga'
-    game.jam = 'Ten jam nie istnieje'
-    game.path = "Satelite destroyer.zip"
+    game.description = 'Jako operator działa niszcz zbliżające się statki wroga'
+    game.jam = 'Global game jam'
+    game.path = "Battle of tatooine.zip"
     db.session.add(game)
     db.session.commit()
 
     game = models.Game()
     game.title = "Shoot fast! Don't die!"
-    game.team = "Dróżyna wygrywów"
+    game.team = "LameTeam"
     game.description = 'Multiplayer FPS typu arena'
-    game.jam = 'Szybki jam o dziwnych grach'
-    game.path = "Shoot fast! Don't die!."
+    game.jam = 'Global game jam'
+    game.path = "Shoot fast! Don't die!.zip"
     db.session.add(game)
     db.session.commit()
 
