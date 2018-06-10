@@ -1210,15 +1210,14 @@ def download():
     except KeyError:
         organizer = False
         admin = False
-    files = Game.query.order_by(Game.title.asc()).all()
+    files = Game.query.order_by(Game.id.asc()).all()
     if request.method == "POST":
         title = request.form.get('title')
         used_title = Game.query.filter_by(title=title).first()
         description = request.form.get('description')
-        # path = request.files['file'].filename
         if used_title:
             flash('Ta nazwa gry jest już zajęta, proszę wybierz inną.')
-            files = Game.query.order_by(Game.title.asc()).all()
+            files = Game.query.order_by(Game.id.asc()).all()
             return render_template('download.html', files=files, organizer=organizer, admin=admin)
         if 'file' not in request.files:
             flash('No file part')
@@ -1242,7 +1241,7 @@ def download():
             db.session.commit()
             flash("Gra dodana!")
             gc.collect()
-        files = Game.query.order_by(Game.title.asc()).all()
+        files = Game.query.order_by(Game.id.asc()).all()
         return render_template('download.html', files=files, organizer=organizer, admin=admin)
     return render_template('download.html', files=files, organizer=organizer, admin=admin)
 
