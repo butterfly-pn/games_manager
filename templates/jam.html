@@ -60,12 +60,12 @@
         {% for team in jam.teams %}
       <div class="list-group-item ">
           <div class="row">
-              <div class="col-3">
+              <div class="col-2">
                   <a style="color:#000000; " href="/team/{{team}}"><h4 style="margin:10px 0px 0px 10px;">{{team}}</h4></a>
 
               </div>
 
-              <div class="col-8">
+                  <div class="col-8">
                   {% for game in games%}
 
                   {% if game.team == team%}
@@ -96,9 +96,11 @@
 
 
               </div>
+              <div class="col-1">
 {% if userteam == team or jam.master == session['username'] or admin%}
               <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{team}}" href="#are-you-sure-{{team}}">Wyrzyć</button>
               {%endif%}
+          </div>
           </div>
       </div>
 

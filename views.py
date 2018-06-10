@@ -1211,6 +1211,28 @@ def download():
         organizer = False
         admin = False
     files = Game.query.order_by(Game.id.asc()).all()
+
+    user_member = False
+    team_leader = False
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        team = Team.query.filter_by(master=session['username']).all()
+        if team:
+            team_leader = True
+        admin = User.query.filter_by(username=session['username']).first().admin
+        teams = Team.query.order_by(Team.id.asc()).all()
+        for t in teams:
+            if session['username'] in t.contributors:
+                user_member = True
+    except KeyError:
+        organizer = False
+        admin = False
+        user_member = False
+    except KeyError:
+        organizer = False
+        admin = False
+        user_member = False
+
     if request.method == "POST":
         title = request.form.get('title')
         used_title = Game.query.filter_by(title=title).first()
@@ -1242,8 +1264,11 @@ def download():
             flash("Gra dodana!")
             gc.collect()
         files = Game.query.order_by(Game.id.asc()).all()
-        return render_template('download.html', files=files, organizer=organizer, admin=admin)
-    return render_template('download.html', files=files, organizer=organizer, admin=admin)
+        teams = Team.query.order_by(Team.id).all()
+
+
+        return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
+    return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
 
 @app.route('/download/<filename>')
 def uploaded_file(filename):
