@@ -157,7 +157,7 @@ def db_start():
 
     game = models.Game()
     game.title = "Military trucks"
-    game.team = "BestTeam"
+    game.team = "DrozynaWygrywów"
     game.description = 'Prosta gra wyścigowa z pojazdami wojskowymi'
     game.jam = 'Jam testowy'
     game.path = "Military trucks.tar.xz"
@@ -168,7 +168,7 @@ def db_start():
     game.title = "Quit now"
     game.team = "BestTeam"
     game.description = 'Ciężka gra platformowa'
-    game.jam = 'Jam testowy'
+    game.jam = 'Jam testowy2'
     game.path = "Quit now.zip"
     db.session.add(game)
     db.session.commit()
@@ -187,7 +187,7 @@ def db_start():
     game.team = "Dróżyna wygrywów"
     game.description = 'Multiplayer FPS typu arena'
     game.jam = 'Szybki jam o dziwnych grach'
-    game.path = "Shoot fast! Don't die!.7z"
+    game.path = "Shoot fast! Don't die!."
     db.session.add(game)
     db.session.commit()
 
