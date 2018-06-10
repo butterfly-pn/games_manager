@@ -13,11 +13,11 @@
 <h5>Aktywne Jamy:</h5>
 {% for t in jams %}
       {% if t.active%}
-                    <div style="background-color: #cccccc" class="container">
+                    <div style="border-radius: 25px; background-color: rgba(204, 204, 204,.8);" class="container">
                 <div class="col-12">
                     <div class="row ">
 
-                        <a class="btn btn-secondary" href="/jam/{{t.id}}"{{ t.title }} style="margin:12px;" ><h3>{{ t.title }}</h3></a>
+                        <a class="btn btn-secondary" href="/jam/{{t.id}}" style="margin:12px;" ><h3>{{ t.title }}</h3></a>
                         <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{t.master}}">{{t.master}}</a></h5>
                      </div>
                     <div>
@@ -52,7 +52,7 @@
           <h4>Nieaktywne jamy</h4>
           {% for t in jams %}
     {% if not t.active%}
-                    <div style="background-color: #cccccc" class="container">
+                    <div style="border-radius: 25px; background-color: rgba(204, 204, 204,.8);" class="container">
                 <div class="col-12">
                     <div class="row ">
 

@@ -15,7 +15,7 @@
 </div>
     <div class="col-md-4">
          {%if user.username==session['username']%}
-            <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#" > Usuń swoje konto</button><br>
+            <button class="btn btn-danger btn-block" data-toggle="modal" data-target="#are-you-sure"> Usuń swoje konto</button><br>
             <a class="btn btn-primary btn-block" href="/user/{{user.username}}/messages">
                 Twoje wiadomości<span class="ml-2 badge badge-light badge-pill">{{new_messages}}</span>
             </a>
