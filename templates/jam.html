@@ -10,13 +10,13 @@
       <div class="col-lg-3 mt-3">
               {% if jam.active %}<a class="btn btn-secondary btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-close" href="#">Zamknij jam</a><br>{%endif%}
           <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-delete" href="#">Usuń jam</button>
-          <hr>
+
       </div>
           {%endif%}
 
 
   <div class="row">
-    <div class="col-6">
+    <div class="col-8">
 
             <h3>Nazwa jamu: {{ jam.title }}<br></h3>
       <h5>  Motyw porzewodni jamu: {{jam.theme}}<br>
@@ -24,10 +24,12 @@
 
 
     </div>
-      <div class="col-6" >
+      <div class="col-4" >
           <h4>{{jam.description}}</h4>
       </div>
+
   </div>
+
     </div>
       </div>
 
@@ -58,12 +60,12 @@
         {% for team in jam.teams %}
       <div class="list-group-item ">
           <div class="row">
-              <div class="col-3">
+              <div class="col-2">
                   <a style="color:#000000; " href="/team/{{team}}"><h4 style="margin:10px 0px 0px 10px;">{{team}}</h4></a>
 
               </div>
 
-              <div class="col-8">
+                  <div class="col-8">
                   {% for game in games%}
 
                   {% if game.team == team%}
@@ -94,9 +96,11 @@
 
 
               </div>
+              <div class="col-1">
 {% if userteam == team or jam.master == session['username'] or admin%}
               <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{team}}" href="#are-you-sure-{{team}}">Wyrzyć</button>
               {%endif%}
+          </div>
           </div>
       </div>
 

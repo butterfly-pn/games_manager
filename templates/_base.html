@@ -109,9 +109,13 @@ color: #1491e5;
         <li class="nav-item{% if page_id == 'download' %} active{% endif %}">
           <a class="nav-link" href="{{ url_for('download') }}">Download</a>
         </li>
-    {% if not team_leader%}
+    {% if not team_leader or member %}
         <li class="nav-item{% if page_id == 'create-team' %} active{% endif %}">
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-team" href="#">Stwórz zespół</a>
+        </li>
+
+        <li class="nav-item{% if page_id == 'teams' %} active{% endif %}">
+          <a class="nav-link" href="{{ url_for('teams') }}">Lista zespołów</a>
         </li>
           {%endif%}
         <li class="nav-item{% if page_id == 'create-jam' %} active{% endif %}">

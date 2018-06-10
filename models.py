@@ -96,3 +96,4 @@ class Game(db.Model):
     description = Column(String(200))
     jam = Column(String(20))
     path = Column(String(100))
+

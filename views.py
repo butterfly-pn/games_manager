@@ -546,26 +546,26 @@ Koniec usuwania użytkownika, początek obsługi drużyn
 @app.route('/teams')
 def teams():
     """Wyświetla listę zarejstrowanych drużyn, z linkami do nich"""
-    if User.query.filter_by(username=session['username']).first().admin:
-        user_member = False
-        team_leader = False
-        try:
-            organizer = User.query.filter_by(username=session['username']).first().organizer
-            admin = User.query.filter_by(username=session['username']).first().admin
-            teams = Team.query.order_by(Team.id.asc()).all()
-            for t in teams:
-                if session['username'] in t.contributors:
-                    user_member = True
-            team = Team.query.filter_by(master=session['username']).all()
-            if team:
-                team_leader = True
-        except KeyError:
-            organizer = False
-            admin = False
-            user_member = False
+
+    user_member = False
+    team_leader = False
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        admin = User.query.filter_by(username=session['username']).first().admin
         teams = Team.query.order_by(Team.id.asc()).all()
-        return render_template("teams.html", teams=teams, admin=admin, organizer=organizer, member=user_member, team_leader=team_leader)
-    return redirect('/')
+        for t in teams:
+            if session['username'] in t.contributors:
+                user_member = True
+        team = Team.query.filter_by(master=session['username']).all()
+        if team:
+            team_leader = True
+    except KeyError:
+        organizer = False
+        admin = False
+        user_member = False
+    teams = Team.query.order_by(Team.id.asc()).all()
+    return render_template("teams.html", teams=teams, admin=admin, organizer=organizer, member=user_member, team_leader=team_leader)
+
 
 @app.route("/team/<team_name>")
 def team(team_name):
@@ -735,6 +735,59 @@ def team_join(team_name, username):
             return redirect('/team/'+team_name)
         flash("Błąd:  nie ma takiej drużyny")
     return redirect('/')
+
+
+@app.route('/join-team/<team_name>')
+@login_required
+def join_team(team_name):
+    username=session['username']
+    team=Team.query.filter_by(name=team_name).first()
+    teams1=Team.query.order_by(Team.id.asc()).all()
+    for team1 in teams1:
+        if username in team1.contributors:
+            flash('Jesteś już w jakiejś drużynie', 'warning')
+            return redirect("/team/"+team_name)
+    message=Message.query.filter_by(author=username, adresser=team.master, title="Prośba o dołączenie do drużyny "+team_name).first()
+    if not message:
+        new_message = Message()
+        new_message.title ="Prośba o dołączenie do drużyny "+team_name
+        new_message.author =username
+        new_message.adresser =Team.query.filter_by(name=team_name).first().master
+        new_message.created=datetime.now()
+        new_message.content = "Użytkownik "+username+"Chce dołączyć do twojej drużyny "+team_name+'<br><br>  <a href=\'/team/'+team_name+'/add/'+username+'\' style="color: #000000">Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
+        db.session.add(new_message)
+        db.session.commit()
+        flash("Wysłano prośbę o dołączenie")
+    else:
+        flash("Użytkonik był już zaproszony. Poczekaj na jego odpowiedź")
+    return redirect('/team/'+team_name)
+
+@app.route('/team/<team_name>/add/<username>')
+@login_required
+def add_team(team_name, username):
+    team=Team.query.filter_by(name=team_name).first()
+    teams1=Team.query.order_by(Team.id.asc()).all()
+    for team1 in teams1:
+        if username in team1.contributors:
+            flash('Użytkownk jest już w jakiejś drużynie', 'warning')
+            return redirect("/team/"+team_name)
+    message=Message.query.filter_by(author=username, adresser=team.master, title="Prośba o dołączenie do drużyny "+team_name).first()
+    if message:
+        db.session.delete(message)
+        if team.contributors:
+            cont = team.contributors[:]
+            cont.append(username)
+            team.contributors = cont[:]
+            db.session.commit()
+            flash('Pomyślnie dołączono do drużyny')
+        else:
+            cont = team.contributors[:]
+            cont = [username]
+            team.contributors = cont[:]
+            db.session.commit()
+            flash('Pomyślnie dołączono do drużyny')
+    else:
+        return redirect("/")
 
 @app.route("/team/<team_name>/give//1")
 @login_required
@@ -1006,7 +1059,7 @@ def jam_invite(jam_id,team_name):
             message.title="Prośba o dołączenie drużyny do jamu gamejam".replace("gamejam",jam.title)
             message.adresser=jam.master
             message.author="Drużyna "+team_name
-            message.content='Drużyna '+team_name+' chce brać udział w twoim jamie <br><br>  <a href=\'/jam/'+jam_id+'/add/'+team_name+'\' style="color: #000000">Kliknij tu</a> aby zatwierdzić jego zgłoszenieKliknij tu</a> aby zatwierdzić to zgłoszenie'
+            message.content='Drużyna '+team_name+' chce brać udział w twoim jamie <br><br>  <a href=\'/jam/'+jam_id+'/add/'+team_name+'\' style="color: #000000">Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
             message.created=datetime.now()
             db.session.add(message)
             db.session.commit()
@@ -1158,6 +1211,28 @@ def download():
         organizer = False
         admin = False
     files = Game.query.order_by(Game.id.asc()).all()
+
+    user_member = False
+    team_leader = False
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        team = Team.query.filter_by(master=session['username']).all()
+        if team:
+            team_leader = True
+        admin = User.query.filter_by(username=session['username']).first().admin
+        teams = Team.query.order_by(Team.id.asc()).all()
+        for t in teams:
+            if session['username'] in t.contributors:
+                user_member = True
+    except KeyError:
+        organizer = False
+        admin = False
+        user_member = False
+    except KeyError:
+        organizer = False
+        admin = False
+        user_member = False
+
     if request.method == "POST":
         title = request.form.get('title')
         used_title = Game.query.filter_by(title=title).first()
@@ -1189,8 +1264,11 @@ def download():
             flash("Gra dodana!")
             gc.collect()
         files = Game.query.order_by(Game.id.asc()).all()
-        return render_template('download.html', files=files, organizer=organizer, admin=admin)
-    return render_template('download.html', files=files, organizer=organizer, admin=admin)
+        teams = Team.query.order_by(Team.id).all()
+
+
+        return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
+    return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
 
 @app.route('/download/<filename>')
 def uploaded_file(filename):

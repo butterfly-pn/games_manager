@@ -3,15 +3,13 @@
 {% set page_id = 'teams' %}
 {% block content %}
    <div class="row mt-3">
-      <div class="col-lg-3 mb-2">
-          <a class="btn btn-warning btn-block" href="/admin">< Funkcje administratora</a>
-          <hr>
-      </div>
     <div class="col-lg-8">
          <div class="list-group">
             <li class="list-group-item active" href=""><h4>Drużyny<span class="float-right badge badge-light badge-pill">{{teams|length}}</span></h4></li>
             {% for t in teams %}
-            <li class="list-group-item"><a class="btn m-1" href="/team/{{t.name}}"><h5>{{t.name}}</h5></a><a class="float-right btn btn-danger m-1" href="/delete-team/{{t.name}}">Usuń zespół</a> </li>
+            <li class="list-group-item"><a class="btn m-1" href="/team/{{t.name}}"><h5>{{t.name}}</h5></a>
+                {%if not team_leader%} <a class="float-right btn btn-primary m-1" href="/join-team/{{t.name}}">Dołącz do zespołu</a>{%endif%}
+                {% if admin %}<a class="float-right btn btn-danger m-1" href="/delete-team/{{t.name}}">Usuń zespół</a> {%endif%}</li>
          {% endfor %}
  
      </div>
