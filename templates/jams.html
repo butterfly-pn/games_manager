@@ -8,21 +8,76 @@
       <h2> Game jamy:</h2>
       </div>
       <br>
-      <div class="col-6">
-          <h4>Aktywne jamy:</h4>
-    <br>
-           {% for t in jams %}
-    {% if t.active%}
-          <a class="btn btn-primary" href="/jam/{{t.id}}">{{t.title}}></a><br><br>
-{%endif%}
-            {% endfor %}
 
-    </div>
+<div class="col-6">
+<h5>Aktywne Jamy:</h5>
+{% for t in jams %}
+      {% if t.active%}
+                    <div style="background-color: #cccccc" class="container">
+                <div class="col-12">
+                    <div class="row ">
+
+                        <a class="btn btn-secondary" href="/jam/{{t.id}}"{{ t.title }} style="margin:12px;" ><h3>{{ t.title }}</h3></a>
+                        <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{t.master}}">{{t.master}}</a></h5>
+                     </div>
+                    <div>
+
+                                              <h4>
+                      Motyw przewodni:<br>
+                      </h4>
+                        <h5>{{ t.theme }}</h5>
+
+
+                      <h4>
+                      Opis:<br>
+                      </h4>
+                        <h5>{{ t.description }}</h5>
+
+                        <br>
+
+                </div>
+
+              </div>
+                    </div>
+<br>
+
+      {%endif%}
+ {% endfor %}
+
+</div>
+
+
+
       <div class="col-6">
           <h4>Nieaktywne jamy</h4>
           {% for t in jams %}
     {% if not t.active%}
-          <a class="btn btn-secondary" href="/jam/{{t.id}}">{{t.title}}></a><br><br>
+                    <div style="background-color: #cccccc" class="container">
+                <div class="col-12">
+                    <div class="row ">
+
+                        <a class="btn btn-secondary" href="/jam/{{t.id}}"{{ t.title }} style="margin:12px;" ><h3>{{ t.title }}</h3></a>
+                        <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{t.master}}">{{t.master}}</a></h5>
+                     </div>
+                    <div>
+
+                                              <h4>
+                      Motyw przewodni:<br>
+                      </h4>
+                        <h5>{{ t.theme }}</h5>
+
+                      <h4>
+                      Opis:<br>
+                      </h4>
+                        <h5>{{ t.description }}</h5>
+
+                        <br>
+
+                </div>
+
+              </div>
+                    </div>
+<br>
 {%endif%}
             {% endfor %}
       </div>

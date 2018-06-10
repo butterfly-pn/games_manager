@@ -3,57 +3,119 @@
 {% set page_id = "jam" %}
 
 {% block content %}
-    {% if admn or session['username'] == jam.master%}
-      <div class="row">
+
+<div class="jumbotron">
+    {% if admin or session['username'] == jam.master%}
+<div class="row">
       <div class="col-lg-3 mt-3">
               {% if jam.active %}<a class="btn btn-secondary btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-close" href="#">Zamknij jam</a><br>{%endif%}
           <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-delete" href="#">Usuń jam</button>
           <hr>
       </div>
           {%endif%}
+
+
   <div class="row">
-    <div class="col-8">
+    <div class="col-6">
 
             <h3>Nazwa jamu: {{ jam.title }}<br></h3>
-      <h5>Organizator jamu: <a class=" btn btn-primary "href="/user/{{jam.master}}">{{jam.master}}</a> <br>
-          Motyw porzewodni jamu: {{jam.theme}}<br></h5>
-
-
-      {% if jam.teams %}
-      Zarejstrowane drużyny: {% for i in jam.teams %}
-      <div class="btn-group" role="group" aria-label="User">
-      <a class="btn btn-primary" href="/team/{{i}}">{{i}}</a>
-        {% if admin or session['username']==jam.master%}
-      <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{i}}" href="#are-you-sure-{{i}}">-</button>
-        {%endif%}
-
-      </div>
-      {% if loop.index != jam.teams|length %},{%endif%} {%endfor%} {%endif%}
-<br>
-{% if jam.active%}
-      {% if teams%}
-
-        {% if jam.teams%}
-        {% for t in teams %}
-      {% if t.name not in jam.teams%}
-        <a class="btn btn-primary" href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</class><br>
-      {% endif%}
-        {% endfor%}
-        {% else%}
-        {% for t in teams %}
-        <a class="btn btn-primary" href="/jam/{{jam.id}}/invite/{{t.name}}">Dodaj do tego jamu drużynę {{t.name}}</a><br>
-        {% endfor%}
-        {%endif %}
-        {%endif%}
-      {% endif%}
-
+      <h5>  Motyw porzewodni jamu: {{jam.theme}}<br>
+      Organizator jamu: <a class=" btn btn-primary "href="/user/{{jam.master}}">{{jam.master}}</a> </h5>
 
 
     </div>
-      <div class="col-4">
+      <div class="col-6" >
           <h4>{{jam.description}}</h4>
       </div>
   </div>
+    </div>
+      </div>
+
+
+
+
+    <div class="row">
+
+        <div class="col-12">
+          <div class="list-group">
+              <li class="list-group-item active" href="">
+
+<div class="row">
+    <div class="col-7">
+                 <a> <h4 >Zespoły:</h4></a>
+                  </div>
+
+    <div class="col-5">
+        {% if not teams.name in jam.teams%}
+    <a class="btn btn-secondary"  href="/jam/{{jam.id}}/invite/{{teams.name}}">Dodaj do tego jamu drużynę {{teams.name}}</a>
+        {%endif%}
+</div>
+
+</div>
+              </li>
+          {% if jam.teams%}
+
+        {% for team in jam.teams %}
+      <div class="list-group-item ">
+          <div class="row">
+              <div class="col-3">
+                  <a style="color:#000000; " href="/team/{{team}}"><h4 style="margin:10px 0px 0px 10px;">{{team}}</h4></a>
+
+              </div>
+
+              <div class="col-8">
+                  {% for game in games%}
+
+                  {% if game.team == team%}
+                    <div style="background-color: #dddddd"  class="container">
+                  <div class="row" >
+                  <div class="col-3">
+                  <h5 style="margin:10px 8px 8px 8px;">{{ game.title}}</h5>
+                  </div>
+
+                      <div class="col-3">
+                      <h6 style="margin:12px 10px 10px 0px;">{{game.description}} </h6>
+                      </div>
+
+                      <div class="col-4"></div>
+
+                      <div class="col-2">
+
+                           <div style="text-align:left;"> <a class="btn btn-info " style="margin:4px 4px 4px 0px;" role="button" href="/download/{{game.path}}" download="{{game.path}}">Pobierz</a></div>
+
+                      </div>
+
+                  </div>
+
+                    </div>
+
+                  {% endif%}
+
+
+                  {% endfor %}
+
+
+              </div>
+{% if userteam == team or jam.master == session['username'] or admin%}
+              <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{team}}" href="#are-you-sure-{{team}}">Wyrzyć</button>
+              {%endif%}
+          </div>
+      </div>
+
+      {% endfor %}
+
+          {%else%}
+              <li class="list-group-item" href="">-</li>
+          {%endif%}
+          </div>
+        </div>
+    </div>
+
+
+
+
+
+
   {% if jam.teams%}
       {% for cont in jam.teams %}
    <div class="modal fade" id="are-you-sure-{{cont}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">

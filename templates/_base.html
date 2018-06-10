@@ -17,10 +17,9 @@
 
 <!--Tworzenie nowej klasy mynewmodal do wyświetlania informacji o cookies-->
     <style>
-    body {
-text-color=#f1f1f1;
+modal{
+z-index: 1;
 }
-
 
 body {font-family: Arial, Helvetica, sans-serif;}
 
@@ -152,11 +151,12 @@ color: #1491e5;
         </li>
         {% endif %}
       </ul>
-      <form class="form-inline mt-2 mt-md-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        {% if session['username']%}
+      <form class="form-inline mt-2 mt-md-0" method="get" action="/search/">
+            <input class="form-control mr-sm-2" type="text" name="search" id="search"  placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
       </form>
-
+{%endif%}
       <!--{% if not session['accepted']%}-->
   <!--<li class="nav-item{% if page_id == 'accept' %} active{% endif %}">-->
           <!--<a role="presentation" class="nav-link" data-toggle="modal" data-target="#accept" href="#">cookies</a>-->
@@ -380,7 +380,7 @@ color: #1491e5;
       </div>
     </div>
 
-    <div style="padding: 80px">
+    <div style="padding: 50px">
     {% block content %}{% endblock %}
       </div>
 
