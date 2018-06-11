@@ -1035,11 +1035,13 @@ def jam(jam_id):
     game=Game.query.filter_by(jam=this_jam.title).all()
 
 
-
+    teamsxd=[]
+    for i in this_jam.teams:
+        teamsxd.append(Team.query.filter_by(name=i).first())
 
     userteam=Team.query.filter_by(master=session['username']).first()
     if this_jam:
-        return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=team, team_leader=team_leader, games=game, userteam=userteam)
+        return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=team, team_leader=team_leader, games=game, userteam=userteam, teamsxd=teamsxd)
     return render_template('404.html'), 404
 
 @app.route('/jam/<jam_id>/invite/<team_name>')

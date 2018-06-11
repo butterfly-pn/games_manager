@@ -57,18 +57,18 @@
               </li>
           {% if jam.teams%}
 
-        {% for team in jam.teams %}
+        {% for team in teamsxd %}
       <div class="list-group-item ">
           <div class="row">
               <div class="col-3">
-                  <a style="color:#000000; " href="/team/{{team}}"><h4 style="margin:10px 0px 0px 10px;">{{team}}</h4></a>
+                  <a style="color:#000000; " href="/team/{{team}}"><h4 style="margin:10px 0px 0px 10px;">{{team.name}}</h4></a>
 
               </div>
 
                   <div class="col-8">
+                      {% if jam.title in team.gameinjams %}
                   {% for game in games%}
-
-                  {% if game.team == team%}
+                  {% if game.team == team.name%}
                     <div style="background-color: #dddddd"  class="container">
                   <div class="row" >
                   <div class="col-4">
@@ -91,9 +91,11 @@
 
 
                   {% endif%}
-
-
                   {% endfor %}
+
+                      {% else %}
+                      nie ma
+                      {% endif%}
 
 
               </div>
