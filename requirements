@@ -19,3 +19,4 @@ python-bcrypt
 pytz
 six
 wtforms_html5
+regex
