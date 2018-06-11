@@ -92,7 +92,7 @@ def db_start():
     team.master = "wikwoj"
     team.master_email = 'wikwo@xd.coml'
     team.contributors = ['wikwoj', 'bedegralwgre', 'jestemhardkorem']
-    team.gameinjams = ['Jam testowy', 'Szybki jam o dziwnych grach', 'Ten jam nie istnieje', 'Global game jam']
+    team.gameinjams = ['Jam testowy', 'Szybki jam', 'Ten jam nie istnieje', 'Global game jam']
     db.session.add(team)
     db.session.commit()
 
@@ -101,7 +101,7 @@ def db_start():
     team.master = "marek"
     team.master_email = 'Marek@mc.coml'
     team.contributors = ['Krzyś', 'artur', 'Helena']
-    team.gameinjams = ['Pierwszy jam', 'Szybki jam o dziwnych grach', 'Ten jam nie istnieje', 'Global game jam']
+    team.gameinjams = ['Pierwszy jam', 'Szybki jam', 'Ten jam nie istnieje', 'Global game jam']
     db.session.add(team)
     db.session.commit()
 
@@ -110,7 +110,7 @@ def db_start():
     team.master = "stefan"
     team.master_email = 'stefan@onet.com'
     team.contributors = ['Chyzio', 'Zyzio', 'Dyzio']
-    team.gameinjams = ['Pierwszy jam', 'Szybki jam o dziwnych grach', 'Global game jam']
+    team.gameinjams = ['Pierwszy jam', 'Szybki', 'Global game jam']
     db.session.add(team)
     db.session.commit()
 
@@ -190,7 +190,7 @@ def db_start():
     db.session.commit()
 
     jam = models.Jam()
-    jam.title = "Szybki jam o dziwnych grach"
+    jam.title = "Szybki jam"
     jam.master = "wikwoj"
     jam.theme = "Stranger things"
     jam.description = "Jam o dziwnych i zwariowanych grach"
@@ -203,7 +203,7 @@ def db_start():
     game.title = "Lightsaber tactics"
     game.team = "DrużynaWygrywów"
     game.description = 'Platformowa gra 2D, w której poruszasz się zbuntowanym rycerzem Jedi i zabijasz młodych adeptów'
-    game.jam = 'Szybki jam o dziwnych grach'
+    game.jam = 'Szybki jam'
     game.path = "Lightsaber tactics.zip"
     db.session.add(game)
     db.session.commit()
@@ -212,7 +212,7 @@ def db_start():
     game.title = "Quit now"
     game.team = "MonsterCouch"
     game.description = 'Ciężka gra platformowa'
-    game.jam = 'Szybki jam o dziwnych grach'
+    game.jam = 'Szybki jam'
     game.path = "Quit now.zip"
     db.session.add(game)
     db.session.commit()
@@ -221,7 +221,7 @@ def db_start():
     game.title = "Worms arena"
     game.team = "LameTeam"
     game.description = 'Bijesz się na areni będąc robakiem'
-    game.jam = 'Szybki jam o dziwnych grach'
+    game.jam = 'Szybki jam'
     game.path = "worms arena.zip"
     db.session.add(game)
     db.session.commit()
@@ -230,7 +230,7 @@ def db_start():
     jam.title = "Ten jam nie istnieje"
     jam.master = "patryk"
     jam.theme = "matrix"
-    jam.description = "Jam o rniebyciu"
+    jam.description = "Jam o niebyciu"
     jam.master_email = 'patryk@pn.com'
     jam.teams = ['DrużynaWygrywów', 'BestTeam', 'MonsterCouch']
     jam.active = False

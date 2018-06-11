@@ -93,7 +93,7 @@
                   {% endif%}
                   {% endfor %}
 
-                      {% else %}
+                      {% elif team.master==session['username'] or session['username'] in team.contributors %}
                       nie ma
                       {% endif%}
 

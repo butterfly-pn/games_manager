@@ -12,7 +12,7 @@
 
 
 
-        <div style="background-color: #cccccc" class="container">
+        <div style="background-color: rgba(204, 204, 204,.8); border-radius: 25px; margin:10px;" class="container">
 
         <div class="row projects-button">
 
@@ -53,7 +53,7 @@
     {% for team in steams%}
 <div class="col-4">
 
-            <div style="background-color: #cccccc" class="container">
+            <div style="background-color: rgba(204, 204, 204,.8); border-radius: 25px; margin:10px;" class="container">
 
                 <a class="btn btn-secondary" href="/team/{{team.name}}"style="margin:10px;" ><h3>Drużyna {{ team.name }}</h3></a>
                         <h5 style="margin-left:10px;"> Założona przez: <a   class="btn btn-outline-secondary " style="margin-bottom:10px;" href="/user/{{team.master}}">{{team.master}}</a></h5>
@@ -78,7 +78,7 @@
 
 
 
-        <div style="background-color: #cccccc" class="container">
+        <div style="background-color: rgba(204, 204, 204,.8); border-radius: 25px; margin:10px;" class="container">
 
         <a class="btn btn-secondary" href="/jam/{{jam.id}}"{{ jam.title }} style="margin:12 0px;" ><h3>{{ jam.title }}</h3></a>
                         <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{jam.master}}">{{jam.master}}</a></h5>
