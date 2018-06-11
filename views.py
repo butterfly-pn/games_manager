@@ -1427,11 +1427,12 @@ Koniec obsługi konta administratora, wyszukiwanie
 
 @app.route('/search/', methods=['GET'])
 def search():
-    search = request.args.get('search')
+    search = request.args.get('search').lower()
     jams=Jam.query.order_by(Jam.id.asc()).all()
     a=[]
     for jam in jams:
-        found=re.findall(r'.*search.*'.replace('search', search), jam.title)
+        jam1 = jam.title
+        found=re.findall(r'.*search.*'.replace('search', search), jam1.lower())
         if len(found)==0 :
             a.append(jam)
     for i in a:
@@ -1440,7 +1441,8 @@ def search():
     steams = Team.query.order_by(Team.id.asc()).all()
     a=[]
     for steam in steams:
-        found=re.findall(r'.*search.*'.replace('search', search), steam.name)
+        steam1 = steam.name
+        found=re.findall(r'.*search.*'.replace('search', search), steam1.lower())
         if len(found)==0:
             a.append(steam)
     for i in a:
@@ -1451,7 +1453,8 @@ def search():
     games = Game.query.order_by(Game.id.asc()).all()
     a = []
     for game in games:
-        found = re.findall(r'.*search.*'.replace('search', search), game.title)
+        game1 = game.title
+        found = re.findall(r'.*search.*'.replace('search', search), game1.lower())
         if len(found) == 0:
             a.append(game)
     for i in a:
