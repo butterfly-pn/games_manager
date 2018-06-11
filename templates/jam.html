@@ -66,11 +66,9 @@
               </div>
 
                   <div class="col-8">
-                      <script type="text/javascript">var a=0;</script>
                   {% for game in games%}
 
                   {% if game.team == team%}
-                      <script type="text/javascript">var a=1;</script>
                     <div style="background-color: #dddddd"  class="container">
                   <div class="row" >
                   <div class="col-4">
@@ -91,18 +89,11 @@
 
                     </div>
 
-<script>Document.Write(a)</script>
-{% endif%}
+
+                  {% endif%}
+
+
                   {% endfor %}
-                      <script type="text/javascript">
-                          if (a>0){
-                          <p> none found</p>
-                          }else{
-                          <p> found
-</p>                          }
-
-
-                      </script>
 
 
               </div>
