@@ -68,6 +68,8 @@ class Team(db.Model):
     master_email = Column(String(200))
     master = Column(String(200))
     contributors = Column(PickleType())
+    gameinjams = Column(PickleType())
+
 
 class Jam(db.Model):
     """
