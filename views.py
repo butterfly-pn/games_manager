@@ -306,7 +306,7 @@ def user_messages(username):
 
 @app.route('/message/<id>')
 @login_required
-def message_print(id):
+def message_wdw(id):
     user_member=False
     team_leader = False
     try:

@@ -122,7 +122,7 @@ color: #1491e5;
             <a role="presentation" class="nav-link" data-toggle="modal" data-target="#create-jam" href="#">Organizuj GAME-JAM</a>
 
 
-          {% if admin or organizer or member %}
+          {% if session['logged_in'] %}
           <li class="nav-item{% if page_id == 'jams' %} active{% endif %}">
           <a class="nav-link" href="/jams">Game Jamy</a>
         </li>
