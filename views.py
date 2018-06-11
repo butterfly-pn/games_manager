@@ -1204,14 +1204,8 @@ class NewFile(Form):
 def download():
     """Lista plików do pobrania oraz upload"""
     """ROZłOŻYć NA OSOBNY DOWNLOAD I UPLOAD"""
-    try:
-        organizer = User.query.filter_by(username=session['username']).first().organizer
-        admin = User.query.filter_by(username=session['username']).first().admin
-    except KeyError:
-        organizer = False
-        admin = False
-    files = Game.query.order_by(Game.id.asc()).all()
 
+    files = Game.query.order_by(Game.id.asc()).all()
     user_member = False
     team_leader = False
     try:
@@ -1480,8 +1474,8 @@ def search():
         organizer = False
         admin = False
         user_member=False
-    if User.query.filter_by(username=session['username']).first().admin:
-        return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, sgames=games, sjams=jams, steams=steams)
+
+    return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, sgames=games, sjams=jams, steams=steams)
 
 
 
