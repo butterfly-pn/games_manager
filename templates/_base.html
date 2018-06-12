@@ -108,6 +108,26 @@
     .xdcolour {
       color: #1491e5;
     }
+
+    body:before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: -1;
+
+      display: block;
+      background-image: url('/static/sw.jpg');
+      width: 100%;
+      height: 100%;
+
+      -webkit-filter: blur(5px);
+      -moz-filter: blur(5px);
+      -o-filter: blur(5px);
+      -ms-filter: blur(5px);
+      filter: blur(5px);
+    }
   </style>
 
   <!--koniec nowej klasy mynewmodal-->
@@ -115,8 +135,7 @@
 
 </head>
 
-<body style="background-image:url({{url_for('static', filename='sw.jpg')}}); background-repeat: no-repeat; background-attachment: fixed;">
-
+<body>
   <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="/">Game Jams</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbarsExampleDefault"
@@ -189,6 +208,7 @@
       <!--cookies accept form-->
     </div>
   </nav>
+  <div class="background-image"></div>
   <!--Beginning of register form-->
   <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
     style="text-align: left;">
