@@ -1,31 +1,25 @@
-{% extends "_base.html" %}
+{% extends "_base.html" %} {% set page_id = 'become-organizer' %} {% block content %}
+<div class="row">
+	<div class="col-2"></div>
 
-{% set page_id = 'become-organizer' %}
-
-{% block content %}
-  <div class="row">
-    <div class="col-2"></div>
-
-    <div class="container jumbotron">
-      <h3>Zostań organizatorem</h3>
-      <br>
-		{% from "_formhelpers.html" import render_field %}
+	<div class="container jumbotron">
+		<h3>Zostań organizatorem</h3>
+		<br> {% from "_formhelpers.html" import render_field %}
 		<form method=post action="/become-organizer/">
 			<dl>
-				{{render_field(form.fullname)}}
-				{{render_field(form.birthdate_day)}}
-				{{render_field(form.birthdate_month)}}
-				{{render_field(form.birthdate_year)}}
-				{{render_field(form.about)}}
-				{{render_field(form.why)}}
+				{{render_field(form.fullname)}} {{render_field(form.birthdate_day)}} {{render_field(form.birthdate_month)}} {{render_field(form.birthdate_year)}}
+				{{render_field(form.about)}} {{render_field(form.why)}}
 			</dl>
-			<p><input class="btn btn-primary" type=submit value="Złóż wniosek"></p>
+			<p>
+				<input class="btn btn-primary" type=submit value="Złóż wniosek">
+			</p>
 		</form>
 		{% if error %}
-			<p class="error"><strong>Error:</strong>{{error}}</p>
+		<p class="error">
+			<strong>Error:</strong>{{error}}</p>
 		{% endif %}
 	</div>
 
-    <div class="col-2"></div>
-  </div>
+	<div class="col-2"></div>
+</div>
 {% endblock %}

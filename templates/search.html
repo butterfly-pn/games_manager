@@ -1,62 +1,97 @@
-{% extends "_base.html" %}
-
-{% set page_id = "info" %}
+{% extends "_base.html" %} {% set page_id = "info" %}
 <center>
-{% block content %}
-
-    {% if sgames%}
+    {% block content %} {% if sgames%}
     <h2>Wyszukane Gry:</h2>
     <div class="row">
-{% for file in sgames%}
-      <div class="col-4">
+        {% for file in sgames%}
+        <div class="col-4">
 
 
 
-        <div style="background-color: rgba(204, 204, 204,.8); border-radius: 25px; margin:10px;" class="container">
+            <div style="background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:10px; padding: 20px" class="container">
 
-        <div class="row projects-button">
+                <div class="row projects-button">
 
-                        <h3 style="margin:12px;"> <strong>{{ file.title }}</strong>  </h3>
-            <div style="text-align:left;"> <a class="btn btn-info " style="margin-left:20px;  margin-top:12px;" role="button" href="/download/{{file.path}}" download="{{file.path}}">Download</a></div>
+                    <h3 style="margin:12px;">
+                        <strong>{{ file.title }}</strong>
+                    </h3>
+                    <div style="text-align:left;">
+                        <a class="btn btn-info " style="margin-left:20px;  margin-top:12px;" role="button" href="/download/{{file.path}}"
+                            download="{{file.path}}">Download</a>
+                    </div>
 
-                     </div>
-                    <div>
-                      <h4>
-                      O grze:<br>
-                      </h4>
+                </div>
+                <div>
+                    <h4>
+                        O grze:
+                        <br>
+                    </h4>
 
-                        <h6>{{ file.description }}</h6>
+                    <h6>{{ file.description }}</h6>
 
-                  </div>
+                </div>
 
-                    <div class="row justify-content-end" style="margin-top:10px; margin-left:0px;">
+                <div class="row justify-content-end" style="margin-top:10px; margin-left:0px;">
 
-                          <i>Made by: {{ file.team }}<br>For: {{file.jam}}</i>
-                          <br><br>
+                    <i>Made by: {{ file.team }}
+                        <br>For: {{file.jam}}</i>
+                    <br>
+                    <br>
 
-                  </div>
+                </div>
+
+            </div>
+
+
+            {% if loop.index0 is divisibleby 3 %}
+            <br>{%endif%}
 
         </div>
-
-
-{% if loop.index0 is divisibleby 3 %}<br>{%endif%}
-
-    </div>
         {%endfor%}
     </div>
-{% endif%}
+    {% endif%} {% if susers%}
+    <h2>Wyszukani Użytkownicy:</h2>
+    <div class="row">
+        {% for user in susers%}
+        <div class="col-4">
 
 
-{%if steams%}
+
+            <div style="background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:10px; padding: 15px" class="container">
+
+                <div class="row projects-button">
+
+                    <h3 style="margin:12px;">{{ user.username }}</h3>
+                    <div style="text-align:left;">
+                        <a class="btn btn-info " style="margin-left:20px;  margin-top:12px;" role="button" href="/user/{{user.username}}">Zobacz profil</a>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            {% if loop.index0 is divisibleby 3 %}
+            <br>{%endif%}
+
+        </div>
+        {%endfor%}
+    </div>
+    {% endif%} {%if steams%}
     <h2>Wyszukane drużyny:</h2>
-<div class="row">
-    {% for team in steams%}
-<div class="col-4">
+    <div class="row">
+        {% for team in steams%}
+        <div class="col-4">
 
-            <div style="background-color: rgba(204, 204, 204,.8); border-radius: 25px; margin:10px;" class="container">
+            <div style="background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:10px; padding: 20px" class="container">
 
-                <a class="btn btn-secondary" href="/team/{{team.name}}"style="margin:10px;" ><h3>Drużyna {{ team.name }}</h3></a>
-                        <h5 style="margin-left:10px;"> Założona przez: <a   class="btn btn-outline-secondary " style="margin-bottom:10px;" href="/user/{{team.master}}">{{team.master}}</a></h5>
+                <a class="btn btn-secondary" href="/team/{{team.name}}" style="margin:10px;">
+                    <h3>Drużyna {{ team.name }}</h3>
+                </a>
+                <h5 style="margin-left:10px;"> Założona przez:
+                    <a class="btn btn-outline-secondary " style="margin-bottom:10px;" href="/user/{{team.master}}">{{team.master}}</a>
+                </h5>
 
 
             </div>
@@ -64,51 +99,55 @@
 
 
         </div>
-    {% if loop.index0 is divisibleby 3 %}<br>{%endif%}
-    {%endfor%}
-</div>
+        {% if loop.index0 is divisibleby 3 %}
+        <br>{%endif%} {%endfor%}
+    </div>
 
-{% endif%}
-
-    {% if sjams%}
+    {% endif%} {% if sjams%}
     <h2>Wyszukane Jamy:</h2>
     <div class="row">
         {% for jam in sjams%}
-<div class="col-5">
+        <div class="col-5">
 
 
 
-        <div style="background-color: rgba(204, 204, 204,.8); border-radius: 25px; margin:10px;" class="container">
+            <div style="background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:10px; padding: 20px" class="container">
 
-        <a class="btn btn-secondary" href="/jam/{{jam.id}}"{{ jam.title }} style="margin:12 0px;" ><h3>{{ jam.title }}</h3></a>
-                        <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:<br><a   class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{jam.master}}">{{jam.master}}</a></h5>
-
-
-
-                                              <h4>
-                      Motyw przewodni:<br>
-                      </h4>
-                        <h5>{{ jam.theme }}</h5>
+                <a class="btn btn-secondary" href="/jam/{{jam.id}}" {{ jam.title }} style="margin:12 0px;">
+                    <h3>{{ jam.title }}</h3>
+                </a>
+                <h5 style="marigin-left:10px; margin-top:10px;"> założony przez:
+                    <br>
+                    <a class="btn btn-outline-secondary " style="marigin:5px;" href="/user/{{jam.master}}">{{jam.master}}</a>
+                </h5>
 
 
-                      <h4>
-                      Opis:<br>
-                      </h4>
-                        <h5>{{ jam.description }}</h5>
 
-                        <br>
+                <h4>
+                    Motyw przewodni:
+                    <br>
+                </h4>
+                <h5>{{ jam.theme }}</h5>
+
+
+                <h4>
+                    Opis:
+                    <br>
+                </h4>
+                <h5>{{ jam.description }}</h5>
+
+                <br>
+
+
+            </div>
+
+
 
 
         </div>
-
-
-
-
-    </div>
-        {% if loop.index0 is divisibleby 2 %}<br>{%endif%}
- {%endfor%}
+        {% if loop.index0 is divisibleby 2 %}
+        <br>{%endif%} {%endfor%}
 
     </div>
-    {% endif%}
-{% endblock %}
+    {% endif%} {% endblock %}
 </center>

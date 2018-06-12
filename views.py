@@ -1513,7 +1513,15 @@ def search():
     for i in a:
         steams.remove(i)
 
-
+    users = User.query.order_by(User.id.asc()).all()
+    a=[]
+    for user in users:
+        user1 = user.username
+        found=re.findall(r'.*search.*'.replace('search', search), user1.lower())
+        if len(found)==0 :
+            a.append(user)
+    for i in a:
+        users.remove(i)
 
     games = Game.query.order_by(Game.id.asc()).all()
     a = []
@@ -1543,7 +1551,7 @@ def search():
         admin = False
         user_member=False
 
-    return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, sgames=games, sjams=jams, steams=steams)
+    return render_template('search.html', organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, sgames=games, sjams=jams, steams=steams, susers=users)
 
 
 
