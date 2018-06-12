@@ -976,6 +976,7 @@ def jam_creation():
         flash(error)
         return redirect(url_for('homepage'))
 
+
 @app.route('/jams')
 def jams():
     """Wyświetla listę jamów, z linkami do nich"""
@@ -1007,7 +1008,7 @@ def jams():
     minute=time_now[15:18]
     jams = Jam.query.order_by(Jam.id.asc()).all()
     return render_template("jams.html", jams=jams, admin=admin, organizer=organizer, member=user_member, team_leader=team_leader)
-    return redirect('/')
+    # return redirect('/')
 
 @app.route("/jam/<jam_id>")
 def jam(jam_id):
@@ -1033,8 +1034,6 @@ def jam(jam_id):
     team = Team.query.filter_by(master=session['username']).first()
     jam_master=Jam.query.filter_by(master=session['username'])
     game=Game.query.filter_by(jam=this_jam.title).all()
-
-
     teamsxd=[]
     for i in this_jam.teams:
         teamsxd.append(Team.query.filter_by(name=i).first())
@@ -1043,6 +1042,7 @@ def jam(jam_id):
     if this_jam:
         return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=team, team_leader=team_leader, games=game, userteam=userteam, teamsxd=teamsxd)
     return render_template('404.html'), 404
+
 
 @app.route('/jam/<jam_id>/invite/<team_name>')
 @login_required
@@ -1057,7 +1057,7 @@ def jam_invite(jam_id,team_name):
         message = Message.query.filter_by(adresser=jam_master, title=title, author="Drużyna " + team_name ).first()
 
         if not message:
-            message=Message()
+            message = Message()
             message.title="Prośba o dołączenie drużyny do jamu gamejam".replace("gamejam",jam.title)
             message.adresser=jam.master
             message.author="Drużyna "+team_name
@@ -1073,25 +1073,24 @@ def jam_invite(jam_id,team_name):
         flash(e)
         return redirect("/")
 
+
 @app.route('/jam/<jam_id>/add/<team_name>')
 @login_required
 def jam_add(jam_id, team_name):
 
-    admin=User.query.filter_by(username=session['username']).first().admin
-    jam_master=Jam.query.filter_by(id=jam_id).first().master
+    admin = User.query.filter_by(username=session['username']).first().admin
+    jam_master = Jam.query.filter_by(id=jam_id).first().master
     title = "Prośba o dołączenie drużyny team do twojego gamejamu".replace("team", team_name)
-    message=Message.query.filter_by(adresser=jam_master,title=title)
-    team= Team.query.filter_by(name=team_name).first()
-    jams=Jam.query.order_by(Jam.id.asc()).all()
-    i=0
+    message = Message.query.filter_by(adresser=jam_master,title=title)
+    team = Team.query.filter_by(name=team_name).first()
+    jams = Jam.query.order_by(Jam.id.asc()).all()
+    i = 0
     for jam in jams:
         if team.name in jam.teams and jam.active:
-            i+=1
-    if i>1:
+            i += 1
+    if i > 1:
         flash("ta drużyna jest już w dwóch innych jamach")
         return redirect("/jam/"+str(Jam.query.filter_by(id=jam_id).first().id))
-
-
     if admin or message and jam_master==session['username']:
         jam = Jam.query.filter_by(id=jam_id).first()
         if jam:
@@ -1114,6 +1113,7 @@ def jam_add(jam_id, team_name):
             return redirect('/jam/' + jam_id)
         return redirect("/")
     return redirect('/')
+
 
 @app.route('/jam/<jam_id>/delete/<team_name>')
 @login_required
@@ -1141,26 +1141,26 @@ def jam_delete(team_name, jam_id):
         flash("Błąd: Nie masz uprawnień", category='error')
         return redirect('team/'+team_name)
 
+
 @app.route('/jam/<jam_id>/delete')
 @login_required
 def delete_jam(jam_id):
     try:
-       if User.query.filter_by(username=session['username']).first().admin or Jam.query.filter_by(id=jam_id).first().master == session['username']:
-           this_jam = Jam.query.filter_by(id=jam_id).first()
-           if this_jam:
-               messages=Message.query.filter_by(title="Prośba o dołączenie drużyny do jamu gamejam".replace("gamejam", this_jam.title), adresser=this_jam.master).all()
-               if messages:
-                   for message in messages:
-                       db.session.delete(message)
-                       db.session.commit()
-               db.session.delete(this_jam)
-               db.session.commit()
-               flash("Usunięto jam!")
-           return redirect("/jams")
-
-       else:
-           flash("Nie masz uprawnień")
-           return redirect(url_for('homepage'))
+        if User.query.filter_by(username=session['username']).first().admin or Jam.query.filter_by(id=jam_id).first().master == session['username']:
+            this_jam = Jam.query.filter_by(id=jam_id).first()
+            if this_jam:
+                messages=Message.query.filter_by(title="Prośba o dołączenie drużyny do jamu gamejam".replace("gamejam", this_jam.title), adresser=this_jam.master).all()
+                if messages:
+                    for message in messages:
+                        db.session.delete(message)
+                        db.session.commit()
+                db.session.delete(this_jam)
+                db.session.commit()
+                flash("Usunięto jam!")
+            return redirect("/jams")
+        else:
+            flash("Nie masz uprawnień")
+            return redirect(url_for('homepage'))
     except Exception as error:
         flash(error)
         return redirect(url_for('homepage'))
@@ -1192,21 +1192,9 @@ Koniec jamów początek plików
 """
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-class NewFile(Form):
-    title = StringField('Nazwa gry:', [validators.Length(min=4, max=20)])
-    description = TextAreaField('O grze:', [validators.Length(min=4, max=200)])
-    file = FileField()
-
-@app.route("/download", methods=['GET', 'POST'])
+@app.route("/downloadhelp/<jam_id>", methods=['POST'])
 @login_required
-def download():
-    """Lista plików do pobrania oraz upload"""
-    """ROZłOŻYć NA OSOBNY DOWNLOAD I UPLOAD"""
-
+def downloadhelp(jam_id):
     files = Game.query.order_by(Game.id.asc()).all()
     user_member = False
     team_leader = False
@@ -1229,41 +1217,116 @@ def download():
         admin = False
         user_member = False
 
-    if request.method == "POST":
-        title = request.form.get('title')
-        used_title = Game.query.filter_by(title=title).first()
-        description = request.form.get('description')
-        if used_title:
-            flash('Ta nazwa gry jest już zajęta, proszę wybierz inną.')
-            files = Game.query.order_by(Game.id.asc()).all()
-            return render_template('download.html', files=files, organizer=organizer, admin=admin)
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            new_game = Game()
-            new_game.title = title
-            new_game.team = Team.query.filter_by(master=session['username']).first().name
-            new_game.description = description
-            new_game.jam = Jam.query.filter_by(master=session['username']).first().title
-            new_game.path = filename
-            db.session.add(new_game)
-            db.session.commit()
-            flash("Gra dodana!")
-            gc.collect()
+    title = request.form.get('title')
+    used_title = Game.query.filter_by(title=title).first()
+    description = request.form.get('description')
+    if used_title:
+        flash('Ta nazwa gry jest już zajęta, proszę wybierz inną.')
         files = Game.query.order_by(Game.id.asc()).all()
-        teams = Team.query.order_by(Team.id).all()
+        return render_template('download.html', files=files, organizer=organizer, admin=admin)
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file = request.files['file']
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        this_jam = Jam.query.filter_by(id=jam_id).first()
+        new_game = Game()
+        new_game.title = title
+        new_game.team = Team.query.filter_by(master=session['username']).first().name
+        new_game.description = description
+        new_game.jam = this_jam.title
+        new_game.path = filename
+        teamsxd = []
+        for i in this_jam.teams:
+            teamsxd.append(Team.query.filter_by(name=i).first())
+        teamsxd.append(this_jam.title)
+        team = Team.query.filter_by(master=session['username']).first().id
+        team = Team.query.get(team)
+        team.gameinjams = teamsxd
+        db.session.add(new_game)
+        db.session.commit()
+        flash("Gra dodana!")
+        gc.collect()
+    files = Game.query.order_by(Game.id.asc()).all()
+    return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
 
 
-        return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+class NewFile(Form):
+    title = StringField('Nazwa gry:', [validators.Length(min=4, max=20)])
+    description = TextAreaField('O grze:', [validators.Length(min=4, max=200)])
+    file = FileField()
+
+
+@app.route("/download", methods=['GET', 'POST'])
+@login_required
+def download():
+    """Lista plików do pobrania oraz upload"""
+    files = Game.query.order_by(Game.id.asc()).all()
+    user_member = False
+    team_leader = False
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        team = Team.query.filter_by(master=session['username']).all()
+        if team:
+            team_leader = True
+        admin = User.query.filter_by(username=session['username']).first().admin
+        teams = Team.query.order_by(Team.id.asc()).all()
+        for t in teams:
+            if session['username'] in t.contributors:
+                user_member = True
+    except KeyError:
+        organizer = False
+        admin = False
+        user_member = False
+    except KeyError:
+        organizer = False
+        admin = False
+        user_member = False
+    # if request.method == "POST":
+    #     title = request.form.get('title')
+    #     used_title = Game.query.filter_by(title=title).first()
+    #     description = request.form.get('description')
+    #     if used_title:
+    #         flash('Ta nazwa gry jest już zajęta, proszę wybierz inną.')
+    #         files = Game.query.order_by(Game.id.asc()).all()
+    #         return render_template('download.html', files=files, organizer=organizer, admin=admin)
+    #     if 'file' not in request.files:
+    #         flash('No file part')
+    #         return redirect(request.url)
+    #     file = request.files['file']
+    #     # if user does not select file, browser also
+    #     # submit a empty part without filename
+    #     if file.filename == '':
+    #         flash('No selected file')
+    #         return redirect(request.url)
+    #     if file and allowed_file(file.filename):
+    #         filename = secure_filename(file.filename)
+    #         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    #         new_game = Game()
+    #         new_game.title = title
+    #         new_game.team = Team.query.filter_by(master=session['username']).first().name
+    #         new_game.description = description
+    #         new_game.jam = Jam.query.filter_by(master=session['username']).first().title
+    #         new_game.path = filename
+    #         db.session.add(new_game)
+    #         db.session.commit()
+    #         flash("Gra dodana!")
+    #         gc.collect()
+    #     files = Game.query.order_by(Game.id.asc()).all()
+    #     teams = Team.query.order_by(Team.id).all()
+    #
+    #
+    #     return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
     return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
 
 @app.route('/download/<filename>')
