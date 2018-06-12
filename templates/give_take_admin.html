@@ -1,34 +1,32 @@
-{% extends "_base.html" %}
+{% extends "_base.html" %} {% set page_id = 'give_take_admin' %} {% block content %}
+<div class="row">
+	<div class="col-2"></div>
 
-{% set page_id = 'give_take_admin' %}
+	<div class="container jumbotron">
 
-{% block content %}
-  <div class="row">
-    <div class="col-2"></div>
-
-    <div class="container jumbotron">
-
-      <br>
-		{% from "_formhelpers.html" import render_field %}
+		<br> {% from "_formhelpers.html" import render_field %}
 		<form method=post action="/give_take_admin/">
-            <h4>Nowy admin</h4>
+			<h4>Nowy admin</h4>
 			<dl>
-				{{render_field(form.new_admin)}}
-				{{render_field(form.accept_give)}}
+				{{render_field(form.new_admin)}} {{render_field(form.accept_give)}}
 			</dl>
-			<p><input class="btn btn-primary" type=submit value='Daj admina'></p>
+			<p>
+				<input class="btn btn-primary" type=submit value='Daj admina'>
+			</p>
 			<h4>Były admin</h4>
 			<dl>
-				{{render_field(form.old_admin)}}
-				{{render_field(form.accept_take)}}
+				{{render_field(form.old_admin)}} {{render_field(form.accept_take)}}
 			</dl>
-			<p><input class="btn btn-primary" type=submit value='Odbierz admina'></p>
+			<p>
+				<input class="btn btn-primary" type=submit value='Odbierz admina'>
+			</p>
 		</form>
 		{% if error %}
-			<p class="error"><strong>Error:</strong>{{error}}</p>
+		<p class="error">
+			<strong>Error:</strong>{{error}}</p>
 		{% endif %}
 	</div>
 
-    <div class="col-2"></div>
-  </div>
+	<div class="col-2"></div>
+</div>
 {% endblock %}
