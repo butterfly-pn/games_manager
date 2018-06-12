@@ -115,7 +115,7 @@
 
 </head>
 
-<body style="background-image:url(../static/sw.jpg); background-repeat: no-repeat; background-attachment: fixed;">
+<body style="background-image:url({{url_for('static', filename='sw.jpg')}}); background-repeat: no-repeat; background-attachment: fixed;">
 
   <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="/">Game Jams</a>
@@ -246,8 +246,7 @@
                   <label for="accept_tos">Akceptuję
                     <a href="/about/tos" target="blank">Warunki użytkowania</a> i
                     <a href="/about/privacy-policy" target="blank">Politykę prywatności</a> (zaktualizowana 17 stycznia 2018r.)
-                    <input id="accept_tos" name="accept_tos"
-                      type="checkbox" value="y">
+                    <input id="accept_tos" name="accept_tos" type="checkbox" value="y">
                   </label>
                 </dt>
               </dl>
