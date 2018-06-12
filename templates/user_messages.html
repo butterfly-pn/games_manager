@@ -25,9 +25,9 @@
       <ul class="list-group list-group-flush">
 
         {% for message in new_messages %}
-        <li class="list-group-item">
+        <li class="list-group-item" style="border-radius: 5px; background-color: rgba(204, 204, 204,.8)">
           <div class="col-lg-10">
-            <a class="text-secondary" href="/message/{{message.id}}">
+            <a href="/message/{{message.id}}">
               {%if message.new%}
               <h3>{{message.title}}
                 <span class="badge badge-secondary">New</span>
@@ -38,9 +38,9 @@
           </div>
         </li>
         {% endfor %} {% for message in old_messages%}
-        <li class="list-group-item">
+        <li class="list-group-item" style="border-radius: 5px; background-color: rgba(204, 204, 204,.8)">
           <div class="col-lg-10">
-            <a class="text-secondary" href="/message/{{message.id}}">
+            <a class="text-primary" href="/message/{{message.id}}">
               {%if not message.new%}
               <h4>{{message.title}}</h4>
             </a>

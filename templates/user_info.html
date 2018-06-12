@@ -63,9 +63,9 @@
           <br> {%endif%}
         </li>
         {% if teams2%} {% for team in teams2 %}
-        <a class="list-group-item list-group-item-action" href="/team/{{team.name}}">{{team.name}}</a>
+        <a class="list-group-item list-group-item-action" href="/team/{{team.name}}" style="background-color: rgba(204, 204, 204,.8)">{{team.name}}</a>
         {% endfor %} {%else%}
-        <li class="list-group-item" href="">-</li>
+        <li class="list-group-item" href="" style="background-color: rgba(204, 204, 204,.8)">-</li>
         {%endif%}
       </div>
     </div>
@@ -77,9 +77,9 @@
           <br> {%endif%}
         </li>
         {% if teams %} {% for team in teams %}
-        <a class="list-group-item list-group-item-action" href="/team/{{team.name}}">{{team.name}}</a>
+        <a class="list-group-item list-group-item-action" href="/team/{{team.name}}" style="background-color: rgba(204, 204, 204,.8)">{{team.name}}</a>
         {% endfor %} {%else%}
-        <li class="list-group-item" href="">-</li>
+        <li class="list-group-item" href="" style="background-color: rgba(204, 204, 204,.8)">-</li>
         {%endif%}
       </div>
     </div>
