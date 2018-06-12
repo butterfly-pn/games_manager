@@ -513,20 +513,20 @@
   </div>
 
   {% if not session['accepted']%}
-  <div id="myModal" class="mynewmodal-show">
+  <div id="myModal" class="mynewmodal-show mb-5">
 
     <!-- Modal content -->
-    <div class="mynewmodal-content">
-      <div class="mynewmodal-header">
+    <div class="mynewmodal-content" style="border-radius: 5px;">
+      <div class="mynewmodal-header p-3">
         <h2>Pliki Cookies</h2>
       </div>
-      <div class="mynewmodal-body">
+      <div class="mynewmodal-body p-3">
         <div class="container">
           <h3>Ta witryna obsługuje pliki cookies</h3>
           <br>
           <br>
-          <a class="btn btn-success" href="/cookies-accept">Akceptuję</a>
-          <a class="btn btn-secondary" href="/cookies-about">Dowiedz się więcej</a>
+          <a class="btn btn-success" href="/cookies-accept?next={{ url_for(request.endpoint) }}">Akceptuję</a>
+          <a class="btn btn-secondary" href="/cookies-about?next={{ url_for(request.endpoint) }}">Dowiedz się więcej</a>
 
         </div>
       </div>

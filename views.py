@@ -42,11 +42,16 @@ def login_required(func):
 @app.route("/cookies-accept")
 def cookies_accept():
     session['accepted']=True
+    if request.args.get('next'):
+        return redirect(request.args.get('next'))
     return redirect('/')
 
 @app.route("/cookies-about")
 def cookies_about():
     session['accepted']=False
+    if request.args.get('next'):
+        return redirect(request.args.get('next'))
+    return redirect('/')
 
 
 """
