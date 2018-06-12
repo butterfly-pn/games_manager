@@ -1,215 +1,244 @@
-{% extends "_base.html" %}
+{% extends "_base.html" %} {% set page_id = "jam" %} {% block content %}
 
-{% set page_id = "jam" %}
-
-{% block content %}
-
-<div class="jumbotron">
-    {% if admin or session['username'] == jam.master%}
-<div class="row">
-      <div class="col-lg-3 mt-3">
-              {% if jam.active %}<a class="btn btn-secondary btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-close" href="#">Zamknij jam</a><br>{%endif%}
-          <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-delete" href="#">Usuń jam</button>
-
-      </div>
-          {%endif%}
-
-
+<div class="jumbotron" style="background-color: rgba(204, 204, 204,.8)">
+  {% if admin or session['username'] == jam.master%}
   <div class="row">
-    <div class="col-8">
-
-            <h3>Nazwa jamu: {{ jam.title }}<br></h3>
-      <h5>  Motyw porzewodni jamu: {{jam.theme}}<br>
-      Organizator jamu: <a class=" btn btn-primary "href="/user/{{jam.master}}">{{jam.master}}</a> </h5>
-
-
-    </div>
-      <div class="col-4" >
-          <h4>{{jam.description}}</h4>
-      </div>
-
-  </div>
+    <div class="col-lg-3 mt-3">
+      {% if jam.active %}
+      <a class="btn btn-secondary btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-close"
+        href="#">Zamknij jam</a>
+      <br>{%endif%}
+      <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure-delete" href="#">Usuń jam</button>
 
     </div>
-      </div>
-
-
+    {%endif%}
 
 
     <div class="row">
+      <div class="col-8">
 
-        <div class="col-12">
-          <div class="list-group">
-              <li class="list-group-item active" href="">
-
-<div class="row">
-    <div class="col-7">
-                 <a> <h4 >Zespoły:</h4></a>
-                  </div>
-
-    <div class="col-5">
-        {% if teams and not teams.name in jam.teams%}
-    <a class="btn btn-secondary"  href="/jam/{{jam.id}}/invite/{{teams.name}}">Dodaj do tego jamu drużynę {{teams.name}}</a>
-        {%endif%}
-</div>
-
-</div>
-              </li>
-          {% if jam.teams%}
-
-        {% for team in teamsxd %}
-      <div class="list-group-item ">
-          <div class="row">
-              <div class="col-3">
-                  <a style="color:#000000; " href="/team/{{team}}"><h4 style="margin:10px 0px 0px 10px;">{{team.name}}</h4></a>
-
-              </div>
-
-                  <div class="col-8">
-                      {% if jam.title in team.gameinjams %}
-                  {% for game in games%}
-                  {% if game.team == team.name%}
-                    <div style="background-color: #dddddd"  class="container">
-                  <div class="row" >
-                  <div class="col-4">
-                  <h6 style="margin:10px 0px 8px 8px;"><b>{{ game.title}}</b></h6>
-                  </div>
-
-                      <div class="col-6">
-                      <h7 style="margin:15px 0px 10px 0px;">{{game.description}} </h7>
-                      </div>
-
-                      <div class="col-2">
-
-                           <div style="text-align:left;"> <a class="btn btn-info " style="margin:4px 0px 4px 0px;" role="button" href="/download/{{game.path}}" download="{{game.path}}">Pobierz</a></div>
-
-                      </div>
-
-                  </div>
-
-                    </div>
+        <h3>Nazwa jamu: {{ jam.title }}
+          <br>
+        </h3>
+        <h5> Motyw porzewodni jamu: {{jam.theme}}
+          <br> Organizator jamu:
+          <a class=" btn btn-primary " href="/user/{{jam.master}}">{{jam.master}}</a>
+        </h5>
 
 
-                  {% endif%}
-                  {% endfor %}
-
-                      {% else %}
-                      <div class="col-8">
-                                <div class="row justify-content-center">
-                                        <a role="presentation" class="btn btn-info" data-toggle="modal" data-target="#upload" href="#" style="width:300px;">Dodaj grę</a>
-                                </div>
-                        </div>
-
-                      {% endif%}
-
-
-              </div>
-              <div class="col-1">
-    {% if userteam == team or jam.master == session['username'] or admin%}
-              <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{team}}" href="#are-you-sure-{{team}}">Wyrzuć</button>
-              {%endif%}
-          </div>
-          </div>
+      </div>
+      <div class="col-4">
+        <h4>{{jam.description}}</h4>
       </div>
 
-      {% endfor %}
+    </div>
 
-          {% elif team.master==session['username'] or session['username'] in team.contributors %}
-              <li class="list-group-item" href="">-</li>
-          {%endif%}
+  </div>
+</div>
+
+
+
+
+<div class="row">
+
+  <div class="col-12">
+    <div class="list-group">
+      <li class="list-group-item active" href="">
+
+        <div class="row">
+          <div class="col-7">
+            <a>
+              <h4>Zespoły:</h4>
+            </a>
+          </div>
+
+          <div class="col-5">
+            {% if teams and not teams.name in jam.teams%}
+            <a class="btn btn-secondary" href="/jam/{{jam.id}}/invite/{{teams.name}}">Dodaj do tego jamu drużynę {{teams.name}}</a>
+            {%endif%}
+          </div>
+
+        </div>
+      </li>
+      {% if jam.teams%} {% for team in teamsxd %}
+      <div class="list-group-item" style="background-color: rgba(204, 204, 204,.8)">
+        <div class="row">
+          <div class="col-3">
+            <a style="color:#000000; " href="/team/{{team}}">
+              <h4 style="margin:10px 0px 0px 10px;">{{team.name}}</h4>
+            </a>
+
+          </div>
+
+          <div class="col-8">
+            {% if jam.title in team.gameinjams %} {% for game in games%} {% if game.team == team.name%}
+            <div style="border-style: solid; border-color: rgba(102, 102, 102,.8); border-radius: 5px; padding: 10px" class="container">
+              <div class="row">
+                <div class="col-4">
+                  <h6 style="margin:10px 0px 8px 8px;">
+                    <b>{{ game.title}}</b>
+                  </h6>
+                </div>
+
+                <div class="col-6">
+                  <h7 style="margin:15px 0px 10px 0px;">{{game.description}} </h7>
+                </div>
+
+                <div class="col-2">
+
+                  <div style="text-align:left;">
+                    <a class="btn btn-info " style="margin:4px 0px 4px 0px;" role="button" href="/download/{{game.path}}" download="{{game.path}}">Pobierz</a>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            {% endif%} {% endfor %} {% else %}
+            <div class="col-8">
+              <div class="row justify-content-center">
+                <a role="presentation" class="btn btn-info" data-toggle="modal" data-target="#upload" href="#" style="width:300px;">Dodaj grę</a>
+              </div>
+            </div>
+
+            {% endif%}
+
+
+          </div>
+          <div class="col-1">
+            {% if userteam == team or jam.master == session['username'] or admin%}
+            <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{team}}" href="#are-you-sure-{{team}}">Wyrzuć</button>
+            {%endif%}
           </div>
         </div>
+      </div>
+
+      {% endfor %} {% elif team.master==session['username'] or session['username'] in team.contributors %}
+      <li class="list-group-item" href="">-</li>
+      {%endif%}
     </div>
+  </div>
+</div>
 
 
 
 <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Upload</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-              <div class="container">
-                <form method=post action="/downloadhelp/{{jam.id}}" enctype=multipart/form-data>
-                  <dl>
-                    <dt><label for="title">Tytuł gry:</label></dt>
-                    <dd><input id="title" name="title" type="text" value="" autofocus></dd>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Upload</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <form method=post action="/downloadhelp/{{jam.id}}" enctype=multipart/form-data>
+            <dl>
+              <dt>
+                <label for="title">Tytuł gry:</label>
+              </dt>
+              <dd>
+                <input id="title" name="title" type="text" value="" autofocus>
+              </dd>
 
-                    <dt><label for="description">O grze:</label></dt>
-                    <dd><input id="description" name="description" type="text" value=""></dd>
+              <dt>
+                <label for="description">O grze:</label>
+              </dt>
+              <dd>
+                <input id="description" name="description" type="text" value="">
+              </dd>
 
-                    <dt><label for="file">Dodaj plik</label></dt>
-                    <dd><input id="file" name="file" type="file"></dd>
-                  </dl>
-                  <p style="padding-bottom:20px;"><input class="btn btn-primary" type=submit value="Upload"></p>
-                </form>
-              </div>
-            </div>
-          </div>
+              <dt>
+                <label for="file">Dodaj plik</label>
+              </dt>
+              <dd>
+                <input id="file" name="file" type="file">
+              </dd>
+            </dl>
+            <p style="padding-bottom:20px;">
+              <input class="btn btn-primary" type=submit value="Upload">
+            </p>
+          </form>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 
 
 
-  {% if jam.teams%}
-      {% for cont in jam.teams %}
-   <div class="modal fade" id="are-you-sure-{{cont}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-              <div class="container">
-                <p>Właśnie zamierzasz usunąć <b>{{cont}}</b> drużyn w gamejamie <b>{{jam.title}}</b>. Jesteś tego pewien?</p>
-                <a class="btn btn-danger" href="/jam/{{jam.id}}/delete/{{cont}}">Usuń</a>
-                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
-                </form>
-              </div>
-            </div>
-          </div>
+{% if jam.teams%} {% for cont in jam.teams %}
+<div class="modal fade" id="are-you-sure-{{cont}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  style="text-align: left;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <p>Właśnie zamierzasz usunąć
+            <b>{{cont}}</b> drużyn w gamejamie
+            <b>{{jam.title}}</b>. Jesteś tego pewien?</p>
+          <a class="btn btn-danger" href="/jam/{{jam.id}}/delete/{{cont}}">Usuń</a>
+          <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+          </form>
         </div>
       </div>
-  {%endfor%}
-  {% endif%}
-           <div class="modal fade" id="are-you-sure-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-              <div class="container">
-                <p>Właśnie zamierzasz usunąć gamejam  <b>{{jam.title}}</b>. Jesteś tego pewien?</p>
-                <a class="btn btn-danger" href="/jam/{{jam.id}}/delete">Usuń</a>
-                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
-                </form>
-              </div>
-            </div>
-          </div>
+    </div>
+  </div>
+</div>
+{%endfor%} {% endif%}
+<div class="modal fade" id="are-you-sure-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  style="text-align: left;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <p>Właśnie zamierzasz usunąć gamejam
+            <b>{{jam.title}}</b>. Jesteś tego pewien?</p>
+          <a class="btn btn-danger" href="/jam/{{jam.id}}/delete">Usuń</a>
+          <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+          </form>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 
-          <div class="modal fade" id="are-you-sure-close" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-              <div class="container">
-                <p>Właśnie zamierzasz zamknąć gamejam  <b>{{jam.title}}</b>. Jesteś tego pewien?</p>
-                <a class="btn btn-danger" href="/jam/{{jam.id}}/close">Zamknij</a>
-                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
-                </form>
-              </div>
-            </div>
-          </div>
+<div class="modal fade" id="are-you-sure-close" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  style="text-align: left;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <p>Właśnie zamierzasz zamknąć gamejam
+            <b>{{jam.title}}</b>. Jesteś tego pewien?</p>
+          <a class="btn btn-danger" href="/jam/{{jam.id}}/close">Zamknij</a>
+          <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+          </form>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

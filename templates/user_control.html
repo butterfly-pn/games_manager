@@ -1,74 +1,91 @@
 {% extends "_base.html" %}
 <title> Kontrola nad użytkownikiem {{username}} </title>
-{% set page_id = "user_control" %}
-{% block content %}
+{% set page_id = "user_control" %} {% block content %}
 <!--<div class="container">-->
-  <div class="row">
-      <br>
+<div class="row">
+  <br>
 
-            <div class="col-4">
-          <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#" > Usuń konto użytkownika {{user.username}}</button>
+  <div class="col-4">
+    <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#"> Usuń konto użytkownika {{user.username}}</button>
 
-          {% if user.admin%}
-          <br> <a class="btn btn-primary btn-block" href='/take_admin/{{user.id}}' >Odbierz uprawnienia administratora<br> użytkownikowi {{user.username}}</a></h3>
+    {% if user.admin%}
+    <br>
+    <a class="btn btn-primary btn-block" href='/take_admin/{{user.id}}'>Odbierz uprawnienia administratora
+      <br> użytkownikowi {{user.username}}</a>
+    </h3>
 
-          {% else %}
+    {% else %}
 
-            <br> <a class="btn btn-primary btn-block" href='/give_admin/{{user.id}}' >Przekaż uprawnienia administratora<br> użytkownikowi {{user.username}}</a></h3>
+    <br>
+    <a class="btn btn-primary btn-block" href='/give_admin/{{user.id}}'>Przekaż uprawnienia administratora
+      <br> użytkownikowi {{user.username}}</a>
+    </h3>
 
-          {% endif %}
+    {% endif %} {% if user.organizer%}
 
-           {% if user.organizer%}
+    <br>
+    <a class="btn btn-primary btn-block" href='/take-organizer/{{user.username}}'>Odbierz uprawnienia organizatora
+      <br> użytkownikowi {{user.username}}</a>
+    </h3>
 
-          <br> <a class="btn btn-primary btn-block" href='/take-organizer/{{user.username}}' >Odbierz uprawnienia organizatora<br> użytkownikowi {{user.username}}</a></h3>
+    {% else %}
 
-          {% else %}
+    <br>
+    <a class="btn btn-primary btn-block" href='/make-organizer/{{user.username}}'>Przekaż uprawnienia organizatora
+      <br> użytkownikowi {{user.username}}</a>
+    </h3>
 
-            <br> <a class="btn btn-primary btn-block" href='/make-organizer/{{user.username}}' >Przekaż uprawnienia organizatora<br> użytkownikowi {{user.username}}</a></h3>
-
-          {% endif %}
-            </div>
-<br>
-
-          <div class="col-4">
-              <h4>Zespoły należące do użytkownika:</h4>
-          {% for t in teams%}
-          <ol>
-          {% if t.master==user.username%}
-            <li> <a class="btn btn-primary" href="/team/{{t.name}}">{{t.name}}</a></li>
-              {%endif%}
-        </ol>
-          {% endfor %}
-          </div>
-        <div class="col-4">
-            <h4>Zespoły, do których użytkownik jest zapisany:</h4>
-          {% for t in teams%}
-          <ol>
-              {%if user.username in t.contributors%}
-              <li><a class="btn btn-primary" href="/team/{{t.name}}">{{t.name}}</a></li>
-              {%endif%}
-          </ol>
-         {%endfor%}
-        </div>
+    {% endif %}
   </div>
+  <br>
+
+  <div class="col-4">
+    <h4>Zespoły należące do użytkownika:</h4>
+    {% for t in teams%}
+    <ol>
+      {% if t.master==user.username%}
+      <li>
+        <a class="btn btn-primary" href="/team/{{t.name}}">{{t.name}}</a>
+      </li>
+      {%endif%}
+    </ol>
+    {% endfor %}
+  </div>
+  <div class="col-4">
+    <h4>Zespoły, do których użytkownik jest zapisany:</h4>
+    {% for t in teams%}
+    <ol>
+      {%if user.username in t.contributors%}
+      <li>
+        <a class="btn btn-primary" href="/team/{{t.name}}">{{t.name}}</a>
+      </li>
+      {%endif%}
+    </ol>
+    {%endfor%}
+  </div>
+</div>
 <!--</div>-->
 
-<div class="modal fade" id="are-you-sure" tabindex="-5" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-              <div class="container">
-                <p>Właśnie zamierzasz usunąć użytkownika <b>{{user.username}}</b>. Jesteś tego pewien?</p>
-                <a class="btn btn-danger" href="/delete/{{user.id}}">Usuń</a>
-                <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
-                </form>
-              </div>
-            </div>
-          </div>
+<div class="modal fade" id="are-you-sure" tabindex="-5" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  style="text-align: left;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Jesteś pewien?</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <p>Właśnie zamierzasz usunąć użytkownika
+            <b>{{user.username}}</b>. Jesteś tego pewien?</p>
+          <a class="btn btn-danger" href="/delete/{{user.id}}">Usuń</a>
+          <a class="btn btn-primary" data-dismiss="modal" href="#">Anuluj</a>
+          </form>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

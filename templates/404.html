@@ -2,14 +2,13 @@
 <title>{{ session['username'] }}</title>
 {% set page_id = "messages_normal" %}
 <center>
-{% block content %}
-  <div class="row">
-      <center>
-<h1>Strona nie została odnaleiona</h1>
-<a class="btn btn-primary btn-block" href="/">< Powrót na stronę główną</a>
-      </center>
+  {% block content %}
+  <div class="row" style="background-color: rgba(204, 204, 204,.8); padding: 20px; border-radius: 5px">
     <div class="col-12">
+      <h1>Strona nie została odnaleiona</h1>
+      <a class="btn btn-primary btn-block" href="/">
+        < Powrót na stronę główną</a>
     </div>
   </div>
-{% endblock %}
+  {% endblock %}
 </center>

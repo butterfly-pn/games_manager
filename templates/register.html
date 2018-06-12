@@ -1,32 +1,26 @@
-{% extends "_base.html" %}
+{% extends "_base.html" %} {% set page_id = 'register' %} {% block content %}
+<div class="row">
+	<div class="col-2"></div>
 
-{% set page_id = 'register' %}
-
-{% block content %}
-  <div class="row">
-    <div class="col-2"></div>
-
-    <div class="container jumbotron">
-      <h3>Rejestracja</h3>
-      <br>
-		{% from "_formhelpers.html" import render_field %}
+	<div class="container jumbotron">
+		<h3>Rejestracja</h3>
+		<br> {% from "_formhelpers.html" import render_field %}
 		<form method=post action="/register/">
 			<dl>
-				{{render_field(form.username)}}
-				{{render_field(form.email)}}
-				{{render_field(form.password)}}
-				{{render_field(form.confirm)}}
-				{{render_field(form.job)}}
-				{{render_field(form.accept_tos)}}
+				{{render_field(form.username)}} {{render_field(form.email)}} {{render_field(form.password)}} {{render_field(form.confirm)}}
+				{{render_field(form.job)}} {{render_field(form.accept_tos)}}
 
 			</dl>
-			<p><input class="btn btn-primary" type=submit value=Register></p>
+			<p>
+				<input class="btn btn-primary" type=submit value=Register>
+			</p>
 		</form>
 		{% if error %}
-			<p class="error"><strong>Error:</strong>{{error}}</p>
+		<p class="error">
+			<strong>Error:</strong>{{error}}</p>
 		{% endif %}
 	</div>
 
-    <div class="col-2"></div>
-  </div>
+	<div class="col-2"></div>
+</div>
 {% endblock %}
