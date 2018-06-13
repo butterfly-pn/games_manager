@@ -546,7 +546,6 @@
       </div>
     </div>
 
-
     <div style="padding: 10px 0px">
       {% block content %}{% endblock %}
     </div>
@@ -565,8 +564,8 @@
           <h3>Ta witryna obsługuje pliki cookies</h3>
           <br>
           <br>
-          <a class="btn btn-success" href="/cookies-accept?next={{ url_for(request.endpoint) }}">Akceptuję</a>
-          <a class="btn btn-secondary" href="/cookies-about?next={{ url_for(request.endpoint) }}">Dowiedz się więcej</a>
+          <a class="btn btn-success" href="/cookies-accept?next={{ request.path }}">Akceptuję</a>
+          <a class="btn btn-secondary" href="/cookies-about?next={{ request.path }}">Dowiedz się więcej</a>
 
         </div>
       </div>
