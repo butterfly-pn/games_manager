@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+<title> {{ session['username'] }} </title>
+{% set page_id = "walpapers" %}
+
+
+  {% block content %}
+  <div class="row">
+      <a class="btn btn-primary btn-block" href="/">
+        < Powrót na stronę główną</a>
+        {%for i in range(1,19)%}
+        <a href="/background/{{i}}?next={{ url_for(request.endpoint) }}">
+                <img src="/static/background{{i}}.jpg" alt="Tło {{i}}" class="mr-3 mt-3 rounded-circle image" style="width:150px; height:150px; border: 1px solid black; margin:20px;">
+              </a>
+        {% endfor %}
+  </div>
+  {% endblock %}

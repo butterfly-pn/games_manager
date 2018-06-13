@@ -146,12 +146,11 @@
 
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="navbar-nav mr-auto">
-
+        {% if not page_id == 'walpapers' %}
         <li class="nav-item{% if page_id == 'change-background' %} active{% endif %}">
           <a role="presentation" class="nav-link" data-toggle="modal" data-target="#change-background" href="#">Zmień tło</a>
         </li>
-
-        {% if session['logged_in'] %}
+        {%endif%} {% if session['logged_in'] %}
         <li class="nav-item{% if page_id == 'user_info_id' %} active{% endif %}">
           <a class="nav-link" href="/user/{{ session['username'] }}">{{ session['username'] }}</a>
         </li>
@@ -235,10 +234,11 @@
             <h4>W trosce o wyższy komfort użytkowania strony, umożliwiliśmy Ci wybranie jej tła</h4>
             <form method=post action="/change-background/">
               {% for i in range(1, 10) %}
-              <a href="/background/{{i}}">
+              <a href="/background/{{i}}?next={{ request.path }}">
                 <img src="/static/background{{i}}.jpg" alt="Tło {{i}}" class="mr-3 mt-3 rounded-circle" style="width:125px; height:125px; border: 1px solid black;l">
               </a>
               {% endfor %}
+              <a class="btn btn-primary btn-block" href="/walpapers" style="margin:10px;">Więcej teł</a>
             </form>
           </div>
         </div>
@@ -566,6 +566,7 @@
       </div>
 
     </div>{% endif %}
+
 
     <div style="padding: 10px 0px">
       {% block content %}{% endblock %}
