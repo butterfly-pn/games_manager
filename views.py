@@ -1268,7 +1268,7 @@ class NewFile(Form):
     file = FileField()
 
 
-@app.route("/download", methods=['GET', 'POST'])
+@app.route("/download/", methods=['GET', 'POST'])
 @login_required
 def download():
     """Lista plików do pobrania oraz upload"""
@@ -1277,8 +1277,9 @@ def download():
     team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
-        user_team = Team.query.filter_by(master=session['username']).first().name
+        user_team = Team.query.filter_by(master=session['username']).first()
         if user_team:
+            user_team = user_team.name
             team_leader = True
         admin = User.query.filter_by(username=session['username']).first().admin
         teams = Team.query.order_by(Team.id.asc()).all()
@@ -1564,4 +1565,3 @@ def page_not_found(e):
 
 
 app.secret_key = "sekretny klucz"
-
