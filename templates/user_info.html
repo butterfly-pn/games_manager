@@ -1,17 +1,17 @@
 {% extends "_base.html" %}
 <title>{{ session['username'] }}</title>
 {% set page_id = "user_info_id" %}
-<center>
+<center >
   {% block content %}
   <div class="row mt-3">
     <div class="col-md-8">
 
       {%if user.username==session['username']%}
-      <h2>{{ session['username']}}
+      <h2 style="padding:5px; border-radius: 5px; background-color: rgba(204, 204, 204,.8)">{{ session['username']}}
         <span class="ml-3 badge badge-secondary">TO TY!</span>
       </h2>
       {%else%}
-      <h2>{{user.username}}</h2>
+      <h2 ><div style="border-radius: 5px; background-color: rgba(204, 204, 204,.8)">{{user.username}}</h2>
       {%endif%}
 
     </div>

@@ -5,11 +5,11 @@
     {% block content %}
     <div class="row">
         <div class="col-12">
-            <h2> Game jamy:</h2>
+            <h2 style="padding:5px; border-radius:5px; background-color: rgba(204, 204, 204,.8)"> Game jamy:</h2>
         </div>
         <br>
         <div class="col-6">
-            <h4>Aktywne Jamy:</h4>
+            <h4 style="padding:5px;  border-radius:5px; background-color: rgba(204, 204, 204,.8)">Aktywne Jamy:</h4>
             {% for t in jams %} {% if t.active%}
             <div style="border-radius: 5px; background-color: rgba(204, 204, 204,.8);" class="container">
                 <div class="col-12">
@@ -56,7 +56,7 @@
 
 
         <div class="col-6">
-            <h4>Nieaktywne jamy</h4>
+            <h4 style="padding:5px;  border-radius:5px; background-color: rgba(204, 204, 204,.8)">Nieaktywne Jamy:</h4>
             {% for t in jams %} {% if not t.active%}
             <div style="border-radius: 5px; background-color: rgba(204, 204, 204,.8);" class="container">
                 <div class="col-12">

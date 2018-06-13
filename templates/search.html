@@ -1,7 +1,7 @@
 {% extends "_base.html" %} {% set page_id = "info" %}
 <center>
     {% block content %} {% if sgames%}
-    <h2>Wyszukane Gry:</h2>
+    <h2 style="border-radius: 5px; background-color: rgba(204, 204, 204,.8)">Wyszukane Gry:</h2>
     <div class="row">
         {% for file in sgames%}
         <div class="col-4">
@@ -50,7 +50,7 @@
         {%endfor%}
     </div>
     {% endif%} {% if susers%}
-    <h2>Wyszukani Użytkownicy:</h2>
+    <h2 style="border-radius: 5px; background-color: rgba(204, 204, 204,.8)">Wyszukani Użytkownicy:</h2>
     <div class="row">
         {% for user in susers%}
         <div class="col-4">
@@ -79,7 +79,7 @@
         {%endfor%}
     </div>
     {% endif%} {%if steams%}
-    <h2>Wyszukane drużyny:</h2>
+    <h2 style=" background-color: rgba(204, 204, 204,.8)">Wyszukane drużyny:</h2>
     <div class="row">
         {% for team in steams%}
         <div class="col-4">
@@ -104,7 +104,7 @@
     </div>
 
     {% endif%} {% if sjams%}
-    <h2>Wyszukane Jamy:</h2>
+    <h2 style="border-radius: 5px; background-color: rgba(204, 204, 204,.8)">Wyszukane Jamy:</h2>
     <div class="row">
         {% for jam in sjams%}
         <div class="col-5">
