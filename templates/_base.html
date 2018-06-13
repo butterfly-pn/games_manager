@@ -546,28 +546,6 @@
     </div>
 
 
-    {% if not session['accepted']%}
-    <div id="myModal" class="mynewmodal-show mb-5">
-      <div class="mynewmodal-content" style="border-radius: 5px;">
-        <div class="mynewmodal-header p-3">
-          <h2>Pliki Cookies</h2>
-        </div>
-        <div class="mynewmodal-body p-3">
-          <div class="container">
-            <h3>Ta witryna obsługuje pliki cookies</h3>
-            <br>
-            <br>
-            <a class="btn btn-success" href="/cookies-accept?next={{ request.path }}">Akceptuję</a>
-            <a class="btn btn-secondary" href="/cookies-about?next={{ request.path }}">Dowiedz się więcej</a>
-
-          </div>
-        </div>
-
-      </div>
-
-    </div>{% endif %}
-
-
     <div style="padding: 10px 0px">
       {% block content %}{% endblock %}
     </div>
