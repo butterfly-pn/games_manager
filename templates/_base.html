@@ -235,7 +235,7 @@
             <h4>W trosce o wyższy komfort użytkowania strony, umożliwiliśmy Ci wybranie jej tła</h4>
             <form method=post action="/change-background/">
               {% for i in range(1, 10) %}
-              <a href="/background/{{i}}?next={{ url_for(request.endpoint) }}">
+              <a href="/background/{{i}}?next={{ request.path }}">
                 <img src="/static/background{{i}}.jpg" alt="Tło {{i}}" class="mr-3 mt-3 rounded-circle" style="width:125px; height:125px; border: 1px solid black;l">
               </a>
               {% endfor %}
