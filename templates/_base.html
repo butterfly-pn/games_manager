@@ -146,12 +146,11 @@
 
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="navbar-nav mr-auto">
-{% if not page_id == 'walpapers' %}
+        {% if not page_id == 'walpapers' %}
         <li class="nav-item{% if page_id == 'change-background' %} active{% endif %}">
           <a role="presentation" class="nav-link" data-toggle="modal" data-target="#change-background" href="#">Zmień tło</a>
         </li>
-{%endif%}
-        {% if session['logged_in'] %}
+        {%endif%} {% if session['logged_in'] %}
         <li class="nav-item{% if page_id == 'user_info_id' %} active{% endif %}">
           <a class="nav-link" href="/user/{{ session['username'] }}">{{ session['username'] }}</a>
         </li>
@@ -545,6 +544,7 @@
         </div>
       </div>
     </div>
+
 
     <div style="padding: 10px 0px">
       {% block content %}{% endblock %}
