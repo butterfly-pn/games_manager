@@ -53,6 +53,14 @@ def cookies_about():
         return redirect(request.args.get('next'))
     return redirect('/')
 
+@app.route("/background/<int:i>")
+def bckground(i):
+    session['background']="background"+str(i)+".jpg"
+    print(session['background'])
+    if request.args.get('next'):
+        return redirect(request.args.get('next'))
+    return redirect('/')
+
 
 """
 Początek Rejstracji

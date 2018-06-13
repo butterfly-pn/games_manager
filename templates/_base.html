@@ -118,7 +118,6 @@
       z-index: -1;
 
       display: block;
-      background-image: url('/static/sw.jpg');
       width: 100%;
       height: 100%;
 
@@ -135,7 +134,7 @@
 
 </head>
 
-<body>
+<body style="background-image: url('/static/{{session['background']}} '); background-size: cover;">
   <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="/">Game Jams</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbarsExampleDefault"
@@ -146,10 +145,15 @@
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="navbar-nav mr-auto">
 
-        <li class="nav-item{% if page_id == 'user_info_id' %} active{% endif %}">
-          <a class="nav-link" href="/user/{{session['username']}}">{{ session['username'] }}</a>
+        <li class="nav-item{% if page_id == 'change-background' %} active{% endif %}">
+          <a role="presentation" class="nav-link" data-toggle="modal" data-target="#change-background" href="#">Zmień tło</a>
         </li>
+
         {% if session['logged_in'] %}
+        <li class="nav-item{% if page_id == 'user_info_id' %} active{% endif %}">
+          <a class="nav-link" href="/user/session['']">{{ session['username'] }}</a>
+        </li>
+
         <li class="nav-item{% if page_id == 'download' %} active{% endif %}">
           <a class="nav-link" href="{{ url_for('download') }}">Download</a>
         </li>
@@ -206,8 +210,40 @@
 
       <!--{%endif%}-->
       <!--cookies accept form-->
+
+
+
+
+
     </div>
   </nav>
+
+          <div class="modal fade" id="change-background" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    style="text-align: left;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div style="background-color:#0066ff;" class="modal-header">
+          <h4 style="text-align: left; " class="modal-title" id="exampleModalLabele">Wybieranie tła strony</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <h4>W trosce o wyższy komfort użytkowania strony, umożliwiliśmy Ci wybranie jej tła</h4>
+            <form method=post action="/change-background/" >
+              {% for i in range(1, 10) %}
+                  <a href="/background/{{i}}"><img src="./static/background{{i}}.jpg"  alt="Tło {{i}}" class="mr-3 mt-3 rounded-circle" style="width:125px; height:125px; border: 1px solid black;l"></a>
+              {% endfor %}
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
   <div class="background-image"></div>
   <!--Beginning of register form-->
   <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
@@ -505,17 +541,9 @@
       </div>
     </div>
 
-    <div style="padding: 10px 0px">
-      {% block content %}{% endblock %}
-    </div>
 
-
-  </div>
-
-  {% if not session['accepted']%}
+    {% if not session['accepted']%}
   <div id="myModal" class="mynewmodal-show mb-5">
-
-    <!-- Modal content -->
     <div class="mynewmodal-content" style="border-radius: 5px;">
       <div class="mynewmodal-header p-3">
         <h2>Pliki Cookies</h2>
@@ -534,6 +562,37 @@
     </div>
 
   </div>{% endif %}
+
+    <div style="padding: 10px 0px">
+      {% block content %}{% endblock %}
+    </div>
+
+
+  </div>
+
+  {% if not session['accepted']%}
+  <div id="myModal" class="mynewmodal-show mb-5">
+    <div class="mynewmodal-content" style="border-radius: 5px;">
+      <div class="mynewmodal-header p-3">
+        <h2>Pliki Cookies</h2>
+      </div>
+      <div class="mynewmodal-body p-3">
+        <div class="container">
+          <h3>Ta witryna obsługuje pliki cookies</h3>
+          <br>
+          <br>
+          <a class="btn btn-success" href="/cookies-accept?next={{ url_for(request.endpoint) }}">Akceptuję</a>
+          <a class="btn btn-secondary" href="/cookies-about?next={{ url_for(request.endpoint) }}">Dowiedz się więcej</a>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>{% endif %}
+
+
+
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
