@@ -61,6 +61,31 @@ def bckground(i):
         return redirect(request.args.get('next'))
     return redirect('/')
 
+@app.route("/walpapers")
+def backgrounds():
+    user_member = False
+    team_leader = False
+    try:
+        organizer = User.query.filter_by(username=session['username']).first().organizer
+        team = Team.query.filter_by(master=session['username']).all()
+        if team:
+            team_leader = True
+        admin = User.query.filter_by(username=session['username']).first().admin
+        teams = Team.query.order_by(Team.id.asc()).all()
+        for t in teams:
+            if session['username'] in t.contributors:
+                user_member = True
+    except KeyError:
+        organizer = False
+        admin = False
+        user_member = False
+    user = User.query.filter_by(active=True).first()
+
+
+    return render_template('walpapers.html', organizer=organizer, admin=admin,
+                            member=user_member, team_leader=team_leader)
+
+
 
 """
 Początek Rejstracji
