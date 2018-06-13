@@ -27,7 +27,7 @@
         {% for message in new_messages %}
         <li class="list-group-item" style="border-radius: 5px; background-color: rgba(204, 204, 204,.8)">
           <div class="col-lg-10">
-            <a href="/message/{{message.id}}">
+            <a style="color:#000000; " href="/message/{{message.id}}" >
               {%if message.new%}
               <h3>{{message.title}}
                 <span class="badge badge-secondary">New</span>
