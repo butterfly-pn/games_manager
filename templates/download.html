@@ -50,6 +50,40 @@
                       <br>
                     </li>
                   </div>
+                  {% if user_team == file.team %}
+                        <div class="row justify-content-center">
+                            <a role="presentation" class="btn btn-info mb-3" data-toggle="modal" data-target="#upload" href="#" style="width:300px;">Edytuj</a><br>
+                        </div>
+
+                        <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Edycja</h4>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                  <div class="container">
+                                    <form method=post enctype=multipart/form-data>
+                                      <dl>
+                                        <dt><label for="title">Tytuł gry:</label></dt>
+                                        <dd><input id="title" name="title" type="text" value="" autofocus></dd>
+
+                                        <dt><label for="description">O grze:</label></dt>
+                                        <dd><input id="description" name="description" type="text" value=""></dd>
+
+                                          <input type="hidden" id="id" name="id" value="{{ file.id }}">
+                                          <input type="hidden" id="team" name="team" value="{{ file.team }}">
+                                          <input type="hidden" id="jam" name="jam" value="{{ file.jam }}">
+                                      </dl>
+                                      <p style="padding-bottom:20px;"><input class="btn btn-primary" type=submit value="Zatwierdź"></p>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endif %}
                 </div>
               </div>
 
@@ -59,47 +93,7 @@
           </ul>
         </div>
       </div>
-
-      <!--<div class="col" style="margin-top: 70px;">-->
-      <!--<a role="presentation" class="container btn btn-info" data-toggle="modal" data-target="#upload" href="#" style="position:fixed; width:300px;">Dodaj grę</a>-->
-      <!--</div>-->
-      <!--<div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">-->
-      <!--<div class="modal-dialog">-->
-      <!--<div class="modal-content">-->
-      <!--<div class="modal-header">-->
-      <!--<h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Upload</h4>-->
-      <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>-->
-      <!--</div>-->
-      <!--<div class="modal-body">-->
-      <!--<div class="container">-->
-      <!--<form method=post enctype=multipart/form-data>-->
-      <!--<dl>-->
-      <!--<dt><label for="title">Tytuł gry:</label></dt>-->
-      <!--<dd><input id="title" name="title" type="text" value="" autofocus></dd>-->
-
-      <!--<dt><label for="description">O grze:</label></dt>-->
-      <!--<dd><input id="description" name="description" type="text" value=""></dd>-->
-
-      <!--<dt><label for="file">Dodaj plik</label></dt>-->
-      <!--<dd><input id="file" name="file" type="file"></dd>-->
-      <!--</dl>-->
-      <!--<p style="padding-bottom:20px;"><input class="btn btn-primary" type=submit value="Upload"></p>-->
-      <!--</form>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
-
     </div>
   </div>
-  </div>
-
-  </div>
-
-  <div class="col-2"></div>
-
-  </div>
-
   {% endblock %}
 </center>

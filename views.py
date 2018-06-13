@@ -1217,10 +1217,6 @@ def downloadhelp(jam_id):
         organizer = False
         admin = False
         user_member = False
-    except KeyError:
-        organizer = False
-        admin = False
-        user_member = False
 
     title = request.form.get('title')
     used_title = Game.query.filter_by(title=title).first()
@@ -1281,8 +1277,8 @@ def download():
     team_leader = False
     try:
         organizer = User.query.filter_by(username=session['username']).first().organizer
-        team = Team.query.filter_by(master=session['username']).all()
-        if team:
+        user_team = Team.query.filter_by(master=session['username']).first().name
+        if user_team:
             team_leader = True
         admin = User.query.filter_by(username=session['username']).first().admin
         teams = Team.query.order_by(Team.id.asc()).all()
@@ -1293,46 +1289,34 @@ def download():
         organizer = False
         admin = False
         user_member = False
-    except KeyError:
-        organizer = False
-        admin = False
-        user_member = False
-    # if request.method == "POST":
-    #     title = request.form.get('title')
-    #     used_title = Game.query.filter_by(title=title).first()
-    #     description = request.form.get('description')
-    #     if used_title:
-    #         flash('Ta nazwa gry jest już zajęta, proszę wybierz inną.')
-    #         files = Game.query.order_by(Game.id.asc()).all()
-    #         return render_template('download.html', files=files, organizer=organizer, admin=admin)
-    #     if 'file' not in request.files:
-    #         flash('No file part')
-    #         return redirect(request.url)
-    #     file = request.files['file']
-    #     # if user does not select file, browser also
-    #     # submit a empty part without filename
-    #     if file.filename == '':
-    #         flash('No selected file')
-    #         return redirect(request.url)
-    #     if file and allowed_file(file.filename):
-    #         filename = secure_filename(file.filename)
-    #         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    #         new_game = Game()
-    #         new_game.title = title
-    #         new_game.team = Team.query.filter_by(master=session['username']).first().name
-    #         new_game.description = description
-    #         new_game.jam = Jam.query.filter_by(master=session['username']).first().title
-    #         new_game.path = filename
-    #         db.session.add(new_game)
-    #         db.session.commit()
-    #         flash("Gra dodana!")
-    #         gc.collect()
-    #     files = Game.query.order_by(Game.id.asc()).all()
-    #     teams = Team.query.order_by(Team.id).all()
-    #
-    #
-    #     return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
-    return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
+        user_team = '!!!!!!!'
+    if request.method == "POST":
+        title = request.form.get('title')
+        used_title = Game.query.filter_by(title=title).first()
+        description = request.form.get('description')
+        id = request.form.get('id')
+        jam = request.form.get('jam')
+        team = request.form.get('team')
+        user_team = Team.query.filter_by(name=team).first().id
+        user_team = Team.query.get(user_team).name
+        if used_title:
+            flash('Ta nazwa gry jest już zajęta, proszę wybierz inną.')
+            files = Game.query.order_by(Game.id.asc()).all()
+            return render_template('download.html', files=files, organizer=organizer, admin=admin)
+        edit = Game.query.get(id)
+        edit.title = title
+        edit.team = team
+        edit.description = description
+        edit.jam = jam
+        db.session.commit()
+        flash("Edycja zakończona sukcesem!")
+        gc.collect()
+        files = Game.query.order_by(Game.id.asc()).all()
+        return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member,
+                               team_leader=team_leader, user_team=user_team)
+    return render_template('download.html', files=files, organizer=organizer, admin=admin, member=user_member,
+                           team_leader=team_leader, user_team=user_team)
+
 
 @app.route('/download/<filename>')
 def uploaded_file(filename):
