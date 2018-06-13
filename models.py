@@ -58,6 +58,7 @@ class Message(db.Model):
     new = Column(Boolean, default=True)
 
 
+
 class Team(db.Model):
     """
     Team model
@@ -69,7 +70,6 @@ class Team(db.Model):
     master = Column(String(200))
     contributors = Column(PickleType())
     gameinjams = Column(PickleType())
-
 
 class Jam(db.Model):
     """
