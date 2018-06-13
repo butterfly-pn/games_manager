@@ -97,12 +97,13 @@
 
 
             {% endif%} {% endfor %} {% else %}
+            {% if userteam == team or jam.master == session['username'] or admin%}
             <div class="col-8">
               <div class="row justify-content-center">
                 <a role="presentation" class="btn btn-info" data-toggle="modal" data-target="#upload" href="#" style="width:300px;">Dodaj grę</a>
               </div>
             </div>
-
+            {% endif %}
             {% endif%}
 
 
