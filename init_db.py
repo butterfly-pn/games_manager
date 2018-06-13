@@ -280,7 +280,7 @@ def db_start():
     game.team = "MonsterCouch"
     game.description = 'Prosta gra wyścigowa z pojazdami wojskowymi'
     game.jam = 'Global game jam'
-    game.path = "Military trucks.tar.xz"
+    game.path = "Military trucks.tar.zip"
     db.session.add(game)
     db.session.commit()
 
