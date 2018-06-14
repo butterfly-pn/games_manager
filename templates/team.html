@@ -55,7 +55,98 @@
       </button>
       <br> {% endif %}
     </div>
-    <div class="col-6"></div>
+    <div class="col-6">
+      <h4>Gry drużyny:</h4>
+    {% for file in team_games %}
+
+      <div style="background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:5px" class="container">
+              <div class="col-12">
+                <div class="row" data-toggle="collapse" data-target="#{{ file.id }}">
+
+                  <h3 style="margin:12px;">
+                    <strong>{{ file.title }}</strong>
+                  </h3>
+                </div>
+                <div id="{{ file.id }}" class="collapse">
+                  <div>
+                    <h4>
+                      O grze:
+                      <br>
+                    </h4>
+                    <li>
+                      {{ file.description }}
+                    </li>
+                  </div>
+                  <div class="row justify-content-end">
+                    <li>
+                      <a class="btn btn-info" style="margin-right:20px; margin-top:20px;" role="button" href="/download/{{file.path}}" download="{{file.path}}">Download</a>
+                      <br>
+                    </li>
+                  </div>
+                  <div class="row justify-content-end" style="ymargin-top:10px;">
+                    <li>
+                      <i>
+                        <b>Twórca: </b>{{ file.team }}
+                        <br>
+                        <b> Jam: </b>{{ file.jam}}</i>
+                      <br>
+                      <br>
+                    </li>
+                  </div>
+                  {% if user_team == file.team %}
+                  <div class="row justify-content-center">
+                    <a role="presentation" class="btn btn-info mb-3" data-toggle="modal" data-target="#upload" href="#" style="width:300px;">Edytuj</a>
+                    <br>
+                  </div>
+
+                  <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Edycja</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="container">
+                            <form method=post enctype=multipart/form-data>
+                              <dl>
+                                <dt>
+                                  <label for="title">Tytuł gry:</label>
+                                </dt>
+                                <dd>
+                                  <input id="title" name="title" type="text" value="{{file.title}}" autofocus>
+                                </dd>
+
+                                <dt>
+                                  <label for="description">O grze:</label>
+                                </dt>
+                                <dd>
+                                  <input id="description" name="description" type="text" value="{{file.description}}">
+                                </dd>
+
+                                <input type="hidden" id="id" name="id" value="{{ file.id }}">
+                                <input type="hidden" id="team" name="team" value="{{ file.team }}">
+                                <input type="hidden" id="jam" name="jam" value="{{ file.jam }}">
+                              </dl>
+                              <p style="padding-bottom:20px;">
+                                <input class="btn btn-primary" type=submit value="Zatwierdź">
+                              </p>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+
+            </div>
+
+      {% endfor %}
+    </div>
   </div>
 
   {% if admin or team.master==session['username'] %}

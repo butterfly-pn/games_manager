@@ -610,7 +610,10 @@ def team(team_name):
     """wyświetla informacje o drużynie"""
     user_member=False
     team_leader = False
+    team_games = Game.query.filter_by(team=team_name).all()
     try:
+
+
         organizer = User.query.filter_by(username=session['username']).first().organizer
         admin = User.query.filter_by(username=session['username']).first().admin
         teams=Team.query.order_by(Team.id.asc()).all()
@@ -628,7 +631,7 @@ def team(team_name):
     this_team = Team.query.filter_by(name=team_name).first()
     admin = User.query.filter_by(username=session['username']).first().admin
     if this_team:
-        return render_template("team.html", team=this_team, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader)
+        return render_template("team.html", team=this_team, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, team_games=team_games)
     return render_template('404.html'), 404
 
 
@@ -684,6 +687,8 @@ def create_team():
 @login_required
 def delete_team(team_name):
     try:
+
+
        if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master == session['username']:
            this_team = Team.query.filter_by(name=team_name).first()
            messages=Message.query.filter_by(author=this_team.master, title="Zaproszenie do drużyny "+team_name).all()
