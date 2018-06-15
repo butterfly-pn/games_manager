@@ -630,8 +630,11 @@ def team(team_name):
         user_member=False
     this_team = Team.query.filter_by(name=team_name).first()
     admin = User.query.filter_by(username=session['username']).first().admin
+    messages = Message.query.filter_by( adresser=this_team.master,
+                                      title="Prośba o dołączenie do drużyny " + team_name).all()
+    msgs=len(messages)
     if this_team:
-        return render_template("team.html", team=this_team, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, team_games=team_games)
+        return render_template("team.html", team=this_team, organizer=organizer, admin=admin, member=user_member, team_leader=team_leader, team_games=team_games, messages=messages, msgs=msgs)
     return render_template('404.html'), 404
 
 
@@ -812,11 +815,14 @@ def add_team(team_name, username):
     teams1=Team.query.order_by(Team.id.asc()).all()
     for team1 in teams1:
         if username in team1.contributors:
-            flash('Użytkownk jest już w jakiejś drużynie', 'warning')
+            flash('Użytkownk jest już w jakiejś drużynie ' + team1.name, 'warning')
             return redirect("/team/"+team_name)
     message=Message.query.filter_by(author=username, adresser=team.master, title="Prośba o dołączenie do drużyny "+team_name).first()
+    messages = Message.query.filter_by(author=username,
+                                      title="Prośba o dołączenie do drużyny " + team_name).all()
     if message:
-        db.session.delete(message)
+        for msg in messages:
+            db.session.delete(msg)
         if team.contributors:
             cont = team.contributors[:]
             cont.append(username)
@@ -829,8 +835,8 @@ def add_team(team_name, username):
             team.contributors = cont[:]
             db.session.commit()
             flash('Pomyślnie dołączono do drużyny')
-    else:
-        return redirect("/")
+
+    return redirect("/")
 
 @app.route("/team/<team_name>/give//1")
 @login_required
