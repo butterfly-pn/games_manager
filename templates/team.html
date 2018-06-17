@@ -55,7 +55,7 @@
           href="#">-</button>
         {%endif%}
       </div>
-      {% if loop.index != team.contributors|length %},{%endif%} {%endfor%} {% if admin or team.master==session['username'] %}
+      {% if loop.index != team.contributors|length %} 9{%endif%} {%endfor%} {% if admin or team.master==session['username'] %}
       <button class="ml-5 btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal"
         data-target="#add-to-team" href="#">+
       </button>
@@ -73,7 +73,7 @@
           <div class="row"  >
           {% for mssage in messages%}
             <div class="col-6" >
-              <a class="btn btn-outline-secondary" style="margin:5px;" href="/message/{{mssage.id}}"><h4 >{{mssage.author}}</h4></a>
+              <a class="btn btn-outline-secondary" style="margin:5px; 0px" href="/message/{{mssage.id}}"><h4 >{{mssage.author}}</h4></a>
             </div>
             {%endfor%}
           </div>
@@ -84,12 +84,13 @@
 
     </div>
     <div class="col-6">
-      <h3 style = "background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:5px">Gry drużyny:</h3>
+      <h3 style = "background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:5px 0px;">Gry drużyny:</h3>
     {% for file in team_games %}
 
-      <div style="background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:5px" class="container">
+      <div style="background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:5px 0px;" class="container">
               <div class="col-12">
                 <div class="row" data-toggle="collapse" data-target="#{{ file.id }}">
+
                   <h3 style="margin:12px;">
                     <strong>{{ file.title }}</strong>
                   </h3>
@@ -105,20 +106,20 @@
                     </li>
                   </div>
                   <div class="row justify-content-end">
-                    <li>
+
                       <a class="btn btn-info" style="margin-right:20px; margin-top:20px;" role="button" href="/download/{{file.path}}" download="{{file.path}}">Download</a>
                       <br>
-                    </li>
+
                   </div>
-                  <div class="row justify-content-end" style="ymargin-top:10px;">
-                    <li>
+                  <div class="row justify-content-end" style="margin:10px 0px;">
                       <i>
                         <b>Twórca: </b>{{ file.team }}
                         <br>
-                        <b> Jam: </b>{{ file.jam}}</i>
+                        <b> Jam: </b>{{ file.jam}}
+                      </i>
                       <br>
                       <br>
-                    </li>
+
                   </div>
                   {% if user_team == file.team %}
                   <div class="row justify-content-center">
