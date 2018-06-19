@@ -36,11 +36,10 @@
                 </tr>
             </table>
             <hr>
-            <br>{{message.content | safe}} {% if "Zaproszenie do drużyny " in message.title %}
-            <br>
-            <a href="/team/{{message.title[23:]}}/join/{{message.adresser}}">Dołącz do drużyny {{message.title[23:]}}</a>
-            {%endif%}
-            <br>
+            <p style="padding:10px">{{message.content | safe}} {% if "Zaproszenie do drużyny " in message.title %}
+                <br>
+                <a href="/team/{{message.title[23:]}}/join/{{message.adresser}}">Dołącz do drużyny {{message.title[23:]}}</a>
+                {%endif%}</p>
         </div>
     </div>
     {% endblock %}

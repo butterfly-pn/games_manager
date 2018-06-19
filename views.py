@@ -792,7 +792,7 @@ def join_team(team_name):
         new_message.author =username
         new_message.adresser =Team.query.filter_by(name=team_name).first().master
         new_message.created=datetime.now()
-        new_message.content = "Użytkownik "+username+"Chce dołączyć do twojej drużyny "+team_name+'<br><br>  <a href=\'/team/'+team_name+'/add/'+username+'\' style="color: #000000">Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
+        new_message.content = "Użytkownik "+username+"Chce dołączyć do twojej drużyny "+team_name+'<br><br>  <a href=\'/team/'+team_name+'/add/'+username+'\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
         db.session.add(new_message)
         db.session.commit()
         flash("Wysłano prośbę o dołączenie")
@@ -939,6 +939,21 @@ def team_give(team_name,username,i):
 @login_required
 def team_delete(team_name, username):
     if User.query.filter_by(username=session['username']).first().admin or Team.query.filter_by(name=team_name).first().master == session['username']:
+        for contributor in Team.query.filter_by(name=team_name).first().contributors:
+            if contributor == username:
+                contributors = Team.query.filter_by(name=team_name).first().contributors
+                contributors.remove(contributor)
+                Team.query.filter_by(name=team_name).first().contributors = contributors
+                db.session.commit()
+                invite_message = Message.query.filter_by(adresser=username, title = "Zaproszenie do drużyny "+team_name).first()
+                if invite_message:
+                    db.session.delete(invite_message)
+                    db.session.commit()
+                flash('Pomyślnie usunięto username z drużyny'.replace('username', username))
+                return redirect('team/'+team_name)
+        flash('Błąd: Nie ma takiego użytkownika')
+        return redirect('team/'+team_name)
+    elif session['username'] == username and session['username'] in Team.query.filter_by(name=team_name).first().contributors:
         for contributor in Team.query.filter_by(name=team_name).first().contributors:
             if contributor == username:
                 contributors = Team.query.filter_by(name=team_name).first().contributors
