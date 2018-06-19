@@ -111,7 +111,7 @@
           </div>
           <div class="col-1">
             {% if userteam == team or jam.master == session['username'] or admin%}
-            <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{team}}" href="#are-you-sure-{{team}}">Wyrzuć</button>
+            <button class="btn btn-danger" role="presentation" data-toggle="modal" data-target="#are-you-sure-{{team.name}}" href="#are-you-sure-{{team}}">Wyrzuć</button>
             {%endif%}
           </div>
         </div>
