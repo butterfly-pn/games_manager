@@ -195,15 +195,13 @@ def login():
 def logout():
     """Wylogowuje ustawiając status na niaktywny"""
     try:
-        bck=session['background']
-        cookies=session['accepted']
+        cookies=session['accepted']        
         User.query.filter_by(username=session['username']).first().active = 0
         db.session.commit()
         session.clear()
         flash("Zostałeś poprawnie wylogowany.")
         gc.collect()
         session['accepted']=cookies
-        session['background']=bck
         return redirect(url_for('homepage'))
     except Exception as e:
         flash(e)
