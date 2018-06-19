@@ -109,7 +109,6 @@
             {% endif %}
             {% endif%}
             {% endif %}
-            {% endif %}
 
 
           </div>
@@ -124,6 +123,7 @@
       {% endfor %} {% elif team.master==session['username'] or session['username'] in team.contributors %}
       <li class="list-group-item" href="">-</li>
       {%endif%}
+      {% endif %}
     </div>
   </div>
 </div>
