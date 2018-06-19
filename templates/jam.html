@@ -52,9 +52,11 @@
           </div>
 
           <div class="col-5">
+            {% if jam.teams %}
             {% if teams and not teams.name in jam.teams%}
             <a class="btn btn-secondary" href="/jam/{{jam.id}}/invite/{{teams.name}}">Dodaj do tego jamu drużynę {{teams.name}}</a>
             {%endif%}
+            {% endif %}
           </div>
 
         </div>
