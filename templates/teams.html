@@ -12,7 +12,7 @@
                 <a class="btn m-1" href="/team/{{t.name}}">
                     <h5>{{t.name}}</h5>
                 </a>
-                {%if not team_leader%}
+                {%if not team_leader and not member%}
                 <a class="float-right btn btn-primary m-1" href="/join-team/{{t.name}}">Dołącz do zespołu</a>{%endif%} {% if admin %}
                 <a class="float-right btn btn-danger m-1" href="/delete-team/{{t.name}}">Usuń zespół</a> {%endif%}</li>
             {% endfor %}

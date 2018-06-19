@@ -4,6 +4,9 @@
   <div class="row mt-3" style="background-color: rgba(204, 204, 204,.8); padding: 20px; border-radius: 5px">
     <div class="col-md-4 mb-3">
       <h2>{{ team.name }}</h2>
+      {% if not team_leader and not member %}
+      <a class=" btn btn-primary " href="/join-team/{{team.name}}">Dołącz do zespołu</a>
+      {% endif %}
     </div>
     <div class="col-md-4">
       <a class="btn btn-primary btn-block" href="/user/{{team.master}}">Szef zespołu: {{team.master}}</a>
@@ -12,9 +15,9 @@
     <div class="col-md-4">
       <a class="btn btn-primary btn-block" href="">Mail: {{ team.master_email }}</a>
     </div>
-
+</div>
     {% if admin or team.master==session['username'] %}
-  </div>
+
   <hr>
   <div class="row mt-3" style="background-color: rgba(204, 204, 204,.8); padding: 20px; border-radius: 5px">
 
@@ -29,19 +32,22 @@
       </h3>
       {%endif%}
     </div>
-    <div class="col-md-4  ">
+    <div class="col-md-4 ">
       <button class="btn btn-danger btn-block" role="presentation" data-toggle="modal" data-target="#are-you-sure" href="#">Usuń ten zespół</button>
     </div>
     <div class="col-md-4 ">
       <button class="btn btn-warning btn-block" role="presentation" data-toggle="modal" data-target="#give-team" href="#">przekaż ten zespół</button>
-      {%endif%}
     </div>
+    {%endif%}
   </div>
+
+
 
   <hr>
   <div class="row">
-    <div class="col-6" style="background-color: rgba(204, 204, 204,.8); padding: 20px; border-radius: 5px">
-      Członkowie: {% for i in team.contributors %}
+    <div class="col-6" >
+      <div style="background-color: rgba(204, 204, 204,.8); padding: 20px; border-radius: 5px">
+        <h4>Członkowie:</h4> {% for i in team.contributors %}
       <div class="btn-group" role="group" aria-label="User">
         <a class="btn btn-primary" href="/user/{{i}}">{{i}}</a>
         {% if admin or team.master==session['username'] or i==session['username']%}
@@ -49,13 +55,126 @@
           href="#">-</button>
         {%endif%}
       </div>
-      {% if loop.index != team.contributors|length %},{%endif%} {%endfor%} {% if admin or team.master==session['username'] %}
+      {% if loop.index != team.contributors|length %} 9{%endif%} {%endfor%} {% if admin or team.master==session['username'] %}
       <button class="ml-5 btn btn-primary{% if page_id == 'add-to-team' %} active{% endif %}" role="presentation" data-toggle="modal"
         data-target="#add-to-team" href="#">+
       </button>
       <br> {% endif %}
+      </div>
+       {% if admin or team.master==session['username'] and messages%}
+      <div style="background-color: rgba(204, 204, 204,.8); padding: 10px; border-radius: 5px; margin:5px 0px">
+          <div  data-toggle="collapse" data-target="#{message}">
+                  <h3 style="margin:0px 5px">
+                    Prośby o dołączene  <span style="background-color: rgba(204, 204, 204,.8);" class="ml-2 badge badge-light badge-pill">{{msgs}}</span>
+                  </h3>
+
+          </div>
+        <div id="{message}" class="collapse">
+          <div class="row"  >
+          {% for mssage in messages%}
+            <div class="col-6" >
+              <a class="btn btn-outline-secondary" style="margin:5px; 0px" href="/message/{{mssage.id}}"><h4 >{{mssage.author}}</h4></a>
+            </div>
+            {%endfor%}
+          </div>
+        </div>
+      </div>
+{% endif %}
+
+
     </div>
-    <div class="col-6"></div>
+    <div class="col-6">
+      <h3 style = "background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:5px 0px;">Gry drużyny:</h3>
+    {% for file in team_games %}
+
+      <div style="background-color: rgba(204, 204, 204,.8); border-radius: 5px; margin:5px 0px;" class="container">
+              <div class="col-12">
+                <div class="row" data-toggle="collapse" data-target="#{{ file.id }}">
+
+                  <h3 style="margin:12px;">
+                    <strong>{{ file.title }}</strong>
+                  </h3>
+                </div>
+                <div id="{{ file.id }}" class="collapse">
+                  <div>
+                    <h4>
+                      O grze:
+                      <br>
+                    </h4>
+                    <li>
+                      {{ file.description }}
+                    </li>
+                  </div>
+                  <div class="row justify-content-end">
+
+                      <a class="btn btn-info" style="margin-right:20px; margin-top:20px;" role="button" href="/download/{{file.path}}" download="{{file.path}}">Download</a>
+                      <br>
+
+                  </div>
+                  <div class="row justify-content-end" style="margin:10px 0px;">
+                      <i>
+                        <b>Twórca: </b>{{ file.team }}
+                        <br>
+                        <b> Jam: </b>{{ file.jam}}
+                      </i>
+                      <br>
+                      <br>
+
+                  </div>
+                  {% if user_team == file.team %}
+                  <div class="row justify-content-center">
+                    <a role="presentation" class="btn btn-info mb-3" data-toggle="modal" data-target="#upload" href="#" style="width:300px;">Edytuj</a>
+                    <br>
+                  </div>
+
+                  <div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="text-align: left;">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 style="text-align: left;" class="modal-title" id="exampleModalLabele">Edycja</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="container">
+                            <form method=post enctype=multipart/form-data>
+                              <dl>
+                                <dt>
+                                  <label for="title">Tytuł gry:</label>
+                                </dt>
+                                <dd>
+                                  <input id="title" name="title" type="text" value="{{file.title}}" autofocus>
+                                </dd>
+
+                                <dt>
+                                  <label for="description">O grze:</label>
+                                </dt>
+                                <dd>
+                                  <input id="description" name="description" type="text" value="{{file.description}}">
+                                </dd>
+
+                                <input type="hidden" id="id" name="id" value="{{ file.id }}">
+                                <input type="hidden" id="team" name="team" value="{{ file.team }}">
+                                <input type="hidden" id="jam" name="jam" value="{{ file.jam }}">
+                              </dl>
+                              <p style="padding-bottom:20px;">
+                                <input class="btn btn-primary" type=submit value="Zatwierdź">
+                              </p>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+
+            </div>
+
+      {% endfor %}
+    </div>
   </div>
 
   {% if admin or team.master==session['username'] %}
