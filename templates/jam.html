@@ -70,7 +70,7 @@
           </div>
 
           <div class="col-8">
-            {% if jam.title in team.gameinjams %} {% for game in games%} {% if game.team == team.name%}
+            {% if team.gameinjams %}{% if jam.title in team.gameinjams %} {% for game in games%} {% if game.team == team.name%}
             <div style="border-style: solid; border-color: rgba(102, 102, 102,.8); border-radius: 5px; padding: 10px" class="container">
               <div class="row">
                 <div class="col-4">
@@ -105,6 +105,7 @@
             </div>
             {% endif %}
             {% endif%}
+            {% endif %}
 
 
           </div>

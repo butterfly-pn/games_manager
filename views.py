@@ -1099,15 +1099,17 @@ def jam(jam_id):
     this_jam = Jam.query.filter_by(id=jam_id).first()
     admin = User.query.filter_by(username=session['username']).first().admin
     team = Team.query.filter_by(master=session['username']).first()
-    jam_master=Jam.query.filter_by(master=session['username'])
-    game=Game.query.filter_by(jam=this_jam.title).all()
+    jam_master = Jam.query.filter_by(master=session['username'])
+    games = Game.query.filter_by(jam=this_jam.title).all()
     teamsxd=[]
     for i in this_jam.teams:
         teamsxd.append(Team.query.filter_by(name=i).first())
 
     userteam=Team.query.filter_by(master=session['username']).first()
     if this_jam:
-        return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=team, team_leader=team_leader, games=game, userteam=userteam, teamsxd=teamsxd)
+        for team in teamsxd:
+            print(str(team) + str(team.gameinjams))
+        return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=team, team_leader=team_leader, games=games, userteam=userteam, teamsxd=teamsxd)
     return render_template('404.html'), 404
 
 
@@ -1128,7 +1130,7 @@ def jam_invite(jam_id,team_name):
             message.title="Prośba o dołączenie drużyny do jamu gamejam".replace("gamejam",jam.title)
             message.adresser=jam.master
             message.author="Drużyna "+team_name
-            message.content='Drużyna '+team_name+' chce brać udział w twoim jamie <br><br>  <a href=\'/jam/'+jam_id+'/add/'+team_name+'\' style="color: #000000">Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
+            message.content='Drużyna '+team_name+' chce brać udział w twoim jamie <br><br>  <a href=\'/jam/'+jam_id+'/add/'+team_name+'\'>Kliknij tu</a> aby zatwierdzić jego zgłoszenie'
             message.created=datetime.now()
             db.session.add(message)
             db.session.commit()
