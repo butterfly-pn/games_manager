@@ -1107,8 +1107,6 @@ def jam(jam_id):
 
     userteam=Team.query.filter_by(master=session['username']).first()
     if this_jam:
-        for team in teamsxd:
-            print(str(team) + str(team.gameinjams))
         return render_template("jam.html", jam=this_jam, organizer=organizer, admin=admin, member=user_member,teams=team, team_leader=team_leader, games=games, userteam=userteam, teamsxd=teamsxd)
     return render_template('404.html'), 404
 
