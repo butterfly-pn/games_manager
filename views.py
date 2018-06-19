@@ -1102,8 +1102,9 @@ def jam(jam_id):
     jam_master = Jam.query.filter_by(master=session['username'])
     games = Game.query.filter_by(jam=this_jam.title).all()
     teamsxd=[]
-    for i in this_jam.teams:
-        teamsxd.append(Team.query.filter_by(name=i).first())
+    if this_jam.teams:
+        for i in this_jam.teams:
+            teamsxd.append(Team.query.filter_by(name=i).first())
 
     userteam=Team.query.filter_by(master=session['username']).first()
     if this_jam:
